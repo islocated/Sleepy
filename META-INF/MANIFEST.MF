@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Sleep
+Bundle-SymbolicName: com.isnotok.sleep; singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: com.isnotok.sleep.Activator
+Bundle-Vendor: ISNOTOK
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.ui.navigator;bundle-version="3.4.2"
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-ActivationPolicy: lazy
