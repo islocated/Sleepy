@@ -7,8 +7,8 @@ import org.eclipse.jface.viewers.Viewer;
 
 public class NavigatorContentProvider implements ITreeContentProvider {
 	public Object[] getChildren(Object parentElement) {
-		File fileModel = (File) parentElement;
-		Object [] files = fileModel.listFiles();
+		File file = (File) parentElement;
+		Object [] files = file.listFiles();
 		
 		return files == null ? new Object[0] : files;
 	}

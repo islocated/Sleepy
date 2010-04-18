@@ -14,18 +14,18 @@ public class NavigatorLabelProvider extends LabelProvider implements
 
 	@Override
 	public String getText(Object element) {
-		File fileModel = (File) element;
+		File file = (File) element;
 		
 		// TODO Auto-generated method stub
-		return fileModel.getName();
+		return file.getName();
 	}
 	
 	@Override
 	public Image getImage(Object element) {
-		File fileModel = (File) element;
+		File file = (File) element;
 		
 		//Use shared images
-		return PlatformUI.getWorkbench().getSharedImages().getImage(fileModel.isFile() ? ISharedImages.IMG_OBJ_FILE : ISharedImages.IMG_OBJ_FOLDER);
+		return PlatformUI.getWorkbench().getSharedImages().getImage(file.isFile() ? ISharedImages.IMG_OBJ_FILE : ISharedImages.IMG_OBJ_FOLDER);
 		
 		/*
 		// TODO Auto-generated method stub
