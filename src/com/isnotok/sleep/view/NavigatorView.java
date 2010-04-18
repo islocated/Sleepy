@@ -1,10 +1,11 @@
 package com.isnotok.sleep.view;
 
+import java.io.File;
+
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.ui.navigator.CommonNavigator;
 
-import com.isnotok.sleep.model.DirectoryObject;
-import com.isnotok.sleep.model.FolderModel;
+import com.isnotok.sleep.model.FileModel;
 
 public class NavigatorView extends CommonNavigator {
 	public final static String ID = "com.isnotok.sleep.view.NavigatorView";
@@ -16,9 +17,8 @@ public class NavigatorView extends CommonNavigator {
 	 protected IAdaptable getInitialInput()
 	 {
 		 this.getCommonViewer().refresh();
-		 DirectoryObject root = new FolderModel(null, "/");
+		 //DirectoryObject root = new FolderModel(null, "/");
 		 
-		 
-		 return root;
+		 return new FileModel("/");//root;
 	 }
 }

@@ -49,7 +49,7 @@
             name="Navigator Content">
          <triggerPoints>
             <instanceof
-                  value="com.isnotok.sleep.model.DirectoryObject">
+                  value="com.isnotok.sleep.model.FileModel">
             </instanceof>
          </triggerPoints>
       </navigatorContent>

@@ -3,29 +3,24 @@ package com.isnotok.sleep.provider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
-import com.isnotok.sleep.model.DirectoryObject;
 import com.isnotok.sleep.model.FileModel;
-import com.isnotok.sleep.model.FolderModel;
 
 public class NavigatorContentProvider implements ITreeContentProvider {
 	public Object[] getChildren(Object parentElement) {
-		DirectoryObject directoryObject = (DirectoryObject) parentElement;
+		FileModel fileModel = (FileModel) parentElement;
 		
-		if(directoryObject.getName().equals("/")){
-			FolderModel folderModel = (FolderModel) directoryObject;
-			folderModel.addChild(new FileModel(folderModel, "foo.bar"));
-		}
+		Object [] files = fileModel.listFileModels();
 		
-		//Get children polymorphically
-		return ((DirectoryObject) parentElement).getChildren();
+		return files;
 	}
 
 	public Object getParent(Object element) {
-		return ((DirectoryObject)element).getParent();
+		return ((FileModel)element).getParent();
 	}
 
 	public boolean hasChildren(Object element) {
-		return getChildren(element).length > 0;
+		return ((FileModel) element).isDirectory();
+		//return getChildren(element).length > 0;
 	}
 
 	public Object[] getElements(Object inputElement) {
