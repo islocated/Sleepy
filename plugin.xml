@@ -34,11 +34,39 @@
    <extension
          point="org.eclipse.ui.views">
       <view
-            class="com.isnotok.sleep.NavigatorView"
-            id="com.isnotok.sleep.NavigatorView"
+            class="com.isnotok.sleep.view.NavigatorView"
+            id="com.isnotok.sleep.view.NavigatorView"
             name="Navigator View"
             restorable="true">
       </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.navigator.navigatorContent">
+      <navigatorContent
+            contentProvider="com.isnotok.sleep.provider.NavigatorContentProvider"
+            id="com.isnotok.sleep.VirtualContent"
+            labelProvider="com.isnotok.sleep.provider.NavigatorLabelProvider"
+            name="Navigator Content">
+         <triggerPoints>
+            <instanceof
+                  value="com.isnotok.sleep.model.DirectoryObject">
+            </instanceof>
+         </triggerPoints>
+      </navigatorContent>
+   </extension>
+   <extension
+         point="org.eclipse.ui.navigator.viewer">
+      <viewer
+            viewerId="com.isnotok.sleep.view.NavigatorView">
+      </viewer>
+      <viewerContentBinding
+            viewerId="com.isnotok.sleep.view.NavigatorView">
+         <includes>
+            <contentExtension
+                  pattern="com.isnotok.sleep.VirtualContent">
+            </contentExtension>
+         </includes>
+      </viewerContentBinding>
    </extension>
 
 </plugin>
