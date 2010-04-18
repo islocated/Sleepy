@@ -1,14 +1,27 @@
 package com.isnotok.sleep.provider;
 
 import java.io.File;
+import java.io.FileFilter;
+import java.util.regex.Pattern;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
 public class NavigatorContentProvider implements ITreeContentProvider {
+	private static FileFilter fileFilter = new FileFilter(){
+		Pattern p = Pattern.compile(".*jpg|.*gif|.*png|.*bmp|.*pak", Pattern.CASE_INSENSITIVE);
+		
+		public boolean accept(File pathname) {
+			return pathname.isDirectory() 
+				|| p.matcher(pathname.getName()).matches();
+			//pathname.getName();
+		}
+	};
+	
 	public Object[] getChildren(Object parentElement) {
 		File file = (File) parentElement;
-		Object [] files = file.listFiles();
+
+		Object [] files = file.listFiles(fileFilter);
 		
 		return files == null ? new Object[0] : files;
 	}
