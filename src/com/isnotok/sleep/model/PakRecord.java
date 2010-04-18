@@ -31,8 +31,6 @@ public class PakRecord {
 		return type.length() + 1 + 6 + wordString.length() + 1 + 4 + length;
 	}
 	
-	
-
 	public String getType() {
 		return type;
 	}

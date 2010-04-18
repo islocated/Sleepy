@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
@@ -12,10 +14,14 @@ import com.isnotok.sleep.util.BytesUtil;
 
 public class PakFile {
 	private File file;
-	private List<PakRecord> list;
+	//private List<PakRecord> list;
+	private HashMap<String, HashMap<byte[], PakRecord>> map;
 	
 	public PakFile(File file){
 		this.file = file;
+		
+		//list = new ArrayList<PakRecord>();
+		map = new HashMap<String, HashMap<byte[], PakRecord>>();
 	}
 	
 	public static void main(String [] args){
@@ -40,6 +46,10 @@ public class PakFile {
             // a pack file
 			byte uncompressedData[] = getUncompressedData(file);
 			
+			if(uncompressedData == null){
+				throw new DataFormatException();
+			}
+			
 			int numChunks = BytesUtil.readInt(uncompressedData, 0);
 			int offset = 4;		//Number of bytes we read to get num of chunks
 			
@@ -50,6 +60,15 @@ public class PakFile {
 				
 				for(int i = 0; i < numChunks; i++){
 					PakRecord pakrecord = new PakRecord(uncompressedData, offset);
+					//list.add(pakrecord);
+					
+					HashMap<byte[], PakRecord> records = map.get(pakrecord.getType());
+					if(records == null){
+						records = new HashMap<byte[], PakRecord>();
+						map.put(pakrecord.getType(), records);
+					}
+					records.put(pakrecord.getId(), pakrecord);
+					
 					offset += pakrecord.getUsedBytes();
 				}
 				
