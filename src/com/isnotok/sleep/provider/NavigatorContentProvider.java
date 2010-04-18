@@ -12,9 +12,10 @@ public class NavigatorContentProvider implements ITreeContentProvider {
 		Pattern p = Pattern.compile(".*jpg|.*gif|.*png|.*bmp|.*pak", Pattern.CASE_INSENSITIVE);
 		
 		public boolean accept(File pathname) {
-			return pathname.isDirectory() 
-				|| p.matcher(pathname.getName()).matches();
-			//pathname.getName();
+			return (pathname.isDirectory() 
+				|| p.matcher(pathname.getName()).matches()) 
+				&& !pathname.getName().equalsIgnoreCase(".")	//Ignore current directory
+				&& !pathname.isHidden();						//Ignore hidden files
 		}
 	};
 	
@@ -31,12 +32,12 @@ public class NavigatorContentProvider implements ITreeContentProvider {
 	}
 
 	public boolean hasChildren(Object element) {
-		return ((File) element).isDirectory();
-		//return getChildren(element).length > 0;
+		return ((File) element).isDirectory() && getChildren(element).length > 0;
 	}
 
 	public Object[] getElements(Object inputElement) {
 		//This is called when root is set as the input
+		//TODO:What about when we select a new element?
 		return getChildren(inputElement);
 	}
 
