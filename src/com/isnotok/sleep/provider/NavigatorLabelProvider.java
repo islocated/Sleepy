@@ -9,16 +9,12 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.navigator.IDescriptionProvider;
 
-import com.isnotok.sleep.Activator;
-import com.isnotok.sleep.IImageKeys;
-import com.isnotok.sleep.model.FileModel;
-
 public class NavigatorLabelProvider extends LabelProvider implements
 		ILabelProvider, IDescriptionProvider {
 
 	@Override
 	public String getText(Object element) {
-		FileModel fileModel = (FileModel) element;
+		File fileModel = (File) element;
 		
 		// TODO Auto-generated method stub
 		return fileModel.getName();

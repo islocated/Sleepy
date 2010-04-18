@@ -1,25 +1,24 @@
 package com.isnotok.sleep.provider;
 
+import java.io.File;
+
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
-import com.isnotok.sleep.model.FileModel;
-
 public class NavigatorContentProvider implements ITreeContentProvider {
 	public Object[] getChildren(Object parentElement) {
-		FileModel fileModel = (FileModel) parentElement;
+		File fileModel = (File) parentElement;
+		Object [] files = fileModel.listFiles();
 		
-		Object [] files = fileModel.listFileModels();
-		
-		return files;
+		return files == null ? new Object[0] : files;
 	}
 
 	public Object getParent(Object element) {
-		return ((FileModel)element).getParent();
+		return ((File)element).getParent();
 	}
 
 	public boolean hasChildren(Object element) {
-		return ((FileModel) element).isDirectory();
+		return ((File) element).isDirectory();
 		//return getChildren(element).length > 0;
 	}
 
