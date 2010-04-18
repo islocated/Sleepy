@@ -12,6 +12,7 @@ public class NavigatorView extends CommonNavigator {
 	
 	public NavigatorView() {
 		// TODO Auto-generated constructor stub
+		
 	}
 	
 	 protected IAdaptable getInitialInput()
