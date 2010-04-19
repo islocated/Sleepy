@@ -4,9 +4,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Iterator;
 import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
 
@@ -22,6 +22,23 @@ public class PakFile {
 		
 		//list = new ArrayList<PakRecord>();
 		map = new HashMap<String, HashMap<byte[], PakRecord>>();
+	}
+	
+	public PakRecord getTile(String name){
+		HashMap<byte [], PakRecord> records = map.get("tile");
+		Collection<PakRecord> collection = records.values();
+		
+		Iterator<PakRecord> itr = collection.iterator();
+		
+		while(itr.hasNext()){
+			PakRecord record = itr.next();
+			if(record.getWordString().equals(name)){
+				return record;
+			}
+		}
+		
+		return null;
+		//return map.get("tile").values().toArray(new PakRecord[0])[5];
 	}
 	
 	public static void main(String [] args){

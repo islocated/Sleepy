@@ -5,6 +5,7 @@ import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
 
 import com.isnotok.sleep.view.NavigatorView;
+import com.isnotok.sleep.view.ResourceView;
 
 public class Perspective implements IPerspectiveFactory {
 
@@ -16,5 +17,6 @@ public class Perspective implements IPerspectiveFactory {
 		
 		IFolderLayout right = layout.createFolder("right", IPageLayout.RIGHT, 0.7f, layout.getEditorArea());
 		
+		right.addView(ResourceView.ID);
 	}
 }

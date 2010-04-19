@@ -39,6 +39,12 @@
             name="Navigator View"
             restorable="true">
       </view>
+      <view
+            class="com.isnotok.sleep.view.ResourceView"
+            id="com.isnotok.sleep.view.ResourceView"
+            name="Resource Viewer"
+            restorable="true">
+      </view>
    </extension>
    <extension
          point="org.eclipse.ui.navigator.navigatorContent">

@@ -26,7 +26,7 @@ public class PakRecord {
 		data = BytesUtil.readBytes(bytes, offset, length);
 		offset += length;
 	}
-	
+
 	public int getUsedBytes(){
 		return type.length() + 1 + 6 + wordString.length() + 1 + 4 + length;
 	}
