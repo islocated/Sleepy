@@ -40,47 +40,13 @@ public class ResourceView extends ViewPart {
 			
 			byte [] bytes = record.getData();
 			
-			//Format is RGBA
-			byte [] pixelBytes = new byte[16*16*3];
-			byte [] alphaBytes = new byte[16*16];
-			
-			int i = 0;
-			int j = 0;
-			int k = 0;
-			while(i < 16*16*4){
-				pixelBytes[j++] = bytes[i++];
-				pixelBytes[j++] = bytes[i++];
-				pixelBytes[j++] = bytes[i++];
-				alphaBytes[k++] = bytes[i++];
-			}
-			
-			//System.arraycopy(bytes, 0, pixelBytes, 0, 16*16*4);
-			
-			/*
-			pixelBytes[0] = (byte)0;
-			pixelBytes[1] = (byte)0xff;
-			pixelBytes[2] = (byte)0;
-			pixelBytes[3] = (byte)0;
-			
-			pixelBytes[4] = (byte)0;
-			pixelBytes[5] = (byte)0xff;
-			pixelBytes[6] = (byte)0;
-			pixelBytes[7] = (byte)0;
-			
-			pixelBytes[8] = (byte)0;
-			pixelBytes[9] = (byte)0;
-			pixelBytes[10] = (byte)0xff;
-			pixelBytes[11] = (byte)0;
-			*/
+			//Format is RGBA, if we need alpha, we have to do this separately
+			byte [] pixelBytes = new byte[16*16*4];
+			System.arraycopy(bytes, 0, pixelBytes, 0, 16*16*4);
 			
 			//Format is RGBA
-			PaletteData palette = new PaletteData(0xFF0000, 0xFF00, 0xFF);
-		    imageData = new ImageData(16,16,24,palette, 1, pixelBytes);
-		    //imageData.alpha = 0xFF;
-		    imageData.alphaData = alphaBytes;
-			//ImageData data = new ImageData(16, 16, 3, palette, 0, bytes);
-
-			
+			PaletteData palette = new PaletteData(0xFF000000, 0xFF0000, 0xFF00);
+		    imageData = new ImageData(16,16,32,palette, 1, pixelBytes);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
