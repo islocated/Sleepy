@@ -40,6 +40,7 @@
             restorable="true">
       </view>
       <view
+            allowMultiple="true"
             class="com.isnotok.sleep.view.ResourceView"
             id="com.isnotok.sleep.view.ResourceView"
             name="Resource Viewer"
@@ -73,6 +74,35 @@
             </contentExtension>
          </includes>
       </viewerContentBinding>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="com.isnotok.sleep.handler.OpenPakHandler"
+            commandId="com.isnotok.sleep.handler.OpenPakHandler">
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="com.isnotok.sleep.handler.OpenPakHandler"
+            id="com.isnotok.sleep.command.OpenPak"
+            name="Open Pak">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="menu:org.eclipse.ui.main.menu">
+         <menu
+               label="File">
+            <command
+                  commandId="com.isnotok.sleep.command.OpenPak"
+                  label="Open Pak"
+                  style="push">
+            </command>
+         </menu>
+      </menuContribution>
    </extension>
 
 </plugin>
