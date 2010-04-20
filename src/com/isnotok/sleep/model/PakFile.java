@@ -135,4 +135,9 @@ public class PakFile {
 		
 		return null;
 	}
+
+	public Object[] getTypes() {
+		// TODO Auto-generated method stub
+		return mapByType.keySet().toArray();
+	}
 }

@@ -16,6 +16,6 @@ public class NavigatorView extends CommonNavigator {
 	protected Object getInitialInput()
 	{
 		this.getCommonViewer().refresh();
-		return new File("/");
+		return new File("/Users/Mint/Documents/RCP/com.isnotok.sleep");//"/");
 	}
 }
