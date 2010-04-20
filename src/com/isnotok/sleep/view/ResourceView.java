@@ -36,17 +36,9 @@ public class ResourceView extends ViewPart {
 		
 		try {
 			pakFile.load();
-			PakRecord record = pakFile.getTile("table nm");
-			
-			byte [] bytes = record.getData();
-			
-			//Format is RGBA, if we need alpha, we have to do this separately
-			byte [] pixelBytes = new byte[16*16*4];
-			System.arraycopy(bytes, 0, pixelBytes, 0, 16*16*4);
-			
-			//Format is RGBA
-			PaletteData palette = new PaletteData(0xFF000000, 0xFF0000, 0xFF00);
-		    imageData = new ImageData(16,16,32,palette, 1, pixelBytes);
+			PakRecord record = pakFile.getResource("tile", "table nm").get(0);
+			imageData = record.getImageData();
+		    
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

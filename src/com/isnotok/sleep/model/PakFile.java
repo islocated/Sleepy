@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
 
@@ -14,31 +16,16 @@ import com.isnotok.sleep.util.BytesUtil;
 
 public class PakFile {
 	private File file;
-	//private List<PakRecord> list;
-	private HashMap<String, HashMap<byte[], PakRecord>> map;
+	private HashMap<String, HashMap<String, List<PakRecord>>> mapByType;
 	
 	public PakFile(File file){
 		this.file = file;
 		
-		//list = new ArrayList<PakRecord>();
-		map = new HashMap<String, HashMap<byte[], PakRecord>>();
+		mapByType = new HashMap<String, HashMap<String, List<PakRecord>>>();
 	}
 	
-	public PakRecord getTile(String name){
-		HashMap<byte [], PakRecord> records = map.get("tile");
-		Collection<PakRecord> collection = records.values();
-		
-		Iterator<PakRecord> itr = collection.iterator();
-		
-		while(itr.hasNext()){
-			PakRecord record = itr.next();
-			if(record.getWordString().equals(name)){
-				return record;
-			}
-		}
-		
-		return null;
-		//return map.get("tile").values().toArray(new PakRecord[0])[5];
+	public List<PakRecord> getResource(String type, String name){
+		return mapByType.get(type).get(name);
 	}
 	
 	public static void main(String [] args){
@@ -77,14 +64,7 @@ public class PakFile {
 				
 				for(int i = 0; i < numChunks; i++){
 					PakRecord pakrecord = new PakRecord(uncompressedData, offset);
-					//list.add(pakrecord);
-					
-					HashMap<byte[], PakRecord> records = map.get(pakrecord.getType());
-					if(records == null){
-						records = new HashMap<byte[], PakRecord>();
-						map.put(pakrecord.getType(), records);
-					}
-					records.put(pakrecord.getId(), pakrecord);
+					addRecord(pakrecord);
 					
 					offset += pakrecord.getUsedBytes();
 				}
@@ -92,6 +72,27 @@ public class PakFile {
 				System.out.println("Successful");
 			}
 		}
+	}
+	
+	
+	private void addRecord(PakRecord pakrecord){
+		String type = pakrecord.getType();
+		String name = pakrecord.getWordString();
+		
+		//Get name map of records
+		HashMap<String, List<PakRecord>> nameMap = mapByType.get(type);
+		if(nameMap == null){
+			nameMap = new HashMap<String, List<PakRecord>>();
+			mapByType.put(type, nameMap);
+		}
+		
+		List<PakRecord> pakrecords = nameMap.get(name);
+		if(pakrecords == null){
+			pakrecords = new LinkedList<PakRecord>();
+			nameMap.put(name, pakrecords);
+		}
+		
+		pakrecords.add(pakrecord);
 	}
 
 	private static byte [] getUncompressedData(File file)

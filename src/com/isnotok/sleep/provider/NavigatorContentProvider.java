@@ -21,7 +21,7 @@ public class NavigatorContentProvider implements ITreeContentProvider {
 	
 	public Object[] getChildren(Object parentElement) {
 		File file = (File) parentElement;
-
+		
 		Object [] files = file.listFiles(fileFilter);
 		
 		return files == null ? new Object[0] : files;

@@ -1,5 +1,8 @@
 package com.isnotok.sleep.model;
 
+import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.PaletteData;
+
 import com.isnotok.sleep.util.BytesUtil;
 
 public class PakRecord {
@@ -8,6 +11,7 @@ public class PakRecord {
     private String wordString;
     private int length;
     private byte[] data;
+	private ImageData imageData;
     
     public PakRecord(byte[] bytes, int offset) {
 		// TODO Auto-generated constructor stub
@@ -49,5 +53,29 @@ public class PakRecord {
 
 	public int getLength() {
 		return length;
+	}
+	
+	public ImageData getImageData(){
+		if(imageData == null){
+			if(type.equals("tile"))
+				imageData = getTileImageData();
+		}
+		
+	    return imageData;
+	}
+	
+	//Maybe we need different objects
+	private ImageData getTileImageData(){
+		//Format is RGBA, if we need alpha, we have to do this separately
+		//byte [] pixelBytes = new byte[16*16*4];
+		//System.arraycopy(data, 0, pixelBytes, 0, 16*16*4);
+		
+		//Format is RGBA, data contains more bytes than necessary, but it is ok
+		//because ImageData won't complain with more bytes in data
+		//The last few bytes are for the tile name
+		
+		//ImageData is 16x16x4bytes, last byte is alpha so the masks have extra byte
+		PaletteData palette = new PaletteData(0xFF000000, 0xFF0000, 0xFF00);
+	    return new ImageData(16,16,32,palette, 1, data);
 	}
 }
