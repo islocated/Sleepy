@@ -16,10 +16,11 @@ public class Perspective implements IPerspectiveFactory {
 		layout.addView(NavigatorView.ID, IPageLayout.LEFT, 0.3f, layout.getEditorArea());
 		//layout.addView(NavigatorView.ID, IPageLayout.LEFT, 0.3f, layout.getEditorArea());
 		
-		IFolderLayout right = layout.createFolder("right", IPageLayout.RIGHT, 0.3f, layout.getEditorArea());
+		IFolderLayout right = layout.createFolder("right", IPageLayout.RIGHT, 0.7f, layout.getEditorArea());
 		
-		right.addView(ResourceView.ID);
+		//right.addView(ResourceView.ID);
+		right.addView(PakView.ID);
 		
-		layout.addView(PakView.ID, IPageLayout.RIGHT, 0.4f, layout.getEditorArea());
+		//layout.addView(PakView.ID, IPageLayout.RIGHT, 0.4f, layout.getEditorArea());
 	}
 }

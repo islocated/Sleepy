@@ -30,6 +30,9 @@ public class PakFile {
 	
 	public Object [] getResourceType(String type){
 		List<PakRecord> objs = new LinkedList<PakRecord>();
+		if(mapByType == null || !mapByType.containsKey(type))
+			return new Object[0];
+		
 		for(List<PakRecord> records : mapByType.get(type).values()){
 			objs.addAll(records);
 		}

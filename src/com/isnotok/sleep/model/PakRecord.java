@@ -3,6 +3,7 @@ package com.isnotok.sleep.model;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.PaletteData;
 
+import com.isnotok.sleep.IImageKeys;
 import com.isnotok.sleep.util.BytesUtil;
 
 public class PakRecord {
@@ -59,8 +60,20 @@ public class PakRecord {
 		if(imageData == null){
 			if(type.equals("tile"))
 				imageData = getTileImageData();
+			else if(type.equals("room"))
+				imageData = getTileImageData();
+			else if(type.equals("scene"))
+				imageData = getTileImageData();
+			else if(type.equals("object"))
+				imageData = getTileImageData();
+			else if(type.equals("sprite"))
+				imageData = getTileImageData();
+			else if(type.equals("music"))
+				imageData = getTileImageData();
 		}
-		
+		if(imageData == null){
+			return new ImageData(IImageKeys.FOLDER);
+		}
 	    return imageData;
 	}
 	
