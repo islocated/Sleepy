@@ -46,6 +46,12 @@
             name="Resource Viewer"
             restorable="true">
       </view>
+      <view
+            class="com.isnotok.sleep.view.PakView"
+            id="com.isnotok.sleep.view.PakView"
+            name="Pak View"
+            restorable="true">
+      </view>
    </extension>
    <extension
          point="org.eclipse.ui.navigator.navigatorContent">

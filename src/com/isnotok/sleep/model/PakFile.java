@@ -28,6 +28,15 @@ public class PakFile {
 		return mapByType.get(type).get(name);
 	}
 	
+	public Object [] getResourceType(String type){
+		List<PakRecord> objs = new LinkedList<PakRecord>();
+		for(List<PakRecord> records : mapByType.get(type).values()){
+			objs.addAll(records);
+		}
+		
+		return objs.toArray();
+	}
+	
 	public static void main(String [] args){
 		File file = new File(".", "input/4.pak");
 		PakFile pakFile = new PakFile(file);
