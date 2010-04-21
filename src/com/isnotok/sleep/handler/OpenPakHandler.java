@@ -20,6 +20,8 @@ import com.isnotok.sleep.view.ResourceView;
 
 public class OpenPakHandler implements IHandler {
 
+	private int count = 0;
+	
 	public void addHandlerListener(IHandlerListener handlerListener) {
 		// TODO Auto-generated method stub
 
@@ -48,8 +50,12 @@ public class OpenPakHandler implements IHandler {
 					File file = (File) obj;
 					if(file.getName().endsWith(".pak"));
 					//PakFile pakfile = new PakFile(file);
+					
+					//event.g
 					try {
-						page.showView(ResourceView.ID, "1", IWorkbenchPage.VIEW_ACTIVATE);
+						ResourceView rview = (ResourceView) page.showView(ResourceView.ID, file.getName(), IWorkbenchPage.VIEW_ACTIVATE | IWorkbenchPage.VIEW_CREATE);
+						rview.setFile(file);
+						
 					} catch (PartInitException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();

@@ -2,6 +2,10 @@ package com.isnotok.sleep.view;
 
 import java.io.File;
 
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.navigator.CommonNavigator;
 
 public class NavigatorView extends CommonNavigator {
@@ -17,5 +21,25 @@ public class NavigatorView extends CommonNavigator {
 	{
 		this.getCommonViewer().refresh();
 		return new File("/");
+	}
+	
+	@Override
+	protected void handleDoubleClick(DoubleClickEvent anEvent) {
+		if(anEvent.getSelection() instanceof StructuredSelection){
+			StructuredSelection selection = (StructuredSelection) anEvent.getSelection();
+			File file = (File) selection.getFirstElement();
+			
+			IHandlerService handlerService = (IHandlerService) getSite().getService(IHandlerService.class);
+			try {
+				handlerService.executeCommand("com.isnotok.sleep.command.OpenPak", null);
+			} catch (Exception ex) {
+				throw new RuntimeException("add.command not found");
+			}
+
+		}
+		else{
+			// TODO Auto-generated method stub
+			super.handleDoubleClick(anEvent);
+		}
 	}
 }
