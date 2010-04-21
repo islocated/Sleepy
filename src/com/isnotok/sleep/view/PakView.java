@@ -10,7 +10,11 @@ import org.eclipse.swt.graphics.ImageLoader;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.ui.ISelectionListener;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.nebula.widgets.gallery.DefaultGalleryGroupRenderer;
 import org.eclipse.nebula.widgets.gallery.DefaultGalleryItemRenderer;
 import org.eclipse.nebula.widgets.gallery.Gallery;
@@ -19,8 +23,10 @@ import org.eclipse.nebula.widgets.gallery.GalleryItem;
 import com.isnotok.sleep.model.PakFile;
 import com.isnotok.sleep.model.PakRecord;
 
-public class PakView extends ViewPart {
+public class PakView extends ViewPart implements ISelectionListener{
 	public final static String ID = "com.isnotok.sleep.view.PakView";
+	private PakFile pakfile;
+	private Gallery gallery;
 
 	public PakView() {
 		// TODO Auto-generated constructor stub
@@ -29,8 +35,11 @@ public class PakView extends ViewPart {
 	@Override
 	public void createPartControl(final Composite parent) {
 		// TODO Auto-generated method stub
+		
+		//Sets up the ability for this view to get selection events from all views
+		getSite().getPage().addSelectionListener(this);
 
-		final Gallery gallery = new Gallery(parent, SWT.V_SCROLL | SWT.VIRTUAL);
+		gallery = new Gallery(parent, SWT.V_SCROLL | SWT.VIRTUAL);
 		
 		DefaultGalleryGroupRenderer gr = new DefaultGalleryGroupRenderer();
 		gr.setMinMargin(2);
@@ -50,11 +59,11 @@ public class PakView extends ViewPart {
 		//final File f = new File("C:\\Images");
 		//final File[] contents = f.listFiles();
 
-		File file = new File("/Users/Mint/Documents/RCP/com.isnotok.sleep",
-				"input/4.pak");
-		final PakFile pakFile = new PakFile(file);
+		//File file = new File("/Users/Mint/Documents/RCP/com.isnotok.sleep",
+		//		"input/4.pak");
+		//final PakFile pakFile = new PakFile(file);
 
-		try {
+		/*try {
 			pakFile.load();
 			// PakRecord record = pakFile.getResource("tile",
 			// "table nm").get(0);
@@ -66,11 +75,15 @@ public class PakView extends ViewPart {
 		} catch (DataFormatException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 
 		// SetData is called when Gallery creates an item.
 		gallery.addListener(SWT.SetData, new Listener() {
 			public void handleEvent(Event event) {
+				if(pakfile == null){
+					return;
+				}
+				
 				GalleryItem item = (GalleryItem) event.item;
 				if (item.getParentItem() == null) {
 					// It's a group
@@ -79,31 +92,31 @@ public class PakView extends ViewPart {
 						// This is group 1
 						item.setText("tile");
 						item
-								.setItemCount(pakFile.getResourceType("tile").length);
+								.setItemCount(pakfile.getResourceType("tile").length);
 						item.setExpanded(true);
 					} else if (index == 1) {
 						// This is group 1
 						item.setText("room");
 						item
-								.setItemCount(pakFile.getResourceType("room").length);
+								.setItemCount(pakfile.getResourceType("room").length);
 						item.setExpanded(true);
 					} else if (index == 2) {
 						// This is group 1
 						item.setText("scene");
 						item
-								.setItemCount(pakFile.getResourceType("scene").length);
+								.setItemCount(pakfile.getResourceType("scene").length);
 						item.setExpanded(true);
 					} else if (index == 3) {
 						// This is group 1
 						item.setText("object");
 						item
-								.setItemCount(pakFile.getResourceType("object").length);
+								.setItemCount(pakfile.getResourceType("object").length);
 						item.setExpanded(true);
 					} else if (index == 4) {
 						// This is group 1
 						item.setText("sprite");
 						item
-								.setItemCount(pakFile.getResourceType("sprite").length);
+								.setItemCount(pakfile.getResourceType("sprite").length);
 						item.setExpanded(true);
 					} else {
 						// Should never be used
@@ -121,7 +134,7 @@ public class PakView extends ViewPart {
 					//		.getText());
 					
 					
-					PakRecord pakrecord = (PakRecord) pakFile
+					PakRecord pakrecord = (PakRecord) pakfile
 							.getResourceType(parentItem.getText())[index];
 					
 					item.setText(pakrecord.getWordString());
@@ -134,7 +147,7 @@ public class PakView extends ViewPart {
 		});
 
 		// Create one group (will call SetData)
-		gallery.setItemCount(5);
+		//gallery.setItemCount(5);
 
 	}
 
@@ -142,6 +155,29 @@ public class PakView extends ViewPart {
 	public void setFocus() {
 		// TODO Auto-generated method stub
 
+	}
+	
+	//ISelectionListner interface
+	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
+		// TODO Auto-generated method stub
+		if(selection instanceof IStructuredSelection){
+			IStructuredSelection sel = (IStructuredSelection) selection;
+			Object element = sel.getFirstElement();
+			if(element instanceof File){
+				File file = (File) element;
+				pakfile = new PakFile(file);
+				try {
+					pakfile.load();
+					gallery.setItemCount(5);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (DataFormatException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 
 }
