@@ -41,10 +41,10 @@ public class PakView extends ViewPart implements ISelectionListener{
 
 		gallery = new Gallery(parent, SWT.V_SCROLL | SWT.VIRTUAL);
 		
-		DefaultGalleryGroupRenderer gr = new DefaultGalleryGroupRenderer();
+		final DefaultGalleryGroupRenderer gr = new DefaultGalleryGroupRenderer();
 		gr.setMinMargin(2);
-		gr.setItemHeight(56);
-		gr.setItemWidth(72);
+		gr.setItemHeight(64);
+		gr.setItemWidth(64);
 		gr.setAutoMargin(true);
 		gallery.setGroupRenderer(gr);
 
@@ -93,18 +93,24 @@ public class PakView extends ViewPart implements ISelectionListener{
 						item.setText("tile");
 						item
 								.setItemCount(pakfile.getResourceType("tile").length);
+						//gr.setItemWidth(64);
+						//gr.setItemHeight(64);
 						item.setExpanded(true);
 					} else if (index == 1) {
 						// This is group 1
 						item.setText("sprite");
 						item
 								.setItemCount(pakfile.getResourceType("sprite").length);
+						//gr.setItemWidth(64);
+						//gr.setItemHeight(64);
 						item.setExpanded(true);
 					} else if (index == 2) {
 						// This is group 1
-						item.setText("scene");
+						item.setText("room");
 						item
-								.setItemCount(pakfile.getResourceType("scene").length);
+								.setItemCount(pakfile.getResourceType("room").length);
+						gr.setItemWidth(256);
+						gr.setItemHeight(256);
 						item.setExpanded(true);
 					} else if (index == 3) {
 						// This is group 1
@@ -169,7 +175,7 @@ public class PakView extends ViewPart implements ISelectionListener{
 				try {
 					pakfile.load();
 					gallery.clearAll();
-					gallery.setItemCount(2);
+					gallery.setItemCount(3);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

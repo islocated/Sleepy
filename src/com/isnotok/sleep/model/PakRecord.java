@@ -8,18 +8,22 @@ import com.isnotok.sleep.util.BytesUtil;
 
 public class PakRecord {
 	private String type;
-    private byte[] id;
+    private UniqueId id;
+	//private byte[] id;
     private String wordString;
     private int length;
     private byte[] data;
 	private ImageData imageData;
+	private PakFile parent;
     
-    public PakRecord(byte[] bytes, int offset) {
+    public PakRecord(PakFile parent, byte[] bytes, int offset) {
+    	this.parent = parent;
+    	
 		// TODO Auto-generated constructor stub
 		type = BytesUtil.readString(bytes, offset);
 		offset += type.length() + 1;
 		
-		id = BytesUtil.readBytes(bytes, offset, 6);
+		id = new UniqueId(BytesUtil.readBytes(bytes, offset, 6));
 		offset += 6;
 		
 		wordString = BytesUtil.readString(bytes, offset);
@@ -40,7 +44,7 @@ public class PakRecord {
 		return type;
 	}
 
-	public byte[] getId() {
+	public UniqueId getId() {
 		return id;
 	}
 
@@ -61,7 +65,7 @@ public class PakRecord {
 			if(type.equals("tile"))
 				imageData = getTileImageData();
 			else if(type.equals("room"))
-				imageData = getTileImageData();
+				imageData = getRoomImageData();
 			else if(type.equals("scene"))
 				imageData = getTileImageData();
 			else if(type.equals("object"))
@@ -91,4 +95,58 @@ public class PakRecord {
 		PaletteData palette = new PaletteData(0xFF000000, 0xFF0000, 0xFF00);
 	    return new ImageData(16,16,32,palette, 1, data);
 	}
+	
+	private ImageData getRoomImageData(){
+		PakRecord [][] tiles = new PakRecord[13][13];
+		
+		for(int y = 0; y < 13; y++){
+			for(int x = 0; x < 13; x++){
+				int index = (y * 13 + x) * UniqueId.MAX_DIGITS;
+				byte [] b = new byte[UniqueId.MAX_DIGITS];
+				System.arraycopy(data, index, b, 0, UniqueId.MAX_DIGITS);
+				
+				tiles[x][y] = parent.getResourceById(new UniqueId(b));
+			}
+		}
+		
+		PaletteData palette = new PaletteData(0xFF000000, 0xFF0000, 0xFF00);
+		
+		byte [] bytes = new byte[13*16*13*16*4];
+		
+		for(int i = 0; i < 13*16*13*16*4; i++){
+			bytes[i] = (byte) 0xFF;
+		}
+		
+		
+		for(int y = 0; y < 13; y++){
+			for(int x = 0; x < 13; x++){
+				//Copy tiles
+				//Copy tile[x][y] to bytes location
+				PakRecord tile = tiles[x][y];
+				
+				//Index is for all the pixels in here
+				int index = 0;
+				for(int j = 0; j < 16; j++){
+					for(int i = 0; i < 16; i++){
+						for(int k = 0; k < 4; k++){
+							//If X = 5, Y = 1
+							
+							int bindex = k + i*4 + x*(16*4) + j*16*13*4 + y*16*13*13*4;//(i+x)*16 + (y+j)*4 + k;
+							//System.out.println(tile.getData()[index]);
+							bytes[bindex] = tile.getData()[index++];
+						}
+					}
+				}
+			}
+		}
+		
+		return new ImageData(13*16, 13*16, 32, palette, 1, bytes);
+	}
+
+	/*
+	private void copyTile(PakRecord pakRecord, int x, int y, byte[] bytes) {
+		// TODO Auto-generated method stub
+		byte [] b = new byte[13*13*16*16*4];
+		
+	}*/
 }

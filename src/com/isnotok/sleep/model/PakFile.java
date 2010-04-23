@@ -17,15 +17,21 @@ import com.isnotok.sleep.util.BytesUtil;
 public class PakFile {
 	private File file;
 	private HashMap<String, HashMap<String, List<PakRecord>>> mapByType;
+	private HashMap<UniqueId, PakRecord> idMap;
 	
 	public PakFile(File file){
 		this.file = file;
 		
 		mapByType = new HashMap<String, HashMap<String, List<PakRecord>>>();
+		idMap = new HashMap<UniqueId, PakRecord>();
 	}
 	
 	public List<PakRecord> getResource(String type, String name){
 		return mapByType.get(type).get(name);
+	}
+	
+	public PakRecord getResourceById(UniqueId id){
+		return idMap.get(id);
 	}
 	
 	public Object [] getResourceType(String type){
@@ -75,7 +81,7 @@ public class PakFile {
 				//while(offset < uncompressedData.length){
 				
 				for(int i = 0; i < numChunks; i++){
-					PakRecord pakrecord = new PakRecord(uncompressedData, offset);
+					PakRecord pakrecord = new PakRecord(this, uncompressedData, offset);
 					addRecord(pakrecord);
 					
 					offset += pakrecord.getUsedBytes();
@@ -105,6 +111,9 @@ public class PakFile {
 		}
 		
 		pakrecords.add(pakrecord);
+		
+		//Also add by id
+		idMap.put(pakrecord.getId(), pakrecord);
 	}
 
 	private static byte [] getUncompressedData(File file)
