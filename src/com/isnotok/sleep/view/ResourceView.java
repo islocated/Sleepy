@@ -53,6 +53,7 @@ public class ResourceView extends ViewPart {
 		*/
 	}
 	
+	/*
 	public void setFile(File file){
 		this.file = file;
 		pakfile = new PakFile(file);
@@ -69,6 +70,7 @@ public class ResourceView extends ViewPart {
 			e.printStackTrace();
 		}
 	}
+	*/
 
 	@Override
 	public void createPartControl(Composite parent) {
@@ -91,7 +93,8 @@ public class ResourceView extends ViewPart {
 			//gc.drawImage(image, 0, 0);
 		else{
 			if(pakfile != null)
-				image = new Image(getSite().getShell().getDisplay(), pakfile.getResource("tile", "table nm").get(0).getImageData());
+				;
+				//image = new Image(getSite().getShell().getDisplay(), pakfile.getResource("tile", "table nm").get(0).getImageData());
 		}
 	}
 

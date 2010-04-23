@@ -96,9 +96,9 @@ public class PakView extends ViewPart implements ISelectionListener{
 						item.setExpanded(true);
 					} else if (index == 1) {
 						// This is group 1
-						item.setText("room");
+						item.setText("sprite");
 						item
-								.setItemCount(pakfile.getResourceType("room").length);
+								.setItemCount(pakfile.getResourceType("sprite").length);
 						item.setExpanded(true);
 					} else if (index == 2) {
 						// This is group 1
@@ -114,9 +114,9 @@ public class PakView extends ViewPart implements ISelectionListener{
 						item.setExpanded(true);
 					} else if (index == 4) {
 						// This is group 1
-						item.setText("sprite");
+						item.setText("room");
 						item
-								.setItemCount(pakfile.getResourceType("sprite").length);
+								.setItemCount(pakfile.getResourceType("room").length);
 						item.setExpanded(true);
 					} else {
 						// Should never be used
@@ -168,7 +168,8 @@ public class PakView extends ViewPart implements ISelectionListener{
 				pakfile = new PakFile(file);
 				try {
 					pakfile.load();
-					gallery.setItemCount(5);
+					gallery.clearAll();
+					gallery.setItemCount(2);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

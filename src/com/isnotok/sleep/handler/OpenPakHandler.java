@@ -54,7 +54,7 @@ public class OpenPakHandler implements IHandler {
 					//event.g
 					try {
 						ResourceView rview = (ResourceView) page.showView(ResourceView.ID, file.getName(), IWorkbenchPage.VIEW_ACTIVATE | IWorkbenchPage.VIEW_CREATE);
-						rview.setFile(file);
+						//rview.setFile(file);
 						
 					} catch (PartInitException e) {
 						// TODO Auto-generated catch block
