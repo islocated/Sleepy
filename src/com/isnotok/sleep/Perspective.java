@@ -7,6 +7,7 @@ import org.eclipse.ui.IPerspectiveFactory;
 import com.isnotok.sleep.view.NavigatorView;
 import com.isnotok.sleep.view.PakView;
 import com.isnotok.sleep.view.ResourceView;
+import com.isnotok.sleep.view.RoomView;
 
 public class Perspective implements IPerspectiveFactory {
 
@@ -19,7 +20,12 @@ public class Perspective implements IPerspectiveFactory {
 		IFolderLayout right = layout.createFolder("right", IPageLayout.RIGHT, 0.7f, layout.getEditorArea());
 		
 		//right.addView(ResourceView.ID);
+		
 		right.addView(PakView.ID);
+		
+		IFolderLayout bottomright = layout.createFolder("bottomright", IPageLayout.BOTTOM, 0.6f, "right");
+		
+		bottomright.addView(RoomView.ID);
 		
 		//layout.addView(PakView.ID, IPageLayout.RIGHT, 0.4f, layout.getEditorArea());
 	}

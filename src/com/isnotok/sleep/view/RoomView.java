@@ -24,12 +24,12 @@ import com.isnotok.sleep.model.PakFile;
 import com.isnotok.sleep.model.PakRecord;
 import com.isnotok.sleep.model.ResourceManager;
 
-public class PakView extends ViewPart implements ISelectionListener{
-	public final static String ID = "com.isnotok.sleep.view.PakView";
+public class RoomView extends ViewPart implements ISelectionListener{
+	public final static String ID = "com.isnotok.sleep.view.RoomView";
 	private PakFile pakfile;
 	private Gallery gallery;
 
-	public PakView() {
+	public RoomView() {
 		// TODO Auto-generated constructor stub
 	}
 
@@ -44,8 +44,8 @@ public class PakView extends ViewPart implements ISelectionListener{
 		
 		final DefaultGalleryGroupRenderer gr = new DefaultGalleryGroupRenderer();
 		gr.setMinMargin(2);
-		gr.setItemHeight(64);
-		gr.setItemWidth(64);
+		gr.setItemHeight(128);
+		gr.setItemWidth(128);
 		gr.setAutoMargin(true);
 		gallery.setGroupRenderer(gr);
 		gallery.setAntialias(SWT.OFF);
@@ -69,41 +69,14 @@ public class PakView extends ViewPart implements ISelectionListener{
 					int index = gallery.indexOf(item);
 					if (index == 0) {
 						// This is group 1
-						item.setText("tile");
-						item
-								.setItemCount(pakfile.getResourceType("tile").length);
-						//gr.setItemWidth(64);
-						//gr.setItemHeight(64);
-						item.setExpanded(true);
-					} else if (index == 1) {
-						// This is group 1
-						item.setText("sprite");
-						item
-								.setItemCount(pakfile.getResourceType("sprite").length);
-						//gr.setItemWidth(64);
-						//gr.setItemHeight(64);
-						item.setExpanded(true);
-					} else if (index == 2) {
-						// This is group 1
 						item.setText("room");
 						item
 								.setItemCount(pakfile.getResourceType("room").length);
-						//gr.setItemWidth(256);
-						//gr.setItemHeight(256);
+						//gr.setItemWidth(64);
+						//gr.setItemHeight(64);
 						item.setExpanded(true);
-					} else if (index == 3) {
-						// This is group 1
-						item.setText("object");
-						item
-								.setItemCount(pakfile.getResourceType("object").length);
-						item.setExpanded(true);
-					} else if (index == 4) {
-						// This is group 1
-						item.setText("room");
-						item
-								.setItemCount(pakfile.getResourceType("room").length);
-						item.setExpanded(true);
-					} else {
+					}
+					else {
 						// Should never be used
 						item.setItemCount(0);
 					}
@@ -113,14 +86,7 @@ public class PakView extends ViewPart implements ISelectionListener{
 
 					// Get item index
 					int index = parentItem.indexOf(item);
-
-					// Load corresponding items
-					//Object[] objs = pakFile.getResourceType(parentItem
-					//		.getText());
-					
-					
-					PakRecord pakrecord = (PakRecord) pakfile
-							.getResourceType(parentItem.getText())[index];
+					PakRecord pakrecord = (PakRecord) pakfile.getResourceType(parentItem.getText())[index];
 					
 					item.setText(pakrecord.getWordString());
 
@@ -130,16 +96,12 @@ public class PakView extends ViewPart implements ISelectionListener{
 				}
 			}
 		});
-
-		// Create one group (will call SetData)
-		//gallery.setItemCount(5);
-
 	}
 
 	@Override
 	public void setFocus() {
 		// TODO Auto-generated method stub
-
+		gallery.setFocus();
 	}
 	
 	//ISelectionListner interface
@@ -153,7 +115,7 @@ public class PakView extends ViewPart implements ISelectionListener{
 				if(file.getName().endsWith(".pak")){
 					pakfile = ResourceManager.getInstance().getPakFile(file);
 					gallery.clearAll();
-					gallery.setItemCount(2);
+					gallery.setItemCount(1);
 				}
 			}
 		}
