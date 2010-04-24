@@ -2,10 +2,6 @@ package com.isnotok.sleep.view;
 
 import java.io.File;
 
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.navigator.CommonNavigator;
 
 public class NavigatorView extends CommonNavigator {
@@ -23,6 +19,7 @@ public class NavigatorView extends CommonNavigator {
 		return new File("/");
 	}
 	
+	/*
 	@Override
 	protected void handleDoubleClick(DoubleClickEvent anEvent) {
 		if(anEvent.getSelection() instanceof StructuredSelection){
@@ -42,4 +39,5 @@ public class NavigatorView extends CommonNavigator {
 			super.handleDoubleClick(anEvent);
 		}
 	}
+	*/
 }

@@ -113,11 +113,6 @@ public class PakRecord {
 		
 		byte [] bytes = new byte[13*16*13*16*4];
 		
-		for(int i = 0; i < 13*16*13*16*4; i++){
-			bytes[i] = (byte) 0xFF;
-		}
-		
-		
 		for(int y = 0; y < 13; y++){
 			for(int x = 0; x < 13; x++){
 				//Copy tiles
@@ -142,11 +137,4 @@ public class PakRecord {
 		
 		return new ImageData(13*16, 13*16, 32, palette, 1, bytes);
 	}
-
-	/*
-	private void copyTile(PakRecord pakRecord, int x, int y, byte[] bytes) {
-		// TODO Auto-generated method stub
-		byte [] b = new byte[13*13*16*16*4];
-		
-	}*/
 }

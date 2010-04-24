@@ -22,6 +22,7 @@ import org.eclipse.nebula.widgets.gallery.GalleryItem;
 
 import com.isnotok.sleep.model.PakFile;
 import com.isnotok.sleep.model.PakRecord;
+import com.isnotok.sleep.model.ResourceManager;
 
 public class PakView extends ViewPart implements ISelectionListener{
 	public final static String ID = "com.isnotok.sleep.view.PakView";
@@ -47,35 +48,13 @@ public class PakView extends ViewPart implements ISelectionListener{
 		gr.setItemWidth(64);
 		gr.setAutoMargin(true);
 		gallery.setGroupRenderer(gr);
+		gallery.setAntialias(SWT.OFF);
 
 		
 		DefaultGalleryItemRenderer ir = new DefaultGalleryItemRenderer();
 		ir.setShowLabels(true);
+		ir.setDropShadows(true);
 		gallery.setItemRenderer(ir);
-
-		
-			
-		// Open Directory
-		//final File f = new File("C:\\Images");
-		//final File[] contents = f.listFiles();
-
-		//File file = new File("/Users/Mint/Documents/RCP/com.isnotok.sleep",
-		//		"input/4.pak");
-		//final PakFile pakFile = new PakFile(file);
-
-		/*try {
-			pakFile.load();
-			// PakRecord record = pakFile.getResource("tile",
-			// "table nm").get(0);
-			// imageData = record.getImageData();
-
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (DataFormatException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
 
 		// SetData is called when Gallery creates an item.
 		gallery.addListener(SWT.SetData, new Listener() {
@@ -109,8 +88,8 @@ public class PakView extends ViewPart implements ISelectionListener{
 						item.setText("room");
 						item
 								.setItemCount(pakfile.getResourceType("room").length);
-						gr.setItemWidth(256);
-						gr.setItemHeight(256);
+						//gr.setItemWidth(256);
+						//gr.setItemHeight(256);
 						item.setExpanded(true);
 					} else if (index == 3) {
 						// This is group 1
@@ -171,18 +150,9 @@ public class PakView extends ViewPart implements ISelectionListener{
 			Object element = sel.getFirstElement();
 			if(element instanceof File){
 				File file = (File) element;
-				pakfile = new PakFile(file);
-				try {
-					pakfile.load();
-					gallery.clearAll();
-					gallery.setItemCount(3);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (DataFormatException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				pakfile = ResourceManager.getInstance().getPakFile(file);
+				gallery.clearAll();
+				gallery.setItemCount(3);
 			}
 		}
 	}

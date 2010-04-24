@@ -4,9 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.zip.DataFormatException;
@@ -24,6 +22,10 @@ public class PakFile {
 		
 		mapByType = new HashMap<String, HashMap<String, List<PakRecord>>>();
 		idMap = new HashMap<UniqueId, PakRecord>();
+	}
+	
+	public File getFile(){
+		return file;
 	}
 	
 	public List<PakRecord> getResource(String type, String name){
@@ -49,21 +51,22 @@ public class PakFile {
 	public static void main(String [] args){
 		File file = new File(".", "input/4.pak");
 		PakFile pakFile = new PakFile(file);
-		
+		pakFile.load();
+	}
+	
+	public void load(){
 		try {
-			pakFile.load();
-		}
-		catch (IOException e) {
+			loadHelper();
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		catch (DataFormatException e) {
+		} catch (DataFormatException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
-	public void load() throws IOException, DataFormatException{
+	public void loadHelper() throws IOException, DataFormatException{
 		if(file.getName().endsWith(".pak")){    
             // a pack file
 			byte uncompressedData[] = getUncompressedData(file);
