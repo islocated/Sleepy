@@ -73,7 +73,7 @@ public class PakRecord {
 			else if(type.equals("sprite"))
 				imageData = getTileImageData();
 			else if(type.equals("music"))
-				imageData = getTileImageData();
+				imageData = getMusicImageData();
 			else if(type.equals("scale"))
 				imageData = getScaleImageData();
 		}
@@ -83,6 +83,11 @@ public class PakRecord {
 	    return imageData;
 	}
 	
+	private ImageData getMusicImageData() {
+		PaletteData palette = new PaletteData(0x1, 0x1, 0x1);
+		return new ImageData(16, 16, 8, palette, 1, data);
+	}
+
 	private ImageData getScaleImageData() {
 		//PaletteData palette = new PaletteData(0xFF0000, 0xFF00, 0xFF);
 		

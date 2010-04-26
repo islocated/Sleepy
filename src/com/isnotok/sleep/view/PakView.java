@@ -98,15 +98,22 @@ public class PakView extends ViewPart implements ISelectionListener{
 						item.setExpanded(true);
 					} else if (index == 3) {
 						// This is group 1
-						item.setText("object");
+						item.setText("music");
 						item
-								.setItemCount(pakfile.getResourceType("object").length);
+								.setItemCount(pakfile.getResourceType("music").length);
 						item.setExpanded(true);
 					} else if (index == 4) {
 						// This is group 1
 						item.setText("room");
 						item
 								.setItemCount(pakfile.getResourceType("room").length);
+						item.setExpanded(true);
+					} 
+					else if (index == 5) {
+						// This is group 1
+						item.setText("object");
+						item
+								.setItemCount(pakfile.getResourceType("object").length);
 						item.setExpanded(true);
 					} else {
 						// Should never be used
@@ -158,7 +165,7 @@ public class PakView extends ViewPart implements ISelectionListener{
 				if(file.getName().endsWith(".pak")){
 					pakfile = ResourceManager.getInstance().getPakFile(file);
 					gallery.clearAll();
-					gallery.setItemCount(3);
+					gallery.setItemCount(4);
 				}
 			}
 		}

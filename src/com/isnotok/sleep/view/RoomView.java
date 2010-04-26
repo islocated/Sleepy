@@ -86,6 +86,15 @@ public class RoomView extends ViewPart implements ISelectionListener{
 						//gr.setItemHeight(64);
 						item.setExpanded(true);
 					}
+					else if (index == 2) {
+						// This is group 1
+						item.setText("music");
+						item
+								.setItemCount(pakfile.getResourceType("music").length);
+						//gr.setItemWidth(64);
+						//gr.setItemHeight(64);
+						item.setExpanded(true);
+					}
 					else {
 						// Should never be used
 						item.setItemCount(0);
@@ -125,7 +134,7 @@ public class RoomView extends ViewPart implements ISelectionListener{
 				if(file.getName().endsWith(".pak")){
 					pakfile = ResourceManager.getInstance().getPakFile(file);
 					gallery.clearAll();
-					gallery.setItemCount(2);
+					gallery.setItemCount(3);
 				}
 			}
 		}
