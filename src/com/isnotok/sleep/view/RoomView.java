@@ -54,6 +54,7 @@ public class RoomView extends ViewPart implements ISelectionListener{
 		DefaultGalleryItemRenderer ir = new DefaultGalleryItemRenderer();
 		ir.setShowLabels(true);
 		ir.setDropShadows(true);
+		ir.setDropShadowsSize(2);
 		gallery.setItemRenderer(ir);
 
 		// SetData is called when Gallery creates an item.
@@ -72,6 +73,15 @@ public class RoomView extends ViewPart implements ISelectionListener{
 						item.setText("room");
 						item
 								.setItemCount(pakfile.getResourceType("room").length);
+						//gr.setItemWidth(64);
+						//gr.setItemHeight(64);
+						item.setExpanded(true);
+					}
+					else if (index == 1) {
+						// This is group 1
+						item.setText("scale");
+						item
+								.setItemCount(pakfile.getResourceType("scale").length);
 						//gr.setItemWidth(64);
 						//gr.setItemHeight(64);
 						item.setExpanded(true);
@@ -115,7 +125,7 @@ public class RoomView extends ViewPart implements ISelectionListener{
 				if(file.getName().endsWith(".pak")){
 					pakfile = ResourceManager.getInstance().getPakFile(file);
 					gallery.clearAll();
-					gallery.setItemCount(1);
+					gallery.setItemCount(2);
 				}
 			}
 		}

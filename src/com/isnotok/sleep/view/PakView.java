@@ -8,10 +8,12 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageLoader;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.internal.WorkbenchColors;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -47,6 +49,8 @@ public class PakView extends ViewPart implements ISelectionListener{
 		gr.setItemHeight(64);
 		gr.setItemWidth(64);
 		gr.setAutoMargin(true);
+		//gr.setTitleBackground(Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
+		///gr.setTitleBackground(Display.getDefault().getSystemColor(SWT.COLOR_TITLE_BACKGROUND));
 		gallery.setGroupRenderer(gr);
 		gallery.setAntialias(SWT.OFF);
 
@@ -54,6 +58,7 @@ public class PakView extends ViewPart implements ISelectionListener{
 		DefaultGalleryItemRenderer ir = new DefaultGalleryItemRenderer();
 		ir.setShowLabels(true);
 		ir.setDropShadows(true);
+		ir.setDropShadowsSize(2);
 		gallery.setItemRenderer(ir);
 
 		// SetData is called when Gallery creates an item.
@@ -85,9 +90,9 @@ public class PakView extends ViewPart implements ISelectionListener{
 						item.setExpanded(true);
 					} else if (index == 2) {
 						// This is group 1
-						item.setText("room");
+						item.setText("scale");
 						item
-								.setItemCount(pakfile.getResourceType("room").length);
+								.setItemCount(pakfile.getResourceType("scale").length);
 						//gr.setItemWidth(256);
 						//gr.setItemHeight(256);
 						item.setExpanded(true);
@@ -153,7 +158,7 @@ public class PakView extends ViewPart implements ISelectionListener{
 				if(file.getName().endsWith(".pak")){
 					pakfile = ResourceManager.getInstance().getPakFile(file);
 					gallery.clearAll();
-					gallery.setItemCount(2);
+					gallery.setItemCount(3);
 				}
 			}
 		}

@@ -74,6 +74,8 @@ public class PakRecord {
 				imageData = getTileImageData();
 			else if(type.equals("music"))
 				imageData = getTileImageData();
+			else if(type.equals("scale"))
+				imageData = getScaleImageData();
 		}
 		if(imageData == null){
 			return new ImageData(IImageKeys.FOLDER);
@@ -81,6 +83,25 @@ public class PakRecord {
 	    return imageData;
 	}
 	
+	private ImageData getScaleImageData() {
+		//PaletteData palette = new PaletteData(0xFF0000, 0xFF00, 0xFF);
+		
+		PaletteData palette = new PaletteData(0xFF, 0xFF, 0xFF);
+		
+		byte [] imgData = new byte[16*16];
+		
+		//12 halftones
+		for(int i = 0; i < 12; i++){
+			//Find the diagonal, go from bottom left to top right
+			int index = ((12 - i - 1) + 2) * 16 + i + 2; //add 2 to shift picture over and down by 2
+			imgData[index] = data[i] == 1 ? (byte) 0xFF : 0;
+			//imgData[index++] = data[i] == 1 ? (byte) 0xFF : 0;
+			//imgData[index++] = data[i] == 1 ? (byte) 0xFF : 0;
+		}
+		
+		return new ImageData(16, 16, 8, palette, 1, imgData);
+	}
+
 	//Maybe we need different objects
 	private ImageData getTileImageData(){
 		//Format is RGBA, if we need alpha, we have to do this separately
