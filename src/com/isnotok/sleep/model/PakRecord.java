@@ -85,7 +85,13 @@ public class PakRecord {
 	
 	private ImageData getMusicImageData() {
 		PaletteData palette = new PaletteData(0x1, 0x1, 0x1);
-		return new ImageData(16, 16, 8, palette, 1, data);
+		
+		byte [] imgData = new byte[16*16];
+		for(int i = 0; i < 16*16; i++){
+			imgData[i] = data[16*16-i-1];
+		}
+		
+		return new ImageData(16, 16, 8, palette, 1, imgData);
 	}
 
 	private ImageData getScaleImageData() {

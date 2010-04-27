@@ -58,6 +58,12 @@
             name="Room View"
             restorable="true">
       </view>
+      <view
+            class="com.isnotok.sleep.view.MagnifyView"
+            id="com.isnotok.sleep.view.MagnifyView"
+            name="Magnify View"
+            restorable="true">
+      </view>
    </extension>
    <extension
          point="org.eclipse.ui.navigator.navigatorContent">
