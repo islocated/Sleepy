@@ -1,42 +1,36 @@
 package com.isnotok.sleep.view;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.zip.DataFormatException;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.ImageLoader;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Slider;
-import org.eclipse.ui.ISelectionListener;
-import org.eclipse.ui.ISharedImages;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.part.ViewPart;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.nebula.widgets.gallery.DefaultGalleryGroupRenderer;
 import org.eclipse.nebula.widgets.gallery.DefaultGalleryItemRenderer;
 import org.eclipse.nebula.widgets.gallery.Gallery;
 import org.eclipse.nebula.widgets.gallery.GalleryItem;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Slider;
+import org.eclipse.ui.ISelectionListener;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.part.ViewPart;
 
 import com.isnotok.sleep.model.PakFile;
 import com.isnotok.sleep.model.PakRecord;
 import com.isnotok.sleep.model.ResourceManager;
 
-//Implemtn ISelectionProvider if we want this view to return the zoom
+//Implement ISelectionProvider if we want this view to return the zoom
 public class MagnifyView extends ViewPart implements ISelectionListener{
 	public final static String ID = "com.isnotok.sleep.view.MagnifyView";
+	private static final String[] TYPES = {"tile", "sprite", "room", "music", "object", "scale"};;
+	
 	private PakFile pakfile;
 	private Gallery gallery;
 	private Slider slider;
@@ -90,33 +84,12 @@ public class MagnifyView extends ViewPart implements ISelectionListener{
 				if (item.getParentItem() == null) {
 					// It's a group
 					int index = gallery.indexOf(item);
-					if (index == 0) {
+					if (index >= 0 && index < TYPES.length) {
 						// This is group 1
-						item.setText("room");
-						item
-								.setItemCount(pakfile.getResourceType("room").length);
-						//gr.setItemWidth(64);
-						//gr.setItemHeight(64);
+						item.setText(TYPES[index]);
+						item.setItemCount(pakfile.getResourceType(TYPES[index]).length);
 						item.setExpanded(true);
-					}
-					else if (index == 1) {
-						// This is group 1
-						item.setText("scale");
-						item
-								.setItemCount(pakfile.getResourceType("scale").length);
-						//gr.setItemWidth(64);
-						//gr.setItemHeight(64);
-						item.setExpanded(true);
-					}
-					else if (index == 2) {
-						// This is group 1
-						item.setText("music");
-						item
-								.setItemCount(pakfile.getResourceType("music").length);
-						//gr.setItemWidth(64);
-						//gr.setItemHeight(64);
-						item.setExpanded(true);
-					}
+					} 
 					else {
 						// Should never be used
 						item.setItemCount(0);
@@ -138,21 +111,8 @@ public class MagnifyView extends ViewPart implements ISelectionListener{
 			}
 		});
 		
-		/*
-		Image img = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_ADD);
-		Label label = new Label(canvas, SWT.BORDER);
-		label.setImage(img);
-		gridData = new GridData(SWT.LEFT, SWT.CENTER, true, false);
-		//gridData.widthHint = 8;
-		label.setLayoutData(gridData);
-		*/
-		
 		slider = new Slider(canvas, SWT.HORIZONTAL);
 		slider.setValues(2, 2, 5, 1, 1, 1);
-		
-		//slider.setMinimum(32);
-		//slider.setMaximum(256);
-		//slider.setIncrement(32);
 		
 		gridData = new GridData(SWT.FILL, SWT.CENTER, true, false);
 		slider.setLayoutData(gridData);
@@ -170,9 +130,6 @@ public class MagnifyView extends ViewPart implements ISelectionListener{
 				
 			}
 		});
-		
-		//getSite().setSelectionProvider(this);
-	    //getSite().setSelectionProvider(slider);
 	}
 
 	@Override

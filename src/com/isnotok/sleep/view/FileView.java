@@ -1,41 +1,25 @@
 package com.isnotok.sleep.view;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.zip.DataFormatException;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.ImageLoader;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Slider;
-import org.eclipse.ui.ISelectionListener;
-import org.eclipse.ui.ISharedImages;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.part.ViewPart;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.nebula.widgets.gallery.DefaultGalleryGroupRenderer;
 import org.eclipse.nebula.widgets.gallery.DefaultGalleryItemRenderer;
 import org.eclipse.nebula.widgets.gallery.Gallery;
 import org.eclipse.nebula.widgets.gallery.GalleryItem;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.ui.ISelectionListener;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.part.ViewPart;
 
-import com.isnotok.sleep.model.PakFile;
-import com.isnotok.sleep.model.PakRecord;
-import com.isnotok.sleep.model.ResourceManager;
 import com.isnotok.sleep.model.TileResource;
 
-//Implemtn ISelectionProvider if we want this view to return the zoom
+//Implement ISelectionProvider if we want this view to return the zoom
 public class FileView extends ViewPart implements ISelectionListener{
 	public final static String ID = "com.isnotok.sleep.view.FileView";
 	private Gallery gallery;
@@ -82,8 +66,6 @@ public class FileView extends ViewPart implements ISelectionListener{
 						// This is group 1
 						item.setText("tile");
 						item.setItemCount(1);
-						//gr.setItemWidth(64);
-						//gr.setItemHeight(64);
 						item.setExpanded(true);
 					}
 					else {

@@ -1,26 +1,21 @@
 package com.isnotok.sleep.view;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.zip.DataFormatException;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.ImageLoader;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.ui.ISelectionListener;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.internal.WorkbenchColors;
-import org.eclipse.ui.part.ViewPart;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.nebula.widgets.gallery.DefaultGalleryGroupRenderer;
 import org.eclipse.nebula.widgets.gallery.DefaultGalleryItemRenderer;
 import org.eclipse.nebula.widgets.gallery.Gallery;
 import org.eclipse.nebula.widgets.gallery.GalleryItem;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.ui.ISelectionListener;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.part.ViewPart;
 
 import com.isnotok.sleep.model.PakFile;
 import com.isnotok.sleep.model.PakRecord;
@@ -28,6 +23,9 @@ import com.isnotok.sleep.model.ResourceManager;
 
 public class PakView extends ViewPart implements ISelectionListener{
 	public final static String ID = "com.isnotok.sleep.view.PakView";
+	
+	private static final String[] TYPES = {"tile", "sprite", "scale", "music", "room"};
+	
 	private PakFile pakfile;
 	private Gallery gallery;
 
@@ -72,48 +70,9 @@ public class PakView extends ViewPart implements ISelectionListener{
 				if (item.getParentItem() == null) {
 					// It's a group
 					int index = gallery.indexOf(item);
-					if (index == 0) {
-						// This is group 1
-						item.setText("tile");
-						item
-								.setItemCount(pakfile.getResourceType("tile").length);
-						//gr.setItemWidth(64);
-						//gr.setItemHeight(64);
-						item.setExpanded(true);
-					} else if (index == 1) {
-						// This is group 1
-						item.setText("sprite");
-						item
-								.setItemCount(pakfile.getResourceType("sprite").length);
-						//gr.setItemWidth(64);
-						//gr.setItemHeight(64);
-						item.setExpanded(true);
-					} else if (index == 2) {
-						// This is group 1
-						item.setText("scale");
-						item
-								.setItemCount(pakfile.getResourceType("scale").length);
-						//gr.setItemWidth(256);
-						//gr.setItemHeight(256);
-						item.setExpanded(true);
-					} else if (index == 3) {
-						// This is group 1
-						item.setText("music");
-						item
-								.setItemCount(pakfile.getResourceType("music").length);
-						item.setExpanded(true);
-					} else if (index == 4) {
-						// This is group 1
-						item.setText("room");
-						item
-								.setItemCount(pakfile.getResourceType("room").length);
-						item.setExpanded(true);
-					} 
-					else if (index == 5) {
-						// This is group 1
-						item.setText("object");
-						item
-								.setItemCount(pakfile.getResourceType("object").length);
+					if (index >= 0 && index < TYPES.length) {
+						item.setText(TYPES[index]);
+						item.setItemCount(pakfile.getResourceType(TYPES[index]).length);
 						item.setExpanded(true);
 					} else {
 						// Should never be used
@@ -126,11 +85,6 @@ public class PakView extends ViewPart implements ISelectionListener{
 					// Get item index
 					int index = parentItem.indexOf(item);
 
-					// Load corresponding items
-					//Object[] objs = pakFile.getResourceType(parentItem
-					//		.getText());
-					
-					
 					PakRecord pakrecord = (PakRecord) pakfile
 							.getResourceType(parentItem.getText())[index];
 					
@@ -142,10 +96,6 @@ public class PakView extends ViewPart implements ISelectionListener{
 				}
 			}
 		});
-
-		// Create one group (will call SetData)
-		//gallery.setItemCount(5);
-
 	}
 
 	@Override
@@ -165,7 +115,7 @@ public class PakView extends ViewPart implements ISelectionListener{
 				if(file.getName().endsWith(".pak")){
 					pakfile = ResourceManager.getInstance().getPakFile(file);
 					gallery.clearAll();
-					gallery.setItemCount(4);
+					gallery.setItemCount(TYPES.length);
 				}
 			}
 		}

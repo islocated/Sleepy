@@ -1,24 +1,21 @@
 package com.isnotok.sleep.view;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.zip.DataFormatException;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.ImageLoader;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.ui.ISelectionListener;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.part.ViewPart;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.nebula.widgets.gallery.DefaultGalleryGroupRenderer;
 import org.eclipse.nebula.widgets.gallery.DefaultGalleryItemRenderer;
 import org.eclipse.nebula.widgets.gallery.Gallery;
 import org.eclipse.nebula.widgets.gallery.GalleryItem;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.ui.ISelectionListener;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.part.ViewPart;
 
 import com.isnotok.sleep.model.PakFile;
 import com.isnotok.sleep.model.PakRecord;
@@ -26,6 +23,8 @@ import com.isnotok.sleep.model.ResourceManager;
 
 public class RoomView extends ViewPart implements ISelectionListener{
 	public final static String ID = "com.isnotok.sleep.view.RoomView";
+	private static final String[] TYPES = {"room", "scale", "music"};
+	
 	private PakFile pakfile;
 	private Gallery gallery;
 
@@ -68,31 +67,9 @@ public class RoomView extends ViewPart implements ISelectionListener{
 				if (item.getParentItem() == null) {
 					// It's a group
 					int index = gallery.indexOf(item);
-					if (index == 0) {
-						// This is group 1
-						item.setText("room");
-						item
-								.setItemCount(pakfile.getResourceType("room").length);
-						//gr.setItemWidth(64);
-						//gr.setItemHeight(64);
-						item.setExpanded(true);
-					}
-					else if (index == 1) {
-						// This is group 1
-						item.setText("scale");
-						item
-								.setItemCount(pakfile.getResourceType("scale").length);
-						//gr.setItemWidth(64);
-						//gr.setItemHeight(64);
-						item.setExpanded(true);
-					}
-					else if (index == 2) {
-						// This is group 1
-						item.setText("music");
-						item
-								.setItemCount(pakfile.getResourceType("music").length);
-						//gr.setItemWidth(64);
-						//gr.setItemHeight(64);
+					if (index >= 0 && index < TYPES.length) {
+						item.setText(TYPES[index]);
+						item.setItemCount(pakfile.getResourceType(TYPES[index]).length);
 						item.setExpanded(true);
 					}
 					else {

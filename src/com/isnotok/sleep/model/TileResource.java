@@ -4,16 +4,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.zip.DataFormatException;
-import java.util.zip.Inflater;
 
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.PaletteData;
-
-import com.isnotok.sleep.util.BytesUtil;
 
 public class TileResource {
 	private File file;
@@ -26,6 +19,19 @@ public class TileResource {
 	
 	public File getFile(){
 		return file;
+	}
+	
+	public String getResourceName(){
+		if(data == null){
+			return null;
+		}
+		else{
+			StringBuffer sb = new StringBuffer();
+			for(int i = 16*16*4; i < data.length; i++){
+				sb.append((char)data[i]);
+			}
+			return sb.toString();
+		}
 	}
 	
 	public void load() {

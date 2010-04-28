@@ -1,34 +1,28 @@
 package com.isnotok.sleep.view;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.zip.DataFormatException;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.ImageLoader;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.ui.ISelectionListener;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.internal.WorkbenchColors;
-import org.eclipse.ui.part.ViewPart;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.nebula.widgets.gallery.DefaultGalleryGroupRenderer;
 import org.eclipse.nebula.widgets.gallery.DefaultGalleryItemRenderer;
 import org.eclipse.nebula.widgets.gallery.Gallery;
 import org.eclipse.nebula.widgets.gallery.GalleryItem;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.ui.ISelectionListener;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.part.ViewPart;
 
-import com.isnotok.sleep.model.PakFile;
-import com.isnotok.sleep.model.PakRecord;
-import com.isnotok.sleep.model.ResourceManager;
 import com.isnotok.sleep.model.TileResource;
 
 public class CacheView extends ViewPart implements ISelectionListener{
 	public final static String ID = "com.isnotok.sleep.view.CacheView";
+	private static final String[] TYPES = {"tile", "sprite", "room", "music", "object", "scale"};;
+	
 	private File resourceCache;
 	private Gallery gallery;
 
@@ -48,7 +42,7 @@ public class CacheView extends ViewPart implements ISelectionListener{
 		final DefaultGalleryGroupRenderer gr = new DefaultGalleryGroupRenderer();
 		gr.setMinMargin(2);
 		gr.setItemHeight(64);
-		gr.setItemWidth(64);
+		gr.setItemWidth(84);
 		gr.setAutoMargin(true);
 		//gr.setTitleBackground(Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
 		///gr.setTitleBackground(Display.getDefault().getSystemColor(SWT.COLOR_TITLE_BACKGROUND));
@@ -61,7 +55,7 @@ public class CacheView extends ViewPart implements ISelectionListener{
 		ir.setDropShadows(true);
 		ir.setDropShadowsSize(2);
 		gallery.setItemRenderer(ir);
-
+		
 		// SetData is called when Gallery creates an item.
 		gallery.addListener(SWT.SetData, new Listener() {
 			public void handleEvent(Event event) {
@@ -73,31 +67,12 @@ public class CacheView extends ViewPart implements ISelectionListener{
 				if (item.getParentItem() == null) {
 					// It's a group
 					int index = gallery.indexOf(item);
-					if (index == 0) {
-						item.setText("tile");
-						item.setItemCount(new File(resourceCache, "tile").listFiles().length);
+					if(index >= 0 && index < TYPES.length){
+						item.setText(TYPES[index]);
+						item.setItemCount(new File(resourceCache, TYPES[index]).listFiles().length);
 						item.setExpanded(true);
-					} else if (index == 1) {
-						item.setText("sprite");
-						item.setItemCount(new File(resourceCache, "sprite").listFiles().length);
-						item.setExpanded(true);
-					} else if (index == 2) {
-						item.setText("room");
-						item.setItemCount(new File(resourceCache, "room").listFiles().length);
-						item.setExpanded(true);
-					} else if (index == 3) {
-						item.setText("music");
-						item.setItemCount(new File(resourceCache, "music").listFiles().length);
-						item.setExpanded(true);
-					} else if (index == 4) {
-						item.setText("music");
-						item.setItemCount(new File(resourceCache, "music").listFiles().length);
-						item.setExpanded(true);
-					} else if (index == 5) {
-						item.setText("music");
-						item.setItemCount(new File(resourceCache, "music").listFiles().length);
-						item.setExpanded(true);
-					} else {
+					}
+					else {
 						// Should never be used
 						item.setItemCount(0);
 					}
@@ -108,16 +83,13 @@ public class CacheView extends ViewPart implements ISelectionListener{
 					// Get item index
 					int index = parentItem.indexOf(item);
 
-					// Load corresponding items
-					//Object[] objs = pakFile.getResourceType(parentItem
-					//		.getText());
-					
+					//Need to cache this
 					File p = new File(resourceCache, parentItem.getText());
 					File tile = p.listFiles()[index];
 					TileResource tr = new TileResource(tile);
 					tr.load();
 					
-					item.setText(tile.getName());
+					item.setText(tr.getResourceName());
 
 					Image img = new Image(parent.getDisplay(), tr.getImageData());
 					item.setImage(img);
