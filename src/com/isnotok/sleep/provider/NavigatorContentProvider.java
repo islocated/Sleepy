@@ -9,7 +9,7 @@ import org.eclipse.jface.viewers.Viewer;
 
 public class NavigatorContentProvider implements ITreeContentProvider {
 	private static FileFilter fileFilter = new FileFilter(){
-		Pattern p = Pattern.compile(".*jpg|.*gif|.*png|.*bmp|.*pak", Pattern.CASE_INSENSITIVE);
+		Pattern p = Pattern.compile(".*jpg|.*gif|.*png|.*bmp|.*pak|[A-F0-9]*", Pattern.CASE_INSENSITIVE);
 		
 		public boolean accept(File pathname) {
 			return (pathname.isDirectory() 

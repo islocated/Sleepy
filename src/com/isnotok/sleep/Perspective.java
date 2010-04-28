@@ -4,6 +4,7 @@ import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
 
+import com.isnotok.sleep.view.FileView;
 import com.isnotok.sleep.view.MagnifyView;
 import com.isnotok.sleep.view.NavigatorView;
 import com.isnotok.sleep.view.PakView;
@@ -38,6 +39,8 @@ public class Perspective implements IPerspectiveFactory {
 		IFolderLayout right = layout.createFolder("right", IPageLayout.RIGHT, 0.6f, "middle");
 		
 		right.addView(MagnifyView.ID);
+		right.addView(FileView.ID);
+		
 		
 		//layout.addView(PakView.ID, IPageLayout.RIGHT, 0.4f, layout.getEditorArea());
 	}

@@ -64,6 +64,12 @@
             name="Magnify View"
             restorable="true">
       </view>
+      <view
+            class="com.isnotok.sleep.view.FileView"
+            id="com.isnotok.sleep.view.FileView"
+            name="File View"
+            restorable="true">
+      </view>
    </extension>
    <extension
          point="org.eclipse.ui.navigator.navigatorContent">
