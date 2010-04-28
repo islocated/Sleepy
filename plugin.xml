@@ -70,6 +70,12 @@
             name="File View"
             restorable="true">
       </view>
+      <view
+            class="com.isnotok.sleep.view.CacheView"
+            id="com.isnotok.sleep.view.CacheView"
+            name="Cache View"
+            restorable="true">
+      </view>
    </extension>
    <extension
          point="org.eclipse.ui.navigator.navigatorContent">

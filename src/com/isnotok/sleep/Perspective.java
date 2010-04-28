@@ -4,6 +4,7 @@ import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
 
+import com.isnotok.sleep.view.CacheView;
 import com.isnotok.sleep.view.FileView;
 import com.isnotok.sleep.view.MagnifyView;
 import com.isnotok.sleep.view.NavigatorView;
@@ -21,7 +22,8 @@ public class Perspective implements IPerspectiveFactory {
 		IFolderLayout lbottom = layout.createFolder("lbottom", IPageLayout.BOTTOM, 0.5f, "left");
 		
 		left.addView(NavigatorView.ID);
-		lbottom.addView(ResourceView.ID);
+		lbottom.addView(CacheView.ID);
+		//lbottom.addView(ResourceView.ID);
 		
 		//layout.addView(NavigatorView.ID, IPageLayout.LEFT, 0.3f, layout.getEditorArea());
 		//layout.addView(NavigatorView.ID, IPageLayout.LEFT, 0.3f, layout.getEditorArea());
