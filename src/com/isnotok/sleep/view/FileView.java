@@ -84,6 +84,12 @@ public class FileView extends ViewPart implements ISelectionListener{
 					if(tile.getImageData() != null){
 						Image img = new Image(parent.getDisplay(), tile.getImageData());
 						item.setImage(img);
+						item.setText(tile.getResourceName());
+					}
+					else if(tile.getTimbreData() != null){
+						Image img = new Image(parent.getDisplay(), tile.getTimbreData());
+						item.setImage(img);
+						item.setText(tile.getResourceName());
 					}
 				}
 			}

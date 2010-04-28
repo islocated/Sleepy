@@ -21,7 +21,7 @@ import com.isnotok.sleep.model.TileResource;
 
 public class CacheView extends ViewPart implements ISelectionListener{
 	public final static String ID = "com.isnotok.sleep.view.CacheView";
-	private static final String[] TYPES = {"tile", "sprite", "room", "music", "object", "scale"};;
+	private static final String[] TYPES = {"tile", "sprite", "room", "music", "timbre", "scale"};;
 	
 	private File resourceCache;
 	private Gallery gallery;

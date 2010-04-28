@@ -27,8 +27,17 @@ public class TileResource {
 		}
 		else{
 			StringBuffer sb = new StringBuffer();
-			for(int i = 16*16*4; i < data.length; i++){
-				sb.append((char)data[i]);
+			
+			if(data.length > 16*16*4){
+				for(int i = 16*16*4; i < data.length; i++){
+					sb.append((char)data[i]);
+				}
+			}
+			else{
+				//timbre
+				for(int i = 20; i < data.length; i++){
+					sb.append((char)data[i]);
+				}
 			}
 			return sb.toString();
 		}
@@ -60,11 +69,33 @@ public class TileResource {
 	}
 	
 	public ImageData getImageData(){
-		if(data == null)
+		if(data == null || data.length < 16 * 16 * 4)
 			return null;
 		
 		PaletteData palette = new PaletteData(0xFF000000, 0xFF0000, 0xFF00);
 	    return new ImageData(16,16,32,palette, 1, data);
+	}
+	
+	public ImageData getTimbreData(){
+		if(data == null || data.length < 16)
+			return null;
+		
+		PaletteData palette = new PaletteData(0x1, 0x1, 0x1);
+		
+		//For harmonics use 16
+		byte [] imgData = new byte[16*16];
+		for(int i = 0; i < 16; i++){
+			int y = 16 - i - 1;	//Order this backwards
+			
+			//Data holds the length of the line
+			//Allow the timbre to look like it spans from left edge
+			for(int j = 0; j < data[i]; j++){
+				int index = y*16 + j;
+				imgData[index] = 1;
+			}
+		}
+		
+		return new ImageData(16, 16, 8, palette, 1, imgData);
 	}
 	
 	public static void main(String [] args){
