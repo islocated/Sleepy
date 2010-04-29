@@ -17,8 +17,10 @@ import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
 
+import com.isnotok.sleep.model.MusicResource;
 import com.isnotok.sleep.model.Resource;
 import com.isnotok.sleep.model.RoomResource;
+import com.isnotok.sleep.model.ScaleResource;
 import com.isnotok.sleep.model.SpriteResource;
 import com.isnotok.sleep.model.TileResource;
 import com.isnotok.sleep.model.TimbreResource;
@@ -122,6 +124,12 @@ public class FileView extends ViewPart implements ISelectionListener{
 					}
 					else if(file.getParentFile().getName().equals("room")){
 						resource = new RoomResource(file);
+					}
+					else if(file.getParentFile().getName().equals("scale")){
+						resource = new ScaleResource(file);
+					}
+					else if(file.getParentFile().getName().equals("music")){
+						resource = new MusicResource(file);
 					}
 					
 					if(resource != null){

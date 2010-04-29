@@ -87,8 +87,12 @@ public class PakRecord {
 		PaletteData palette = new PaletteData(0x1, 0x1, 0x1);
 		
 		byte [] imgData = new byte[16*16];
-		for(int i = 0; i < 16*16; i++){
-			imgData[i] = data[16*16-i-1];
+		int rev = 16 * 16 - 1;
+		for(int y = 0; y < 16; y++){
+			for(int x = 0; x < 16; x++){
+				int index = y * 16 + (16-x-1);
+				imgData[index] = data[rev--];
+			}
 		}
 		
 		return new ImageData(16, 16, 8, palette, 1, imgData);
