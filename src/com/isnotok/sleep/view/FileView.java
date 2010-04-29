@@ -17,14 +17,18 @@ import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
 
+import com.isnotok.sleep.model.Resource;
+import com.isnotok.sleep.model.RoomResource;
+import com.isnotok.sleep.model.SpriteResource;
 import com.isnotok.sleep.model.TileResource;
+import com.isnotok.sleep.model.TimbreResource;
 
 //Implement ISelectionProvider if we want this view to return the zoom
 public class FileView extends ViewPart implements ISelectionListener{
 	public final static String ID = "com.isnotok.sleep.view.FileView";
 	private Gallery gallery;
 	
-	private TileResource tile;
+	private Resource resource;
 
 	public FileView() {
 		// TODO Auto-generated constructor stub
@@ -54,7 +58,7 @@ public class FileView extends ViewPart implements ISelectionListener{
 		
 		gallery.addListener(SWT.SetData, new Listener() {
 			public void handleEvent(Event event) {
-				if(tile == null){
+				if(resource == null){
 					return;
 				}
 				
@@ -81,15 +85,10 @@ public class FileView extends ViewPart implements ISelectionListener{
 					
 					item.setText("default");
 					
-					if(tile.getImageData() != null){
-						Image img = new Image(parent.getDisplay(), tile.getImageData());
+					if(resource.getImageData() != null){
+						Image img = new Image(parent.getDisplay(), resource.getImageData());
 						item.setImage(img);
-						item.setText(tile.getResourceName());
-					}
-					else if(tile.getTimbreData() != null){
-						Image img = new Image(parent.getDisplay(), tile.getTimbreData());
-						item.setImage(img);
-						item.setText(tile.getResourceName());
+						item.setText(resource.getResourceName());
 					}
 				}
 			}
@@ -111,8 +110,23 @@ public class FileView extends ViewPart implements ISelectionListener{
 			if(element instanceof File){
 				File file = (File) element;
 				if(!file.getName().endsWith(".pak")){
-					tile = new TileResource(file);
-					tile.load();
+					
+					if(file.getParentFile().getName().equals("tile")){
+						resource = new TileResource(file);
+					}
+					else if(file.getParentFile().getName().equals("timbre")){
+						resource = new TimbreResource(file);
+					}
+					else if(file.getParentFile().getName().equals("sprite")){
+						resource = new SpriteResource(file);
+					}
+					else if(file.getParentFile().getName().equals("room")){
+						resource = new RoomResource(file);
+					}
+					
+					if(resource != null){
+						resource.load();
+					}
 					
 					gallery.clearAll();
 					gallery.setItemCount(1);

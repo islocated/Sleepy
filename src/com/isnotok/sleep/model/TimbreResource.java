@@ -5,12 +5,12 @@ import java.io.File;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.PaletteData;
 
-public class TileResource extends Resource{
+public class TimbreResource extends Resource{
 	public static final int SIZE = 16;
-	public static final int BYTES_PER_PIXEL = 4;
-	public static final int BYTES_TOTAL = SIZE * SIZE * BYTES_PER_PIXEL;
+	public static final int BYTES_PER_PIXEL = 1;
+	public static final int BYTES_TOTAL = SIZE + 4;
 	
-	public TileResource(File file){
+	public TimbreResource(File file){
 		super(file);
 	}
 	
@@ -21,25 +21,38 @@ public class TileResource extends Resource{
 		}
 		else{
 			StringBuffer sb = new StringBuffer();
+			
 			for(int i = BYTES_TOTAL; i < data.length; i++){
 				sb.append((char)data[i]);
 			}
+			
 			return sb.toString();
 		}
 	}
-
+	
 	@Override
 	public ImageData getImageData(){
 		if(data == null || data.length < BYTES_TOTAL)
 			return null;
 		
-		PaletteData palette = new PaletteData(0xFF000000, 0xFF0000, 0xFF00);
-	    return new ImageData(SIZE, SIZE, 8 * BYTES_PER_PIXEL, palette, 1, data);
+		PaletteData palette = new PaletteData(0x1, 0x1, 0x1);
+		
+		byte [] imgData = new byte[SIZE*SIZE];
+		for(int i = 0; i < SIZE; i++){
+			int y = SIZE - i - 1;	//Order this backwards
+			
+			for(int j = 0; j < data[i]; j++){
+				int index = y*SIZE + j;
+				imgData[index] = 1;
+			}
+		}
+		
+		return new ImageData(SIZE, SIZE, 8 * BYTES_PER_PIXEL, palette, 1, imgData);
 	}
 	
 	public static void main(String [] args){
 		File file = new File(".", "input/0A3A96732EF2");
-		TileResource resourceFile = new TileResource(file);
+		TimbreResource resourceFile = new TimbreResource(file);
 		resourceFile.load();
 	}
 }
