@@ -1,5 +1,8 @@
 package com.isnotok.sleep.model;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 public class UniqueId {
 	public final static int MAX_DIGITS = 6;
 	
@@ -9,8 +12,22 @@ public class UniqueId {
 		id = new byte[]{0,0,0,0,0,0};
 	}
 	
+	/*
 	public UniqueId(byte[] id){
 		this.id = id;
+	}*/
+	
+	public UniqueId(byte [] data){
+		try {
+			MessageDigest md = MessageDigest.getInstance("SHA-1");
+			md.update(data);
+			byte [] digest = md.digest();
+			id = new byte [MAX_DIGITS];
+			System.arraycopy(digest, 0, id, 0, MAX_DIGITS);
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	@Override
@@ -49,7 +66,7 @@ public class UniqueId {
 			sb.append(hex.length() > 1 ? hex : "0" + hex);
 		}
 		
-		return sb.toString();
+		return sb.toString().toUpperCase();
 	}
 	
 	public static void main(String [] args){
