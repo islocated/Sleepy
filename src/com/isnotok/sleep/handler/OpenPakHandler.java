@@ -14,6 +14,8 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+import com.isnotok.sleep.editor.PakEditor;
+import com.isnotok.sleep.input.PakFileInput;
 import com.isnotok.sleep.model.PakFile;
 import com.isnotok.sleep.view.NavigatorView;
 import com.isnotok.sleep.view.ResourceView;
@@ -53,8 +55,10 @@ public class OpenPakHandler implements IHandler {
 					
 					//event.g
 					try {
-						ResourceView rview = (ResourceView) page.showView(ResourceView.ID, file.getName(), IWorkbenchPage.VIEW_ACTIVATE | IWorkbenchPage.VIEW_CREATE);
+						//ResourceView rview = (ResourceView) page.showView(ResourceView.ID, file.getName(), IWorkbenchPage.VIEW_ACTIVATE | IWorkbenchPage.VIEW_CREATE);
 						//rview.setFile(file);
+						PakFileInput pakFile = new PakFileInput(file);
+						page.openEditor(pakFile, PakEditor.ID);
 						
 					} catch (PartInitException e) {
 						// TODO Auto-generated catch block

@@ -119,6 +119,11 @@
             id="com.isnotok.sleep.command.OpenPak"
             name="Open Pak">
       </command>
+      <command
+            defaultHandler="com.isnotok.sleep.handler.DeleteFile"
+            id="com.isnotok.sleep.DeleteFile"
+            name="Delete File">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -133,6 +138,36 @@
             </command>
          </menu>
       </menuContribution>
+      <menuContribution
+            locationURI="popup:com.isnotok.sleep.view.NavigatorView">
+         <command
+               commandId="com.isnotok.sleep.command.OpenPak"
+               icon="IMG_OBJ_FILE"
+               label="Open Pak File"
+               style="push"
+               tooltip="Open Pak File">
+         </command>
+         <separator
+               name="com.isnotok.sleep.separator1">
+         </separator>
+         <command
+               commandId="com.isnotok.sleep.DeleteFile"
+               disabledIcon="IMG_TOOL_DELETE_DISABLED"
+               icon="IMG_TOOL_DELETE"
+               label="Delete File"
+               style="push"
+               tooltip="Delete File">
+         </command>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="com.isnotok.sleep.editor.PakEditor"
+            default="false"
+            id="com.isnotok.sleep.editor.PakEditor"
+            name="Pak Editor">
+      </editor>
    </extension>
 
 </plugin>
