@@ -15,6 +15,7 @@ public class Resource {
 	
 	public Resource(File file){
 		this.file = file;
+		load();
 	}
 	
 	public File getFile(){
@@ -33,7 +34,7 @@ public class Resource {
 		return null;
 	}
 	
-	public void load() {
+	private void load() {
 		// TODO Auto-generated method stub
 		try {
 			FileInputStream fis = new FileInputStream(file);
@@ -59,7 +60,7 @@ public class Resource {
 	}
 	
 	public void saveToFile(){
-		UniqueId id = new UniqueId(data);
+		UniqueId id = UniqueId.computeFromData(data);
 		File out = new File(file.getParentFile(), id.toHexString());
 		
 		try {
@@ -83,6 +84,6 @@ public class Resource {
 		File file = new File(".", "input/0A3A96732EF2");
 		Resource resourceFile = new Resource(file);
 		resourceFile.load();
-		resourceFile.saveToFile();
+		//resourceFile.saveToFile();
 	}
 }

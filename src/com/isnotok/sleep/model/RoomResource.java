@@ -34,7 +34,7 @@ public class RoomResource extends Resource{
 		if(data == null || data.length < BYTES_TOTAL)
 			return null;
 		
-		TileResource [][] tiles = new TileResource[GRID][GRID];
+		Resource [][] tiles = new Resource[GRID][GRID];
 		
 		for(int y = 0; y < GRID; y++){
 			for(int x = 0; x < GRID; x++){
@@ -42,10 +42,15 @@ public class RoomResource extends Resource{
 				byte [] b = new byte[UniqueId.MAX_DIGITS];
 				System.arraycopy(data, index, b, 0, UniqueId.MAX_DIGITS);
 				
+				//System.out.println(file.getName());
+				//System.out.println("tile: " + new UniqueId(b).toHexString());
+				
 				File parent = new File(file.getParentFile().getParentFile(), "tile");
 				File tile = new File(parent, new UniqueId(b).toHexString());
-				tiles[x][y] = new TileResource(tile);
-				tiles[x][y].load();
+				
+				
+				tiles[x][y] = CacheManager.getInstance().getResource(tile);
+				//tiles[x][y].load();
 			}
 		}
 		
@@ -57,7 +62,7 @@ public class RoomResource extends Resource{
 			for(int x = 0; x < GRID; x++){
 				//Copy tiles
 				//Copy tile[x][y] to bytes location
-				TileResource tile = tiles[x][y];
+				Resource tile = tiles[x][y];
 				
 				//Index is for all the pixels in here
 				int index = 0;
@@ -81,6 +86,7 @@ public class RoomResource extends Resource{
 	public static void main(String [] args){
 		File file = new File(".", "input/0A3A96732EF2");
 		RoomResource resourceFile = new RoomResource(file);
-		resourceFile.load();
+		//resourceFile.getImageData();
+		//resourceFile.load();
 	}
 }

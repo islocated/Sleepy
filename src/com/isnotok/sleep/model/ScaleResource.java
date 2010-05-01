@@ -50,6 +50,6 @@ public class ScaleResource extends Resource{
 	public static void main(String [] args){
 		File file = new File(".", "input/0A3A96732EF2");
 		ScaleResource resourceFile = new ScaleResource(file);
-		resourceFile.load();
+		//resourceFile.load();
 	}
 }

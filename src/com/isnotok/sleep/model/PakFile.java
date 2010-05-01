@@ -53,7 +53,6 @@ public class PakFile {
 					objs.add(record);
 				}
 			}
-			//objs.addAll(records);
 		}
 		
 		return objs.toArray();
@@ -63,6 +62,7 @@ public class PakFile {
 		File file = new File(".", "input/4.pak");
 		PakFile pakFile = new PakFile(file);
 		pakFile.load();
+		pakFile.unpack();
 	}
 	
 	public void load(){
@@ -180,5 +180,30 @@ public class PakFile {
 		// TODO Auto-generated method stub
 		
 		System.out.println("need to save");
+	}
+	
+	public PakRecord [] getAllRecords(){
+		List<PakRecord> objs = new LinkedList<PakRecord>();
+		if(mapByType == null)
+			return new PakRecord[0];
+		
+		for(HashMap<String, List<PakRecord>> map : mapByType.values()){
+			for(List<PakRecord> records : map.values()){
+				objs.addAll(records);
+			}
+		}
+		
+		return objs.toArray(new PakRecord[0]);
+	}
+	
+	public void unpack() {
+		File parent = file.getParentFile();
+		File newFile = new File(parent, file.getName().replace('.', '-'));
+		if(!newFile.exists())
+			newFile.mkdir();
+		
+		for(PakRecord pakrecord : getAllRecords()){
+			pakrecord.save();
+		}
 	}
 }

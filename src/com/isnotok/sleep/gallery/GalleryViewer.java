@@ -10,8 +10,11 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.nebula.widgets.gallery.DefaultGalleryGroupRenderer;
+import org.eclipse.nebula.widgets.gallery.DefaultGalleryItemRenderer;
 import org.eclipse.nebula.widgets.gallery.Gallery;
 import org.eclipse.nebula.widgets.gallery.GalleryItem;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Composite;
@@ -21,12 +24,31 @@ public class GalleryViewer extends Gallery{
 
 	private Provider provider;
 	private StructuredSelection selection;
+	
+	private DefaultGalleryGroupRenderer gr;
+	private DefaultGalleryItemRenderer ir;
 
 	public GalleryViewer(Composite parent, int style) {
 		super(parent, style);
 		
 		provider = new Provider();
 		selection = new StructuredSelection();
+	}
+	
+	public void setDefaultRenderers(){
+		gr = new DefaultGalleryGroupRenderer();
+		gr.setMinMargin(2);
+		gr.setItemHeight(64);
+		gr.setItemWidth(84);
+		gr.setAutoMargin(true);
+		setGroupRenderer(gr);
+		setAntialias(SWT.OFF);
+		
+		ir = new DefaultGalleryItemRenderer();
+		ir.setShowLabels(true);
+		ir.setDropShadows(true);
+		ir.setDropShadowsSize(2);
+		setItemRenderer(ir);
 	}
 	
 	public void setAsSelectionProvider(IWorkbenchPartSite site) {

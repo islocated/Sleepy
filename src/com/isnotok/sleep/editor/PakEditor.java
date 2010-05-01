@@ -4,12 +4,13 @@ import java.io.File;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.nebula.widgets.gallery.DefaultGalleryGroupRenderer;
-import org.eclipse.nebula.widgets.gallery.DefaultGalleryItemRenderer;
 import org.eclipse.nebula.widgets.gallery.GalleryItem;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.dnd.ByteArrayTransfer;
 import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.DragSource;
+import org.eclipse.swt.dnd.DragSourceEvent;
+import org.eclipse.swt.dnd.DragSourceListener;
+import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.DragDetectEvent;
 import org.eclipse.swt.events.DragDetectListener;
@@ -81,10 +82,6 @@ public class PakEditor extends EditorPart{
 
 	@Override
 	public void createPartControl(final Composite parent) {
-		// TODO Auto-generated method stub
-		//getSite().getPage().addSelectionListener(this);
-		
-		
 		Composite grid = new Composite(parent, SWT.NONE);
 		
 		GridLayout gridLayout = new GridLayout();
@@ -101,43 +98,55 @@ public class PakEditor extends EditorPart{
 		//Set up gallery as the provider
 		gallery.setAsSelectionProvider(getSite());
 		
-		
+		//Set up default renders
+		gallery.setDefaultRenderers();
+
+		//Set up context menu
 		MenuManager menuManager = new MenuManager ();
 		Menu menu = menuManager.createContextMenu (gallery);
 		gallery.setMenu(menu);
 		getSite ().registerContextMenu (menuManager, gallery.getProvider());
 		
 		
+		/*
+		gallery.addDragDetectListener(new DragDetectListener(){
+
+			public void dragDetected(DragDetectEvent e) {
+				// TODO Auto-generated method stub
+				System.out.println("being dragged");
+			}
+			
+		});
+		*/
+		
+		
 		//Drag drop
-		//int ops = DND.DROP_COPY | DND.DROP_MOVE;
-        //Transfer[] transfers = new Transfer[] {  };
+		int ops = DND.DROP_COPY | DND.DROP_MOVE;
+        Transfer[] transfers = new Transfer[] { TextTransfer.getInstance() };
+        DragSource source = new DragSource(gallery, ops);
+        source.setTransfer(transfers);
+        source.addDragListener(new DragSourceListener(){
+
+			public void dragFinished(DragSourceEvent event) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			public void dragSetData(DragSourceEvent event) {
+				// TODO Auto-generated method stub
+				event.data = gallery.getSelection();
+			}
+
+			public void dragStart(DragSourceEvent event) {
+				// TODO Auto-generated method stub
+				
+			}
+        	
+        });
+        
         //gallery.add;//.get.addDragSupport(ops, transfers, this);
 		//addDragSupport();
 		
-		
-		//MenuManager menuManager = new MenuManager ();
-		//Menu menu = menuManager.createContextMenu (this);
-		//getSite().getsetMenu (menu);
-		//getSite ().registerContextMenu (menuManager, gallery.getProvider());
-		
-		
-		DefaultGalleryGroupRenderer gr = new DefaultGalleryGroupRenderer();
-		gr.setMinMargin(2);
-		gr.setItemHeight(64);
-		gr.setItemWidth(72);
-		gr.setAutoMargin(true);
-		//gr.setTitleBackground(Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
-		///gr.setTitleBackground(Display.getDefault().getSystemColor(SWT.COLOR_TITLE_BACKGROUND));
-		gallery.setGroupRenderer(gr);
-		gallery.setAntialias(SWT.OFF);
-
-		
-		DefaultGalleryItemRenderer ir = new DefaultGalleryItemRenderer();
-		ir.setShowLabels(true);
-		ir.setDropShadows(true);
-		ir.setDropShadowsSize(2);
-		gallery.setItemRenderer(ir);
-
 		// SetData is called when Gallery creates an item.
 		gallery.addListener(SWT.SetData, new Listener() {
 			public void handleEvent(Event event) {
@@ -180,11 +189,15 @@ public class PakEditor extends EditorPart{
 		
 		gallery.setItemCount(TYPES.length);
 		
+		setFilterField(grid);
+	}
+
+	private void setFilterField(Composite grid) {
 		final Text text = new Text(grid, SWT.SEARCH);
-		gridData = new GridData(SWT.FILL, SWT.CENTER, true, false);
+		GridData gridData = new GridData(SWT.FILL, SWT.CENTER, true, false);
 		text.setLayoutData(gridData);
 		
-		text.setMessage("Filter Keyword");
+		text.setMessage("Filter by keyword");
 		text.addKeyListener(new KeyListener(){
 
 			public void keyPressed(KeyEvent e) {

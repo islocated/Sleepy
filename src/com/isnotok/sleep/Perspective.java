@@ -50,7 +50,6 @@ public class Perspective implements IPerspectiveFactory {
 		
 		right.addView(InventoryView.ID);
 		
-		
 		//layout.addView(PakView.ID, IPageLayout.RIGHT, 0.4f, layout.getEditorArea());
 	}
 }

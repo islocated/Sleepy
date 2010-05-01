@@ -40,6 +40,6 @@ public class TileResource extends Resource{
 	public static void main(String [] args){
 		File file = new File(".", "input/0A3A96732EF2");
 		TileResource resourceFile = new TileResource(file);
-		resourceFile.load();
+		//resourceFile.load();
 	}
 }

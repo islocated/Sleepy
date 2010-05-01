@@ -1,5 +1,10 @@
 package com.isnotok.sleep.model;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.PaletteData;
 
@@ -172,5 +177,31 @@ public class PakRecord {
 		}
 		
 		return new ImageData(13*16, 13*16, 32, palette, 1, bytes);
+	}
+
+	public void save() {
+		File gparent = parent.getFile().getParentFile();
+		File packFolder = new File(gparent, parent.getFile().getName().replace('.', '-'));
+		// TODO Auto-generated method stub
+		File typeDir = new File(packFolder, type);
+		if(!typeDir.exists()){
+			typeDir.mkdir();
+		}
+		
+		File newFile = new File(typeDir, id.toHexString());
+		
+		try {
+			FileOutputStream fos = new FileOutputStream(newFile);
+			fos.write(data);
+			fos.close();
+			
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 }

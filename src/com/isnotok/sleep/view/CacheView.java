@@ -9,14 +9,22 @@ import org.eclipse.nebula.widgets.gallery.DefaultGalleryItemRenderer;
 import org.eclipse.nebula.widgets.gallery.Gallery;
 import org.eclipse.nebula.widgets.gallery.GalleryItem;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
 
+import com.isnotok.sleep.gallery.GalleryViewer;
+import com.isnotok.sleep.model.CacheManager;
+import com.isnotok.sleep.model.Resource;
 import com.isnotok.sleep.model.TileResource;
 
 public class CacheView extends ViewPart implements ISelectionListener{
@@ -24,7 +32,7 @@ public class CacheView extends ViewPart implements ISelectionListener{
 	private static final String[] TYPES = {"tile", "sprite", "room", "music", "timbre", "scale"};;
 	
 	private File resourceCache;
-	private Gallery gallery;
+	private GalleryViewer gallery;
 
 	public CacheView() {
 		// TODO Auto-generated constructor stub
@@ -32,29 +40,27 @@ public class CacheView extends ViewPart implements ISelectionListener{
 
 	@Override
 	public void createPartControl(final Composite parent) {
-		// TODO Auto-generated method stub
+		Composite grid = new Composite(parent, SWT.NONE);
 		
+		GridLayout gridLayout = new GridLayout();
+		gridLayout.numColumns = 1;
+		grid.setLayout(gridLayout);
+		
+		GridData gridData;
+
+		//Add Gallery to grid
+		gallery = new GalleryViewer(grid, SWT.V_SCROLL | SWT.VIRTUAL | SWT.MULTI);
+		gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
+		gallery.setLayoutData(gridData);
+		
+		gallery.setAsSelectionProvider(getSite());
+		
+		gallery.setDefaultRenderers();
+
 		//Sets up the ability for this view to get selection events from all views
 		getSite().getPage().addSelectionListener(this);
 
-		gallery = new Gallery(parent, SWT.V_SCROLL | SWT.VIRTUAL);
-		
-		final DefaultGalleryGroupRenderer gr = new DefaultGalleryGroupRenderer();
-		gr.setMinMargin(2);
-		gr.setItemHeight(64);
-		gr.setItemWidth(84);
-		gr.setAutoMargin(true);
-		//gr.setTitleBackground(Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
-		///gr.setTitleBackground(Display.getDefault().getSystemColor(SWT.COLOR_TITLE_BACKGROUND));
-		gallery.setGroupRenderer(gr);
-		gallery.setAntialias(SWT.OFF);
-
-		
-		DefaultGalleryItemRenderer ir = new DefaultGalleryItemRenderer();
-		ir.setShowLabels(true);
-		ir.setDropShadows(true);
-		ir.setDropShadowsSize(2);
-		gallery.setItemRenderer(ir);
+		setFilterField(grid);
 		
 		// SetData is called when Gallery creates an item.
 		gallery.addListener(SWT.SetData, new Listener() {
@@ -69,7 +75,7 @@ public class CacheView extends ViewPart implements ISelectionListener{
 					int index = gallery.indexOf(item);
 					if(index >= 0 && index < TYPES.length){
 						item.setText(TYPES[index]);
-						item.setItemCount(new File(resourceCache, TYPES[index]).listFiles().length);
+						item.setItemCount(CacheManager.getInstance().getFileCount(TYPES[index]));
 						item.setExpanded(true);
 					}
 					else {
@@ -82,31 +88,51 @@ public class CacheView extends ViewPart implements ISelectionListener{
 
 					// Get item index
 					int index = parentItem.indexOf(item);
-
-					//Need to cache this
-					File p = new File(resourceCache, parentItem.getText());
-					File tile = p.listFiles()[index];
-					TileResource tr = new TileResource(tile);
-					tr.load();
 					
-					item.setText(tr.getResourceName());
+					File [] files = CacheManager.getInstance().getFilesByType(parentItem.getText());
+					
+					File resourceFile = files[index];
+					
+					Resource resource = CacheManager.getInstance().getResource(resourceFile);
+					
+					item.setText(resource.getResourceName());
 
-					Image img = new Image(parent.getDisplay(), tr.getImageData());
+					Image img = new Image(parent.getDisplay(), resource.getImageData());
 					item.setImage(img);
-					item.setData(tr);
+					item.setData(resourceFile);
 				}
 			}
 		});
+	}
+	
 
-		// Create one group (will call SetData)
-		//gallery.setItemCount(5);
+	private void setFilterField(Composite grid) {
+		final Text text = new Text(grid, SWT.SEARCH);
+		GridData gridData = new GridData(SWT.FILL, SWT.CENTER, true, false);
+		text.setLayoutData(gridData);
+		
+		text.setMessage("Filter by keyword");
+		text.addKeyListener(new KeyListener(){
 
+			public void keyPressed(KeyEvent e) {
+				// TODO Auto-generated method stub
+			}
+
+			public void keyReleased(KeyEvent e) {
+				// TODO Auto-generated method stub
+				CacheManager.getInstance().setFilter(text.getText());
+				System.out.println("filtering: " + text.getText());
+				gallery.clearAll();
+				gallery.setItemCount(TYPES.length);
+			}
+			
+		});
 	}
 
 	@Override
 	public void setFocus() {
 		// TODO Auto-generated method stub
-
+		gallery.setFocus();
 	}
 	
 	//ISelectionListner interface
@@ -117,10 +143,24 @@ public class CacheView extends ViewPart implements ISelectionListener{
 			Object element = sel.getFirstElement();
 			if(element instanceof File){
 				File file = (File) element;
-				if(file.getName().equals("resourceCache")){
-					resourceCache = file;
-					gallery.clearAll();
-					gallery.setItemCount(2);
+				File [] files = file.listFiles();
+				
+				if(files == null){
+					return;
+				}
+				
+				for(File f : file.listFiles()){
+					for(String s : TYPES){
+						if(f.getName().equals(s)){
+							CacheManager.getInstance().setCacheDirectory(file);
+							
+							//if(file.getName().equals("resourceCache")){
+							resourceCache = file;
+							gallery.clearAll();
+							gallery.setItemCount(TYPES.length);
+							return;
+						}
+					}
 				}
 			}
 		}

@@ -50,6 +50,6 @@ public class MusicResource extends Resource{
 	public static void main(String [] args){
 		File file = new File(".", "input/0A3A96732EF2");
 		MusicResource resourceFile = new MusicResource(file);
-		resourceFile.load();
+		//resourceFile.load();
 	}
 }

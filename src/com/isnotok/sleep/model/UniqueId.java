@@ -12,11 +12,11 @@ public class UniqueId {
 		id = new byte[]{0,0,0,0,0,0};
 	}
 	
-	/*
 	public UniqueId(byte[] id){
 		this.id = id;
-	}*/
+	}
 	
+	/*
 	public UniqueId(byte [] data){
 		try {
 			MessageDigest md = MessageDigest.getInstance("SHA-1");
@@ -29,6 +29,7 @@ public class UniqueId {
 			e.printStackTrace();
 		}
 	}
+	*/
 	
 	@Override
 	public boolean equals(Object obj) {
@@ -76,5 +77,23 @@ public class UniqueId {
 		System.out.println(uniqueId.toHexString());
 		
 		System.out.println(uniqueId.equals(uniqueId2));
+	}
+
+	public static UniqueId computeFromData(byte[] data) {
+		try {
+			MessageDigest md = MessageDigest.getInstance("SHA-1");
+			md.update(data);
+			byte [] digest = md.digest();
+			
+			UniqueId uid = new UniqueId();
+			uid.id = new byte [MAX_DIGITS];
+			System.arraycopy(digest, 0, uid.id, 0, MAX_DIGITS);
+			
+			return uid;
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
 	}
 }

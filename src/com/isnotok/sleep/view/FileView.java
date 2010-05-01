@@ -133,7 +133,7 @@ public class FileView extends ViewPart implements ISelectionListener{
 					}
 					
 					if(resource != null){
-						resource.load();
+						//resource.load();
 					}
 					
 					gallery.clearAll();

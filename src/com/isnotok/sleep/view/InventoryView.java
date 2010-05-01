@@ -11,6 +11,14 @@ import org.eclipse.nebula.widgets.gallery.DefaultGalleryItemRenderer;
 import org.eclipse.nebula.widgets.gallery.Gallery;
 import org.eclipse.nebula.widgets.gallery.GalleryItem;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.DragSource;
+import org.eclipse.swt.dnd.DragSourceListener;
+import org.eclipse.swt.dnd.DropTarget;
+import org.eclipse.swt.dnd.DropTargetEvent;
+import org.eclipse.swt.dnd.DropTargetListener;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -21,12 +29,13 @@ import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
 
+import com.isnotok.sleep.gallery.GalleryViewer;
 import com.isnotok.sleep.model.PakRecord;
 
 //Implement ISelectionProvider if we want this view to return the zoom
 public class InventoryView extends ViewPart implements ISelectionListener{
 	public final static String ID = "com.isnotok.sleep.view.InventoryView";
-	private Gallery gallery;
+	private GalleryViewer gallery;
 	
 	private List<GalleryItem> galleryItems = new ArrayList<GalleryItem>();
 
@@ -48,25 +57,12 @@ public class InventoryView extends ViewPart implements ISelectionListener{
 		//Sets up the ability for this view to get selection events from all views
 		//getSite().getPage().addSelectionListener(this);
 
-		gallery = new Gallery(canvas, SWT.V_SCROLL | SWT.VIRTUAL);
+		gallery = new GalleryViewer(canvas, SWT.V_SCROLL | SWT.VIRTUAL);
 		gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
 		gridData.horizontalSpan = 2;
 		gallery.setLayoutData(gridData);
 		
-		final DefaultGalleryGroupRenderer gr = new DefaultGalleryGroupRenderer();
-		gr.setMinMargin(2);
-		gr.setItemHeight(128);
-		gr.setItemWidth(128);
-		gr.setAutoMargin(true);
-		gallery.setGroupRenderer(gr);
-		gallery.setAntialias(SWT.OFF);
-
-		
-		DefaultGalleryItemRenderer ir = new DefaultGalleryItemRenderer();
-		ir.setShowLabels(true);
-		ir.setDropShadows(true);
-		ir.setDropShadowsSize(2);
-		gallery.setItemRenderer(ir);
+		gallery.setDefaultRenderers();
 
 		// SetData is called when Gallery creates an item.
 		gallery.addListener(SWT.SetData, new Listener() {
@@ -106,25 +102,46 @@ public class InventoryView extends ViewPart implements ISelectionListener{
 			}
 		});
 		
-		
-		
-		//slider.setLayoutData(gridData);
-		/*
-		slider.addSelectionListener(new SelectionListener() {
-			
-			public void widgetSelected(SelectionEvent e) {
-				// TODO Auto-generated method stub
-				int zoom = (int) (16 * Math.pow(2, slider.getSelection()));
-				System.out.println("zoom: " + zoom);
-				gr.setItemSize(zoom, zoom);
-			}
-			
-			public void widgetDefaultSelected(SelectionEvent e) {
+		//Drag drop
+		int ops = DND.DROP_COPY | DND.DROP_MOVE;
+        Transfer[] transfers = new Transfer[] { TextTransfer.getInstance() };
+        DropTarget target = new DropTarget(gallery, ops);
+        target.setTransfer(transfers);
+        target.addDropListener(new DropTargetListener(){
+
+			public void dragEnter(DropTargetEvent event) {
 				// TODO Auto-generated method stub
 				
 			}
-		});
-		*/
+
+			public void dragLeave(DropTargetEvent event) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			public void dragOperationChanged(DropTargetEvent event) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			public void dragOver(DropTargetEvent event) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			public void drop(DropTargetEvent event) {
+				// TODO Auto-generated method stub
+				System.out.println("dropped");
+			}
+
+			public void dropAccept(DropTargetEvent event) {
+				// TODO Auto-generated method stub
+				
+			}
+        	
+        });
+
+		
 	}
 
 	@Override
