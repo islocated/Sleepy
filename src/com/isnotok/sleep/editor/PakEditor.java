@@ -1,9 +1,14 @@
 package com.isnotok.sleep.editor;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.nebula.widgets.gallery.DefaultGalleryGroupRenderer;
 import org.eclipse.nebula.widgets.gallery.DefaultGalleryItemRenderer;
@@ -82,12 +87,77 @@ public class PakEditor extends EditorPart{
 		// TODO Auto-generated method stub
 		//getSite().getPage().addSelectionListener(this);
 
-		gallery = new Gallery(parent, SWT.V_SCROLL | SWT.VIRTUAL);
+		gallery = new Gallery(parent, SWT.V_SCROLL | SWT.VIRTUAL | SWT.MULTI);
+		
+		getSite().setSelectionProvider(new ISelectionProvider(){
+
+			public void addSelectionChangedListener(
+					ISelectionChangedListener listener) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			public ISelection getSelection() {
+				return new IStructuredSelection() {
+					
+					public boolean isEmpty() {
+						return gallery.getSelectionCount() == 0;
+					}
+					
+					public List<GalleryItem> toList() {
+						List<GalleryItem> list = new ArrayList<GalleryItem>();
+						for(GalleryItem gi : gallery.getSelection()){
+							list.add(gi);
+						}
+						// TODO Auto-generated method stub
+						return list;
+					}
+					
+					public Object[] toArray() {
+						// TODO Auto-generated method stub
+						return gallery.getSelection();
+					}
+					
+					public int size() {
+						// TODO Auto-generated method stub
+						return gallery.getSelectionCount();
+					}
+					
+					public Iterator<GalleryItem> iterator() {
+						// TODO Auto-generated method stub
+						return toList().iterator();
+					}
+					
+					public Object getFirstElement() {
+						if(gallery.getSelectionCount() == 0)
+							return null;
+						// TODO Auto-generated method stub
+						return gallery.getSelection()[0];
+					}
+				};
+			}
+
+			public void removeSelectionChangedListener(
+					ISelectionChangedListener listener) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			public void setSelection(ISelection selection) {
+				if(selection instanceof IStructuredSelection){
+					IStructuredSelection sel = (IStructuredSelection) selection;
+					Object [] objs = sel.toArray();
+					gallery.setSelection((GalleryItem[]) objs);
+				}
+				// TODO Auto-generated method stub
+			}
+			
+		});
 		
 		final DefaultGalleryGroupRenderer gr = new DefaultGalleryGroupRenderer();
 		gr.setMinMargin(2);
 		gr.setItemHeight(64);
-		gr.setItemWidth(64);
+		gr.setItemWidth(72);
 		gr.setAutoMargin(true);
 		//gr.setTitleBackground(Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
 		///gr.setTitleBackground(Display.getDefault().getSystemColor(SWT.COLOR_TITLE_BACKGROUND));

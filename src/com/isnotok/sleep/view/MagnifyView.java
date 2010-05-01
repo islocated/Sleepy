@@ -22,6 +22,7 @@ import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
 
+import com.isnotok.sleep.editor.PakEditor;
 import com.isnotok.sleep.model.PakFile;
 import com.isnotok.sleep.model.PakRecord;
 import com.isnotok.sleep.model.ResourceManager;
@@ -34,6 +35,8 @@ public class MagnifyView extends ViewPart implements ISelectionListener{
 	private PakFile pakfile;
 	private Gallery gallery;
 	private Slider slider;
+	
+	private GalleryItem[] gi;
 
 	public MagnifyView() {
 		// TODO Auto-generated constructor stub
@@ -76,7 +79,7 @@ public class MagnifyView extends ViewPart implements ISelectionListener{
 		// SetData is called when Gallery creates an item.
 		gallery.addListener(SWT.SetData, new Listener() {
 			public void handleEvent(Event event) {
-				if(pakfile == null){
+				if(gi == null){
 					return;
 				}
 				
@@ -84,12 +87,19 @@ public class MagnifyView extends ViewPart implements ISelectionListener{
 				if (item.getParentItem() == null) {
 					// It's a group
 					int index = gallery.indexOf(item);
+					/*
 					if (index >= 0 && index < TYPES.length) {
 						// This is group 1
 						item.setText(TYPES[index]);
 						item.setItemCount(pakfile.getResourceType(TYPES[index]).length);
 						item.setExpanded(true);
 					} 
+					*/
+					if(index == 0){
+						item.setText("IMAGE");
+						item.setItemCount(gi.length);
+						item.setExpanded(true);
+					}
 					else {
 						// Should never be used
 						item.setItemCount(0);
@@ -100,13 +110,17 @@ public class MagnifyView extends ViewPart implements ISelectionListener{
 
 					// Get item index
 					int index = parentItem.indexOf(item);
-					PakRecord pakrecord = (PakRecord) pakfile.getResourceType(parentItem.getText())[index];
 					
-					item.setText(pakrecord.getWordString());
+					item.setText(gi[index].getText());
+					item.setImage(gi[index].getImage());
+					
+					//PakRecord pakrecord = (PakRecord) pakfile.getResourceType(parentItem.getText())[index];
+					
+					//item.setText(pakrecord.getWordString());
 
-					Image img = new Image(parent.getDisplay(), pakrecord
-							.getImageData());
-					item.setImage(img);
+					//Image img = new Image(parent.getDisplay(), pakrecord
+					//		.getImageData());
+					//item.setImage(img);
 				}
 			}
 		});
@@ -144,6 +158,12 @@ public class MagnifyView extends ViewPart implements ISelectionListener{
 		if(selection instanceof IStructuredSelection){
 			IStructuredSelection sel = (IStructuredSelection) selection;
 			Object element = sel.getFirstElement();
+			if(element == null){
+				return;
+			}
+			
+			System.out.println(element.getClass());
+			/*
 			if(element instanceof File){
 				File file = (File) element;
 				if(file.getName().endsWith(".pak")){
@@ -151,6 +171,18 @@ public class MagnifyView extends ViewPart implements ISelectionListener{
 					gallery.clearAll();
 					gallery.setItemCount(3);
 				}
+			}*/
+			
+			
+			if(element instanceof GalleryItem){
+				gi = (GalleryItem[]) sel.toArray();
+				//gi.getText()
+				//if(file.getName().endsWith(".pak")){
+				//	//pakfile = ResourceManager.getInstance().getPakFile(file);
+					
+				gallery.clearAll();
+				//gallery.setI
+				gallery.setItemCount(1);
 			}
 		}
 	}
