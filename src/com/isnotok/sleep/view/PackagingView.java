@@ -44,7 +44,8 @@ public class PackagingView extends ViewPart implements ISelectionListener{
 	
 	private List<Resource> resources = new ArrayList<Resource>();
 	private List<GalleryItem> galleryItems = new ArrayList<GalleryItem>();
-
+	private CacheManager cache = new CacheManager();
+	
 	public PackagingView() {
 		// TODO Auto-generated constructor stub
 	}
@@ -142,7 +143,7 @@ public class PackagingView extends ViewPart implements ISelectionListener{
 					String[] files = (String[]) event.data;
 					for (int i = 0; i < files.length; i++) {
 						File file = new File(files[i]);
-						Resource resource = CacheManager.getInstance().getResource(file);
+						Resource resource = cache.getResource(file);
 						resources.add(resource);
 					}
 				}

@@ -15,14 +15,16 @@ public class CacheManager {
 
 	private FileFilter fileFilter;
 	
-	private final static CacheManager instance = new CacheManager();
+	//private final static CacheManager instance = new CacheManager();
 	
-	private CacheManager(){
+	public CacheManager(){
 	}
 	
+	/*
 	public static CacheManager getInstance(){
 		return instance;
 	}
+	*/
 	
 	public void setCacheDirectory(File file){
 		cacheDirectory = file;

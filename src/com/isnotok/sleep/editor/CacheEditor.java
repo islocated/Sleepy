@@ -1,12 +1,9 @@
-package com.isnotok.sleep.view;
+package com.isnotok.sleep.editor;
 
 import java.io.File;
 
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.nebula.widgets.gallery.DefaultGalleryGroupRenderer;
-import org.eclipse.nebula.widgets.gallery.DefaultGalleryItemRenderer;
-import org.eclipse.nebula.widgets.gallery.Gallery;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.nebula.widgets.gallery.GalleryItem;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
@@ -16,6 +13,8 @@ import org.eclipse.swt.dnd.DragSourceListener;
 import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.events.DragDetectEvent;
+import org.eclipse.swt.events.DragDetectListener;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.graphics.Image;
@@ -24,26 +23,64 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.ISelectionListener;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.part.ViewPart;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.part.EditorPart;
 
 import com.isnotok.sleep.gallery.GalleryViewer;
 import com.isnotok.sleep.model.CacheManager;
+import com.isnotok.sleep.model.PakFile;
+import com.isnotok.sleep.model.PakRecord;
 import com.isnotok.sleep.model.Resource;
-import com.isnotok.sleep.model.TileResource;
 
-public class CacheView extends ViewPart implements ISelectionListener{
-	public final static String ID = "com.isnotok.sleep.view.CacheView";
-	private static final String[] TYPES = {"tile", "sprite", "room", "music", "timbre", "scale"};;
+public class CacheEditor extends EditorPart{
+	public static final String ID = "com.isnotok.sleep.editor.CacheEditor";
 	
-	//private File resourceCache;
+	private static final String[] TYPES = {"tile", "sprite", "scale", "music", "room"};
+	
 	private GalleryViewer gallery;
 	private CacheManager cache = new CacheManager();
 
-	public CacheView() {
+	public CacheEditor() {
 		// TODO Auto-generated constructor stub
+	}
+
+	@Override
+	public void doSave(IProgressMonitor monitor) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void doSaveAs() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void init(IEditorSite site, IEditorInput input)
+			throws PartInitException {
+		setSite(site);
+		setInput(input);
+		
+		cache.setCacheDirectory((File) input.getAdapter(File.class));
+        //pakfile = new PakFile((File) input.getAdapter(File.class));
+        //pakfile.load();
+	}
+
+	@Override
+	public boolean isDirty() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isSaveAsAllowed() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 	@Override
@@ -66,7 +103,7 @@ public class CacheView extends ViewPart implements ISelectionListener{
 		gallery.setDefaultRenderers();
 
 		//Sets up the ability for this view to get selection events from all views
-		getSite().getPage().addSelectionListener(this);
+		//getSite().getPage().addSelectionListener(this);
 
 		//Drag drop
 		int ops = DND.DROP_COPY | DND.DROP_MOVE;
@@ -141,6 +178,8 @@ public class CacheView extends ViewPart implements ISelectionListener{
 				}
 			}
 		});
+		
+		gallery.setItemCount(TYPES.length);
 	}
 	
 
@@ -169,39 +208,6 @@ public class CacheView extends ViewPart implements ISelectionListener{
 
 	@Override
 	public void setFocus() {
-		// TODO Auto-generated method stub
 		gallery.setFocus();
 	}
-	
-	//ISelectionListner interface
-	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-		// TODO Auto-generated method stub
-		if(selection instanceof IStructuredSelection){
-			IStructuredSelection sel = (IStructuredSelection) selection;
-			Object element = sel.getFirstElement();
-			if(element instanceof File){
-				File file = (File) element;
-				File [] files = file.listFiles();
-				
-				if(files == null){
-					return;
-				}
-				
-				for(File f : file.listFiles()){
-					for(String s : TYPES){
-						if(f.getName().equals(s)){
-							cache.setCacheDirectory(file);
-							
-							//if(file.getName().equals("resourceCache")){
-							//resourceCache = file;
-							gallery.clearAll();
-							gallery.setItemCount(TYPES.length);
-							return;
-						}
-					}
-				}
-			}
-		}
-	}
-
 }

@@ -147,6 +147,11 @@
             id="com.isnotok.sleep.command.SavePak"
             name="Save Pak">
       </command>
+      <command
+            defaultHandler="com.isnotok.sleep.handler.OpenCache"
+            id="com.isnotok.sleep.command.OpenCache"
+            name="Open Cache">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -180,6 +185,12 @@
                style="push"
                tooltip="Delete File">
          </command>
+         <command
+               commandId="com.isnotok.sleep.command.OpenCache"
+               label="Open Cache"
+               style="push"
+               tooltip="Open Cache">
+         </command>
       </menuContribution>
       <menuContribution
             locationURI="popup:com.isnotok.sleep.editor.PakEditor">
@@ -209,6 +220,12 @@
             default="false"
             id="com.isnotok.sleep.editor.PakEditor"
             name="Pak Editor">
+      </editor>
+      <editor
+            class="com.isnotok.sleep.editor.CacheEditor"
+            default="false"
+            id="com.isnotok.sleep.editor.CacheEditor"
+            name="Cache Editor">
       </editor>
    </extension>
 
