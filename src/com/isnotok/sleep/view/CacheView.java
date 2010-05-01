@@ -93,6 +93,7 @@ public class CacheView extends ViewPart implements ISelectionListener{
 
 					Image img = new Image(parent.getDisplay(), tr.getImageData());
 					item.setImage(img);
+					item.setData(tr);
 				}
 			}
 		});

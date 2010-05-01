@@ -1,7 +1,5 @@
 package com.isnotok.sleep.view;
 
-import java.io.File;
-
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.nebula.widgets.gallery.DefaultGalleryGroupRenderer;
@@ -9,36 +7,19 @@ import org.eclipse.nebula.widgets.gallery.DefaultGalleryItemRenderer;
 import org.eclipse.nebula.widgets.gallery.Gallery;
 import org.eclipse.nebula.widgets.gallery.GalleryItem;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Slider;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.ISelectionListener;
-import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
-
-import com.isnotok.sleep.editor.PakEditor;
-import com.isnotok.sleep.model.PakFile;
-import com.isnotok.sleep.model.PakRecord;
-import com.isnotok.sleep.model.ResourceManager;
 
 //Implement ISelectionProvider if we want this view to return the zoom
 public class MagnifyView extends ViewPart implements ISelectionListener{
 	public final static String ID = "com.isnotok.sleep.view.MagnifyView";
-	private static final String[] TYPES = {"tile", "sprite", "room", "music", "object", "scale"};;
-	
-	private PakFile pakfile;
 	private Gallery gallery;
-	private Slider slider;
 	
 	private GalleryItem[] gi;
 
@@ -117,14 +98,7 @@ public class MagnifyView extends ViewPart implements ISelectionListener{
 					
 					item.setText(gi[index].getText());
 					item.setImage(gi[index].getImage());
-					
-					//PakRecord pakrecord = (PakRecord) pakfile.getResourceType(parentItem.getText())[index];
-					
-					//item.setText(pakrecord.getWordString());
-
-					//Image img = new Image(parent.getDisplay(), pakrecord
-					//		.getImageData());
-					//item.setImage(img);
+					item.setData(gi[index].getData());
 				}
 			}
 		});
@@ -151,7 +125,6 @@ public class MagnifyView extends ViewPart implements ISelectionListener{
 
 	@Override
 	public void setFocus() {
-		// TODO Auto-generated method stub
 		gallery.setFocus();
 	}
 	
@@ -166,25 +139,10 @@ public class MagnifyView extends ViewPart implements ISelectionListener{
 			}
 			
 			System.out.println(element.getClass());
-			/*
-			if(element instanceof File){
-				File file = (File) element;
-				if(file.getName().endsWith(".pak")){
-					pakfile = ResourceManager.getInstance().getPakFile(file);
-					gallery.clearAll();
-					gallery.setItemCount(3);
-				}
-			}*/
-			
 			
 			if(element instanceof GalleryItem){
 				gi = (GalleryItem[]) sel.toArray();
-				//gi.getText()
-				//if(file.getName().endsWith(".pak")){
-				//	//pakfile = ResourceManager.getInstance().getPakFile(file);
-					
 				gallery.clearAll();
-				//gallery.setI
 				gallery.setItemCount(1);
 			}
 		}

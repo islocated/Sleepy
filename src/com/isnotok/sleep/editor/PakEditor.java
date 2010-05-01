@@ -1,26 +1,14 @@
 package com.isnotok.sleep.editor;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.ListenerList;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.ISelectionProvider;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.nebula.widgets.gallery.DefaultGalleryGroupRenderer;
 import org.eclipse.nebula.widgets.gallery.DefaultGalleryItemRenderer;
-import org.eclipse.nebula.widgets.gallery.Gallery;
 import org.eclipse.nebula.widgets.gallery.GalleryItem;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -30,16 +18,12 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
-import org.eclipse.ui.ISelectionListener;
-import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
 import com.isnotok.sleep.gallery.GalleryViewer;
-import com.isnotok.sleep.input.PakFileInput;
 import com.isnotok.sleep.model.PakFile;
 import com.isnotok.sleep.model.PakRecord;
-import com.isnotok.sleep.model.ResourceManager;
 
 public class PakEditor extends EditorPart{
 	public static final String ID = "com.isnotok.sleep.editor.PakEditor";
@@ -160,29 +144,23 @@ public class PakEditor extends EditorPart{
 					Image img = new Image(parent.getDisplay(), pakrecord
 							.getImageData());
 					item.setImage(img);
+					
+					item.setData(pakrecord);
 				}
 			}
 		});
 		
 		gallery.setItemCount(TYPES.length);
 		
-		
-		
 		final Text text = new Text(grid, SWT.SEARCH);
 		gridData = new GridData(SWT.FILL, SWT.CENTER, true, false);
 		text.setLayoutData(gridData);
 		
 		text.setMessage("Filter Keyword");
-		//text.setImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_TOOL_BACK));
-		
-		//slider = new Slider(canvas, SWT.HORIZONTAL);
-		//slider.setValues(2, 2, 5, 1, 1, 1);
-		
 		text.addKeyListener(new KeyListener(){
 
 			public void keyPressed(KeyEvent e) {
 				// TODO Auto-generated method stub
-				
 			}
 
 			public void keyReleased(KeyEvent e) {
