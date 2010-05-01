@@ -6,15 +6,19 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.nebula.widgets.gallery.DefaultGalleryGroupRenderer;
 import org.eclipse.nebula.widgets.gallery.DefaultGalleryItemRenderer;
 import org.eclipse.nebula.widgets.gallery.Gallery;
 import org.eclipse.nebula.widgets.gallery.GalleryItem;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
@@ -89,12 +93,70 @@ public class PakEditor extends EditorPart{
 
 		gallery = new Gallery(parent, SWT.V_SCROLL | SWT.VIRTUAL | SWT.MULTI);
 		
-		getSite().setSelectionProvider(new ISelectionProvider(){
+		gallery.addSelectionListener(new SelectionListener(){
 
+			public void widgetDefaultSelected(SelectionEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			public void widgetSelected(SelectionEvent e) {
+				// TODO Auto-generated method stub
+				System.out.println("just pressed");
+				getSite().getSelectionProvider().setSelection(new IStructuredSelection() {
+					
+					public boolean isEmpty() {
+						return gallery.getSelectionCount() == 0;
+					}
+					
+					public List<GalleryItem> toList() {
+						List<GalleryItem> list = new ArrayList<GalleryItem>();
+						for(GalleryItem gi : gallery.getSelection()){
+							list.add(gi);
+						}
+						// TODO Auto-generated method stub
+						return list;
+					}
+					
+					public Object[] toArray() {
+						// TODO Auto-generated method stub
+						return gallery.getSelection();
+					}
+					
+					public int size() {
+						// TODO Auto-generated method stub
+						return gallery.getSelectionCount();
+					}
+					
+					public Iterator<GalleryItem> iterator() {
+						// TODO Auto-generated method stub
+						return toList().iterator();
+					}
+					
+					public Object getFirstElement() {
+						if(gallery.getSelectionCount() == 0)
+							return null;
+						// TODO Auto-generated method stub
+						return gallery.getSelection()[0];
+					}
+				});
+				/*
+				if(e instanceof IStructuredSelection){
+					IStructuredSelection sel = (IStructuredSelection) e;
+					Object [] objs = sel.toArray();
+					gallery.setSelection((GalleryItem[]) objs);
+				}*/
+			}
+			
+		});
+		
+		getSite().setSelectionProvider(new ISelectionProvider(){
+			private ListenerList listeners = new ListenerList();  
+			
 			public void addSelectionChangedListener(
 					ISelectionChangedListener listener) {
 				// TODO Auto-generated method stub
-				
+				listeners.add(listener);
 			}
 
 			public ISelection getSelection() {
@@ -140,15 +202,22 @@ public class PakEditor extends EditorPart{
 			public void removeSelectionChangedListener(
 					ISelectionChangedListener listener) {
 				// TODO Auto-generated method stub
-				
+				listeners.remove(listener);
 			}
 
 			public void setSelection(ISelection selection) {
+				Object[] list = listeners.getListeners();  
+				for (int i = 0; i < list.length; i++) {  
+					((ISelectionChangedListener) list[i])
+						.selectionChanged(new SelectionChangedEvent(this, selection));  
+				 }  
+				
+				/*
 				if(selection instanceof IStructuredSelection){
 					IStructuredSelection sel = (IStructuredSelection) selection;
 					Object [] objs = sel.toArray();
 					gallery.setSelection((GalleryItem[]) objs);
-				}
+				}*/
 				// TODO Auto-generated method stub
 			}
 			
