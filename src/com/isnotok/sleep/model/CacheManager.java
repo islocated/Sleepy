@@ -2,16 +2,12 @@ package com.isnotok.sleep.model;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.io.FilenameFilter;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.regex.Pattern;
 
+//Cache Manager should probably not be singleton...
+//We want to use this to manage other resources as well
 public class CacheManager {
-	private static final int MAX_CACHE = 10000;
-
 	private File cacheDirectory;
 	HashMap<File, Resource> cache = new HashMap<File, Resource>();
 

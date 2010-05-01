@@ -1,5 +1,6 @@
 package com.isnotok.sleep.view;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +21,7 @@ import org.eclipse.swt.dnd.DropTargetListener;
 import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -31,16 +33,19 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
 
 import com.isnotok.sleep.gallery.GalleryViewer;
+import com.isnotok.sleep.model.CacheManager;
 import com.isnotok.sleep.model.PakRecord;
+import com.isnotok.sleep.model.Resource;
 
 //Implement ISelectionProvider if we want this view to return the zoom
-public class InventoryView extends ViewPart implements ISelectionListener{
-	public final static String ID = "com.isnotok.sleep.view.InventoryView";
+public class PackagingView extends ViewPart implements ISelectionListener{
+	public final static String ID = "com.isnotok.sleep.view.PackagingView";
 	private GalleryViewer gallery;
 	
+	private List<Resource> resources = new ArrayList<Resource>();
 	private List<GalleryItem> galleryItems = new ArrayList<GalleryItem>();
 
-	public InventoryView() {
+	public PackagingView() {
 		// TODO Auto-generated constructor stub
 	}
 
@@ -81,8 +86,8 @@ public class InventoryView extends ViewPart implements ISelectionListener{
 					} 
 					*/
 					if(index == 0){
-						item.setText("IMAGE");
-						item.setItemCount(galleryItems.size());
+						item.setText("items");
+						item.setItemCount(resources.size());
 						item.setExpanded(true);
 					}
 					else {
@@ -96,9 +101,10 @@ public class InventoryView extends ViewPart implements ISelectionListener{
 					// Get item index
 					int index = parentItem.indexOf(item);
 					
-					item.setText(galleryItems.get(index).getText());
-					item.setImage(galleryItems.get(index).getImage());
-					item.setData(galleryItems.get(index).getData());
+					item.setText(resources.get(index).getResourceName());
+					Image img = new Image(parent.getDisplay(), resources.get(index).getImageData());
+					item.setImage(img);
+					item.setData(resources.get(index).getFile());
 				}
 			}
 		});
@@ -132,7 +138,18 @@ public class InventoryView extends ViewPart implements ISelectionListener{
 
 			public void drop(DropTargetEvent event) {
 				// TODO Auto-generated method stub
+				if (FileTransfer.getInstance().isSupportedType(event.currentDataType)){
+					String[] files = (String[]) event.data;
+					for (int i = 0; i < files.length; i++) {
+						File file = new File(files[i]);
+						Resource resource = CacheManager.getInstance().getResource(file);
+						resources.add(resource);
+					}
+				}
+				
 				System.out.println("dropped");
+				gallery.clearAll();
+				gallery.setItemCount(1);
 			}
 
 			public void dropAccept(DropTargetEvent event) {
@@ -153,9 +170,10 @@ public class InventoryView extends ViewPart implements ISelectionListener{
 	//ISelectionListner interface
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 		// TODO Auto-generated method stub
-		addSelection(selection);
+		//addSelection(selection);
 	}
 
+	/*
 	public void addSelection(ISelection selection) {
 		// TODO Auto-generated method stub
 		if(selection instanceof IStructuredSelection){
@@ -179,8 +197,9 @@ public class InventoryView extends ViewPart implements ISelectionListener{
 				gallery.setItemCount(1);
 			}
 		}
-	}
+	}*/
 
+	/*
 	public List<PakRecord> getInventory() {
 		List<PakRecord> list = new ArrayList<PakRecord>();
 		
@@ -190,4 +209,5 @@ public class InventoryView extends ViewPart implements ISelectionListener{
 		// TODO Auto-generated method stub
 		return list;
 	}
+	*/
 }

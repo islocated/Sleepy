@@ -9,6 +9,13 @@ import org.eclipse.nebula.widgets.gallery.DefaultGalleryItemRenderer;
 import org.eclipse.nebula.widgets.gallery.Gallery;
 import org.eclipse.nebula.widgets.gallery.GalleryItem;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.DragSource;
+import org.eclipse.swt.dnd.DragSourceEvent;
+import org.eclipse.swt.dnd.DragSourceListener;
+import org.eclipse.swt.dnd.FileTransfer;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.graphics.Image;
@@ -60,6 +67,40 @@ public class CacheView extends ViewPart implements ISelectionListener{
 		//Sets up the ability for this view to get selection events from all views
 		getSite().getPage().addSelectionListener(this);
 
+		//Drag drop
+		int ops = DND.DROP_COPY | DND.DROP_MOVE;
+        Transfer[] transfers = new Transfer[] { FileTransfer.getInstance() };
+        DragSource source = new DragSource(gallery, ops);
+        source.setTransfer(transfers);
+        source.addDragListener(new DragSourceListener(){
+
+			public void dragFinished(DragSourceEvent event) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			public void dragSetData(DragSourceEvent event) {
+				// TODO Auto-generated method stub
+				 if (FileTransfer.getInstance().isSupportedType(event.dataType)) {
+					 GalleryItem [] galleryItems = gallery.getSelection();
+					 String [] files = new String[galleryItems.length];
+					 for(int i = 0; i < files.length; i++){
+						 files[i] = ((File) galleryItems[i].getData()).getAbsolutePath();
+					 }
+					 event.data = files;
+				}
+			}
+
+			public void dragStart(DragSourceEvent event) {
+				// TODO Auto-generated method stub
+				if(gallery.getSelection() == null){
+					event.doit = false;
+				}
+			}
+        });
+		
+		
+		//Set the filter for the keywords
 		setFilterField(grid);
 		
 		// SetData is called when Gallery creates an item.

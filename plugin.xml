@@ -82,6 +82,12 @@
             name="Inventory View"
             restorable="true">
       </view>
+      <view
+            class="com.isnotok.sleep.view.PackagingView"
+            id="com.isnotok.sleep.view.PackagingView"
+            name="Packaging View"
+            restorable="true">
+      </view>
    </extension>
    <extension
          point="org.eclipse.ui.navigator.navigatorContent">

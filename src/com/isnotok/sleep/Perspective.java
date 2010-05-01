@@ -5,13 +5,9 @@ import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
 
 import com.isnotok.sleep.view.CacheView;
-import com.isnotok.sleep.view.FileView;
-import com.isnotok.sleep.view.InventoryView;
 import com.isnotok.sleep.view.MagnifyView;
 import com.isnotok.sleep.view.NavigatorView;
-import com.isnotok.sleep.view.PakView;
-import com.isnotok.sleep.view.ResourceView;
-import com.isnotok.sleep.view.RoomView;
+import com.isnotok.sleep.view.PackagingView;
 
 public class Perspective implements IPerspectiveFactory {
 
@@ -48,7 +44,7 @@ public class Perspective implements IPerspectiveFactory {
 		//IFolderLayout rightmost = layout.createFolder("rightmost", IPageLayout.RIGHT, 0.6f, "right");
 		
 		
-		right.addView(InventoryView.ID);
+		right.addView(PackagingView.ID);
 		
 		//layout.addView(PakView.ID, IPageLayout.RIGHT, 0.4f, layout.getEditorArea());
 	}
