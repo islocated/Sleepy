@@ -16,10 +16,14 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Slider;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.ISelectionListener;
+import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
 import com.isnotok.sleep.editor.PakEditor;
@@ -125,11 +129,9 @@ public class MagnifyView extends ViewPart implements ISelectionListener{
 			}
 		});
 		
-		slider = new Slider(canvas, SWT.HORIZONTAL);
-		slider.setValues(2, 2, 5, 1, 1, 1);
 		
-		gridData = new GridData(SWT.FILL, SWT.CENTER, true, false);
-		slider.setLayoutData(gridData);
+		//slider.setLayoutData(gridData);
+		/*
 		slider.addSelectionListener(new SelectionListener() {
 			
 			public void widgetSelected(SelectionEvent e) {
@@ -144,6 +146,7 @@ public class MagnifyView extends ViewPart implements ISelectionListener{
 				
 			}
 		});
+		*/
 	}
 
 	@Override

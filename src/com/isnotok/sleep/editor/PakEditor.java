@@ -17,12 +17,17 @@ import org.eclipse.nebula.widgets.gallery.DefaultGalleryItemRenderer;
 import org.eclipse.nebula.widgets.gallery.Gallery;
 import org.eclipse.nebula.widgets.gallery.GalleryItem;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.ISelectionListener;
@@ -30,6 +35,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
+import com.isnotok.sleep.gallery.GalleryViewer;
 import com.isnotok.sleep.input.PakFileInput;
 import com.isnotok.sleep.model.PakFile;
 import com.isnotok.sleep.model.PakRecord;
@@ -40,12 +46,10 @@ public class PakEditor extends EditorPart{
 	
 	private static final String[] TYPES = {"tile", "sprite", "scale", "music", "room"};
 	
-	private Gallery gallery;
+	private GalleryViewer gallery;
 
 	private PakFile pakfile;
 	
-	//private PakFileInput pakFileInput;
-
 	public PakEditor() {
 		// TODO Auto-generated constructor stub
 	}
@@ -65,9 +69,7 @@ public class PakEditor extends EditorPart{
 	@Override
 	public void init(IEditorSite site, IEditorInput input)
 			throws PartInitException {
-		// TODO Auto-generated method stub
-		//pakFileInput = (PakFileInput) input;
-		 setSite(site);
+		setSite(site);
          setInput(input);
          
          pakfile = new PakFile((File) input.getAdapter(File.class));
@@ -90,140 +92,24 @@ public class PakEditor extends EditorPart{
 	public void createPartControl(final Composite parent) {
 		// TODO Auto-generated method stub
 		//getSite().getPage().addSelectionListener(this);
-
-		gallery = new Gallery(parent, SWT.V_SCROLL | SWT.VIRTUAL | SWT.MULTI);
 		
-		gallery.addSelectionListener(new SelectionListener(){
-
-			public void widgetDefaultSelected(SelectionEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			public void widgetSelected(SelectionEvent e) {
-				// TODO Auto-generated method stub
-				System.out.println("just pressed");
-				getSite().getSelectionProvider().setSelection(new IStructuredSelection() {
-					
-					public boolean isEmpty() {
-						return gallery.getSelectionCount() == 0;
-					}
-					
-					public List<GalleryItem> toList() {
-						List<GalleryItem> list = new ArrayList<GalleryItem>();
-						for(GalleryItem gi : gallery.getSelection()){
-							list.add(gi);
-						}
-						// TODO Auto-generated method stub
-						return list;
-					}
-					
-					public Object[] toArray() {
-						// TODO Auto-generated method stub
-						return gallery.getSelection();
-					}
-					
-					public int size() {
-						// TODO Auto-generated method stub
-						return gallery.getSelectionCount();
-					}
-					
-					public Iterator<GalleryItem> iterator() {
-						// TODO Auto-generated method stub
-						return toList().iterator();
-					}
-					
-					public Object getFirstElement() {
-						if(gallery.getSelectionCount() == 0)
-							return null;
-						// TODO Auto-generated method stub
-						return gallery.getSelection()[0];
-					}
-				});
-				/*
-				if(e instanceof IStructuredSelection){
-					IStructuredSelection sel = (IStructuredSelection) e;
-					Object [] objs = sel.toArray();
-					gallery.setSelection((GalleryItem[]) objs);
-				}*/
-			}
-			
-		});
+		Composite grid = new Composite(parent, SWT.NONE);
 		
-		getSite().setSelectionProvider(new ISelectionProvider(){
-			private ListenerList listeners = new ListenerList();  
-			
-			public void addSelectionChangedListener(
-					ISelectionChangedListener listener) {
-				// TODO Auto-generated method stub
-				listeners.add(listener);
-			}
-
-			public ISelection getSelection() {
-				return new IStructuredSelection() {
-					
-					public boolean isEmpty() {
-						return gallery.getSelectionCount() == 0;
-					}
-					
-					public List<GalleryItem> toList() {
-						List<GalleryItem> list = new ArrayList<GalleryItem>();
-						for(GalleryItem gi : gallery.getSelection()){
-							list.add(gi);
-						}
-						// TODO Auto-generated method stub
-						return list;
-					}
-					
-					public Object[] toArray() {
-						// TODO Auto-generated method stub
-						return gallery.getSelection();
-					}
-					
-					public int size() {
-						// TODO Auto-generated method stub
-						return gallery.getSelectionCount();
-					}
-					
-					public Iterator<GalleryItem> iterator() {
-						// TODO Auto-generated method stub
-						return toList().iterator();
-					}
-					
-					public Object getFirstElement() {
-						if(gallery.getSelectionCount() == 0)
-							return null;
-						// TODO Auto-generated method stub
-						return gallery.getSelection()[0];
-					}
-				};
-			}
-
-			public void removeSelectionChangedListener(
-					ISelectionChangedListener listener) {
-				// TODO Auto-generated method stub
-				listeners.remove(listener);
-			}
-
-			public void setSelection(ISelection selection) {
-				Object[] list = listeners.getListeners();  
-				for (int i = 0; i < list.length; i++) {  
-					((ISelectionChangedListener) list[i])
-						.selectionChanged(new SelectionChangedEvent(this, selection));  
-				 }  
-				
-				/*
-				if(selection instanceof IStructuredSelection){
-					IStructuredSelection sel = (IStructuredSelection) selection;
-					Object [] objs = sel.toArray();
-					gallery.setSelection((GalleryItem[]) objs);
-				}*/
-				// TODO Auto-generated method stub
-			}
-			
-		});
+		GridLayout gridLayout = new GridLayout();
+		gridLayout.numColumns = 1;
+		grid.setLayout(gridLayout);
 		
-		final DefaultGalleryGroupRenderer gr = new DefaultGalleryGroupRenderer();
+		GridData gridData;
+
+		//Add Gallery to grid
+		gallery = new GalleryViewer(grid, SWT.V_SCROLL | SWT.VIRTUAL | SWT.MULTI);
+		gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
+		gallery.setLayoutData(gridData);
+		
+		//Set up gallery as the provider
+		gallery.setAsSelectionProvider(getSite());
+		
+		DefaultGalleryGroupRenderer gr = new DefaultGalleryGroupRenderer();
 		gr.setMinMargin(2);
 		gr.setItemHeight(64);
 		gr.setItemWidth(72);
@@ -279,30 +165,38 @@ public class PakEditor extends EditorPart{
 		});
 		
 		gallery.setItemCount(TYPES.length);
+		
+		
+		
+		final Text text = new Text(grid, SWT.SEARCH);
+		gridData = new GridData(SWT.FILL, SWT.CENTER, true, false);
+		text.setLayoutData(gridData);
+		
+		text.setMessage("Filter Keyword");
+		//text.setImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_TOOL_BACK));
+		
+		//slider = new Slider(canvas, SWT.HORIZONTAL);
+		//slider.setValues(2, 2, 5, 1, 1, 1);
+		
+		text.addKeyListener(new KeyListener(){
+
+			public void keyPressed(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			public void keyReleased(KeyEvent e) {
+				// TODO Auto-generated method stub
+				pakfile.setFilter(text.getText());
+				gallery.clearAll();
+				gallery.setItemCount(TYPES.length);
+			}
+			
+		});
 	}
 
 	@Override
 	public void setFocus() {
-		// TODO Auto-generated method stub
-
+		gallery.setFocus();
 	}
-
-	/*
-	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-		// TODO Auto-generated method stub
-		if(selection instanceof IStructuredSelection){
-			IStructuredSelection sel = (IStructuredSelection) selection;
-			Object element = sel.getFirstElement();
-			if(element instanceof File){
-				File file = (File) element;
-				if(file.getName().endsWith(".pak")){
-					pakfile = ResourceManager.getInstance().getPakFile(file);
-					gallery.clearAll();
-					gallery.setItemCount(TYPES.length);
-				}
-			}
-		}
-	}
-	*/
-
 }

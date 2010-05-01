@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Pattern;
 import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
 
@@ -17,8 +18,11 @@ public class PakFile {
 	private HashMap<String, HashMap<String, List<PakRecord>>> mapByType;
 	private HashMap<UniqueId, PakRecord> idMap;
 	
+	private String filter;
+	
 	public PakFile(File file){
 		this.file = file;
+		filter = "";
 		
 		mapByType = new HashMap<String, HashMap<String, List<PakRecord>>>();
 		idMap = new HashMap<UniqueId, PakRecord>();
@@ -41,8 +45,15 @@ public class PakFile {
 		if(mapByType == null || !mapByType.containsKey(type))
 			return new Object[0];
 		
+		Pattern p = Pattern.compile(".*" + filter + ".*", Pattern.CASE_INSENSITIVE);
+		
 		for(List<PakRecord> records : mapByType.get(type).values()){
-			objs.addAll(records);
+			for(PakRecord record : records){
+				if(p.matcher(record.getWordString()).matches()){
+					objs.add(record);
+				}
+			}
+			//objs.addAll(records);
 		}
 		
 		return objs.toArray();
@@ -158,5 +169,10 @@ public class PakFile {
 		}
 		
 		return null;
+	}
+
+	public void setFilter(String filter) {
+		// TODO Auto-generated method stub
+		this.filter = filter;
 	}
 }
