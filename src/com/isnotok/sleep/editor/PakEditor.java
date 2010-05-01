@@ -3,10 +3,16 @@ package com.isnotok.sleep.editor;
 import java.io.File;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.nebula.widgets.gallery.DefaultGalleryGroupRenderer;
 import org.eclipse.nebula.widgets.gallery.DefaultGalleryItemRenderer;
 import org.eclipse.nebula.widgets.gallery.GalleryItem;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.ByteArrayTransfer;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.events.DragDetectEvent;
+import org.eclipse.swt.events.DragDetectListener;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.graphics.Image;
@@ -15,6 +21,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
@@ -77,6 +84,7 @@ public class PakEditor extends EditorPart{
 		// TODO Auto-generated method stub
 		//getSite().getPage().addSelectionListener(this);
 		
+		
 		Composite grid = new Composite(parent, SWT.NONE);
 		
 		GridLayout gridLayout = new GridLayout();
@@ -92,6 +100,26 @@ public class PakEditor extends EditorPart{
 		
 		//Set up gallery as the provider
 		gallery.setAsSelectionProvider(getSite());
+		
+		
+		MenuManager menuManager = new MenuManager ();
+		Menu menu = menuManager.createContextMenu (gallery);
+		gallery.setMenu(menu);
+		getSite ().registerContextMenu (menuManager, gallery.getProvider());
+		
+		
+		//Drag drop
+		//int ops = DND.DROP_COPY | DND.DROP_MOVE;
+        //Transfer[] transfers = new Transfer[] {  };
+        //gallery.add;//.get.addDragSupport(ops, transfers, this);
+		//addDragSupport();
+		
+		
+		//MenuManager menuManager = new MenuManager ();
+		//Menu menu = menuManager.createContextMenu (this);
+		//getSite().getsetMenu (menu);
+		//getSite ().registerContextMenu (menuManager, gallery.getProvider());
+		
 		
 		DefaultGalleryGroupRenderer gr = new DefaultGalleryGroupRenderer();
 		gr.setMinMargin(2);

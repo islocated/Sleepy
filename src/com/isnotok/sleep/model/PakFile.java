@@ -107,7 +107,7 @@ public class PakFile {
 	}
 	
 	
-	private void addRecord(PakRecord pakrecord){
+	public void addRecord(PakRecord pakrecord){
 		String type = pakrecord.getType();
 		String name = pakrecord.getWordString();
 		
@@ -174,5 +174,11 @@ public class PakFile {
 	public void setFilter(String filter) {
 		// TODO Auto-generated method stub
 		this.filter = filter;
+	}
+
+	public void save() {
+		// TODO Auto-generated method stub
+		
+		System.out.println("need to save");
 	}
 }

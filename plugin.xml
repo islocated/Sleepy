@@ -76,6 +76,12 @@
             name="Cache View"
             restorable="true">
       </view>
+      <view
+            class="com.isnotok.sleep.view.InventoryView"
+            id="com.isnotok.sleep.view.InventoryView"
+            name="Inventory View"
+            restorable="true">
+      </view>
    </extension>
    <extension
          point="org.eclipse.ui.navigator.navigatorContent">
@@ -121,8 +127,19 @@
       </command>
       <command
             defaultHandler="com.isnotok.sleep.handler.DeleteFile"
-            id="com.isnotok.sleep.DeleteFile"
+            id="com.isnotok.sleep.command.DeleteFile"
             name="Delete File">
+      </command>
+      <command
+            defaultHandler="com.isnotok.sleep.handler.AddItemsHandler"
+            description="Add items to inventory"
+            id="com.isnotok.sleep.command.AddItems"
+            name="Add Items">
+      </command>
+      <command
+            defaultHandler="com.isnotok.sleep.handler.SavePakHandler"
+            id="com.isnotok.sleep.command.SavePak"
+            name="Save Pak">
       </command>
    </extension>
    <extension
@@ -151,12 +168,31 @@
                name="com.isnotok.sleep.separator1">
          </separator>
          <command
-               commandId="com.isnotok.sleep.DeleteFile"
-               disabledIcon="IMG_TOOL_DELETE_DISABLED"
+               commandId="com.isnotok.sleep.command.DeleteFile"
                icon="IMG_TOOL_DELETE"
                label="Delete File"
                style="push"
                tooltip="Delete File">
+         </command>
+      </menuContribution>
+      <menuContribution
+            locationURI="popup:com.isnotok.sleep.editor.PakEditor">
+         <command
+               commandId="com.isnotok.sleep.command.AddItems"
+               icon="IMG_OBJ_ADD"
+               label="Add Items"
+               style="push"
+               tooltip="Add items to inventory">
+         </command>
+      </menuContribution>
+      <menuContribution
+            locationURI="toolbar:com.isnotok.sleep.view.InventoryView">
+         <command
+               commandId="com.isnotok.sleep.command.SavePak"
+               icon="IMG_ETOOL_SAVEALL_EDIT"
+               label="Save Pak"
+               style="push"
+               tooltip="Save Pak">
          </command>
       </menuContribution>
    </extension>

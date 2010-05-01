@@ -1,5 +1,8 @@
 package com.isnotok.sleep.view;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -14,22 +17,20 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.ISelectionListener;
-import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
 
-import com.isnotok.sleep.gallery.GalleryViewer;
+import com.isnotok.sleep.model.PakRecord;
 
 //Implement ISelectionProvider if we want this view to return the zoom
-public class MagnifyView extends ViewPart implements ISelectionListener{
-	public final static String ID = "com.isnotok.sleep.view.MagnifyView";
-	private GalleryViewer gallery;
+public class InventoryView extends ViewPart implements ISelectionListener{
+	public final static String ID = "com.isnotok.sleep.view.InventoryView";
+	private Gallery gallery;
 	
-	private GalleryItem[] gi;
+	private List<GalleryItem> galleryItems = new ArrayList<GalleryItem>();
 
-	public MagnifyView() {
+	public InventoryView() {
 		// TODO Auto-generated constructor stub
 	}
 
@@ -45,13 +46,12 @@ public class MagnifyView extends ViewPart implements ISelectionListener{
 		canvas.setLayout(gridLayout);
 		
 		//Sets up the ability for this view to get selection events from all views
-		getSite().getPage().addSelectionListener(this);
+		//getSite().getPage().addSelectionListener(this);
 
-		gallery = new GalleryViewer(canvas, SWT.V_SCROLL | SWT.VIRTUAL);
+		gallery = new Gallery(canvas, SWT.V_SCROLL | SWT.VIRTUAL);
 		gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
 		gridData.horizontalSpan = 2;
 		gallery.setLayoutData(gridData);
-		
 		
 		final DefaultGalleryGroupRenderer gr = new DefaultGalleryGroupRenderer();
 		gr.setMinMargin(2);
@@ -71,10 +71,6 @@ public class MagnifyView extends ViewPart implements ISelectionListener{
 		// SetData is called when Gallery creates an item.
 		gallery.addListener(SWT.SetData, new Listener() {
 			public void handleEvent(Event event) {
-				if(gi == null){
-					return;
-				}
-				
 				GalleryItem item = (GalleryItem) event.item;
 				if (item.getParentItem() == null) {
 					// It's a group
@@ -89,7 +85,7 @@ public class MagnifyView extends ViewPart implements ISelectionListener{
 					*/
 					if(index == 0){
 						item.setText("IMAGE");
-						item.setItemCount(gi.length);
+						item.setItemCount(galleryItems.size());
 						item.setExpanded(true);
 					}
 					else {
@@ -103,22 +99,14 @@ public class MagnifyView extends ViewPart implements ISelectionListener{
 					// Get item index
 					int index = parentItem.indexOf(item);
 					
-					item.setText(gi[index].getText());
-					item.setImage(gi[index].getImage());
-					item.setData(gi[index].getData());
+					item.setText(galleryItems.get(index).getText());
+					item.setImage(galleryItems.get(index).getImage());
+					item.setData(galleryItems.get(index).getData());
 				}
 			}
 		});
 		
 		
-		//Button button = new Button(canvas, SWT.NONE);
-		//
-		//MenuManager menuManager = new MenuManager ();
-		//Menu menu = menuManager.createContextMenu (gallery);
-		//gallery.setMenu(menu);
-		//getSite ().registerContextMenu (menuManager, gallery.getProvider());
-		
-		//ISharedImages.IMG_ETOOL_SAVEALL_EDIT
 		
 		//slider.setLayoutData(gridData);
 		/*
@@ -147,6 +135,11 @@ public class MagnifyView extends ViewPart implements ISelectionListener{
 	//ISelectionListner interface
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 		// TODO Auto-generated method stub
+		addSelection(selection);
+	}
+
+	public void addSelection(ISelection selection) {
+		// TODO Auto-generated method stub
 		if(selection instanceof IStructuredSelection){
 			IStructuredSelection sel = (IStructuredSelection) selection;
 			Object element = sel.getFirstElement();
@@ -157,10 +150,26 @@ public class MagnifyView extends ViewPart implements ISelectionListener{
 			System.out.println(element.getClass());
 			
 			if(element instanceof GalleryItem){
-				gi = (GalleryItem[]) sel.toArray();
+				GalleryItem [] gi = (GalleryItem[]) sel.toArray();
+				
+				for(GalleryItem item: gi){
+					if(!galleryItems.contains(gi))
+						galleryItems.add(item);
+				}
+				
 				gallery.clearAll();
 				gallery.setItemCount(1);
 			}
 		}
+	}
+
+	public List<PakRecord> getInventory() {
+		List<PakRecord> list = new ArrayList<PakRecord>();
+		
+		for(GalleryItem g : galleryItems){
+			list.add((PakRecord) g.getData());
+		}
+		// TODO Auto-generated method stub
+		return list;
 	}
 }

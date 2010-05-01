@@ -6,6 +6,7 @@ import org.eclipse.ui.IPerspectiveFactory;
 
 import com.isnotok.sleep.view.CacheView;
 import com.isnotok.sleep.view.FileView;
+import com.isnotok.sleep.view.InventoryView;
 import com.isnotok.sleep.view.MagnifyView;
 import com.isnotok.sleep.view.NavigatorView;
 import com.isnotok.sleep.view.PakView;
@@ -19,10 +20,12 @@ public class Perspective implements IPerspectiveFactory {
 		
 		IFolderLayout left = layout.createFolder("left", IPageLayout.LEFT, 0.3f, layout.getEditorArea());
 		
-		//IFolderLayout lbottom = layout.createFolder("lbottom", IPageLayout.BOTTOM, 0.5f, "left");
+		IFolderLayout lbottom = layout.createFolder("lbottom", IPageLayout.BOTTOM, 0.5f, "left");
 		
 		left.addView(NavigatorView.ID);
-		//lbottom.addView(CacheView.ID);
+		
+		
+		lbottom.addView(MagnifyView.ID);
 		//lbottom.addView(ResourceView.ID);
 		
 		//layout.addView(NavigatorView.ID, IPageLayout.LEFT, 0.3f, layout.getEditorArea());
@@ -40,8 +43,12 @@ public class Perspective implements IPerspectiveFactory {
 		
 		IFolderLayout right = layout.createFolder("right", IPageLayout.RIGHT, 0.6f, layout.getEditorArea());
 		
-		right.addView(MagnifyView.ID);
-		//right.addView(FileView.ID);
+		//right.addView(MagnifyView.ID);
+		
+		//IFolderLayout rightmost = layout.createFolder("rightmost", IPageLayout.RIGHT, 0.6f, "right");
+		
+		
+		right.addView(InventoryView.ID);
 		
 		
 		//layout.addView(PakView.ID, IPageLayout.RIGHT, 0.4f, layout.getEditorArea());
