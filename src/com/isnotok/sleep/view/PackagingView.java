@@ -28,6 +28,7 @@ import org.eclipse.ui.part.ViewPart;
 import com.isnotok.sleep.gallery.GalleryViewer;
 import com.isnotok.sleep.model.CacheManager;
 import com.isnotok.sleep.model.PakManager;
+import com.isnotok.sleep.model.PakRecord;
 import com.isnotok.sleep.model.Resource;
 
 //Implement ISelectionProvider if we want this view to return the zoom
@@ -199,5 +200,10 @@ public class PackagingView extends ViewPart implements ISelectionListener{
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 		// TODO Auto-generated method stub
 		//addSelection(selection);
+	}
+
+	public PakManager getPakManager() {
+		// TODO Auto-generated method stub
+		return pakManager;
 	}
 }

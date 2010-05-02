@@ -7,15 +7,19 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.commands.IHandlerListener;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 import com.isnotok.sleep.model.PakFile;
+import com.isnotok.sleep.model.PakManager;
 import com.isnotok.sleep.model.PakRecord;
 import com.isnotok.sleep.view.InventoryView;
+import com.isnotok.sleep.view.PackagingView;
 
 public class SavePakHandler implements IHandler {
 
@@ -40,18 +44,27 @@ public class SavePakHandler implements IHandler {
         fd.setFilterExtensions(filterExt);
         String selected = fd.open();
         if(selected != null){
+        	if(!selected.toLowerCase().endsWith(".pak")){
+        		selected += ".pak";
+        	}
+        	
+        	File file = new File(selected);
+        	if(file.exists()){
+        		boolean overwrite = MessageDialog.openConfirm(window.getShell(), "Confirm Overwrite", "Are you sure you want to overwrite file '" + file.getName() + "'?");
+        		if(!overwrite)
+        		{
+        			return null;
+        		}
+        	}
+        		
         	System.out.println(selected);
         	
-        	InventoryView inventory = (InventoryView) page.findView(InventoryView.ID);
-    		List<PakRecord> list = inventory.getInventory();
+        	PackagingView packaging = (PackagingView) page.findView(PackagingView.ID);
+    		PakManager pakManager = packaging.getPakManager();
     		
-    		PakFile pakfile = new PakFile(new File(selected));
-    		for(PakRecord record : list){
-    			//If record is type room then we need to get the tiles....
-    			pakfile.addRecord(record);
-    		}
+    		//pakManager.save(selected);
     		
-    		pakfile.save();
+    		//pakfile.save();
     		
         }
 		// TODO Auto-generated method stub

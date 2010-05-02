@@ -231,7 +231,7 @@
          </command>
       </menuContribution>
       <menuContribution
-            locationURI="toolbar:com.isnotok.sleep.view.InventoryView">
+            locationURI="toolbar:com.isnotok.sleep.view.PackagingView">
          <command
                commandId="com.isnotok.sleep.command.SavePak"
                icon="IMG_ETOOL_SAVEALL_EDIT"
