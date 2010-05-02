@@ -33,6 +33,7 @@ import org.eclipse.ui.part.EditorPart;
 import com.isnotok.sleep.gallery.GalleryViewer;
 import com.isnotok.sleep.model.CacheManager;
 import com.isnotok.sleep.model.PakFile;
+import com.isnotok.sleep.model.PakManager;
 import com.isnotok.sleep.model.PakRecord;
 import com.isnotok.sleep.model.Resource;
 
@@ -42,7 +43,8 @@ public class CacheEditor extends EditorPart{
 	private static final String[] TYPES = {"tile", "sprite", "scale", "music", "room"};
 	
 	private GalleryViewer gallery;
-	private CacheManager cache = new CacheManager();
+	//private CacheManager cache = new CacheManager();
+	private PakManager pakManager = new PakManager();
 
 	public CacheEditor() {
 		// TODO Auto-generated constructor stub
@@ -66,9 +68,7 @@ public class CacheEditor extends EditorPart{
 		setSite(site);
 		setInput(input);
 		
-		cache.setCacheDirectory((File) input.getAdapter(File.class));
-        //pakfile = new PakFile((File) input.getAdapter(File.class));
-        //pakfile.load();
+		pakManager.initDirectory((File) input.getAdapter(File.class));
 	}
 
 	@Override
@@ -120,7 +120,7 @@ public class CacheEditor extends EditorPart{
 					int index = gallery.indexOf(item);
 					if(index >= 0 && index < TYPES.length){
 						item.setText(TYPES[index]);
-						item.setItemCount(cache.getFileCount(TYPES[index]));
+						item.setItemCount(pakManager.getFileCount(TYPES[index]));//cache.getFileCount(TYPES[index]));
 						item.setExpanded(true);
 					}
 					else {
@@ -134,11 +134,11 @@ public class CacheEditor extends EditorPart{
 					// Get item index
 					int index = parentItem.indexOf(item);
 					
-					File [] files = cache.getFilesByType(parentItem.getText());
+					File [] files = pakManager.getFilesByType(parentItem.getText());//cache.getFilesByType(parentItem.getText());
 					
 					File resourceFile = files[index];
 					
-					Resource resource = cache.getResource(resourceFile);
+					Resource resource = CacheManager.getInstance().getResource(resourceFile);
 					
 					item.setText(resource.getResourceName());
 
@@ -200,7 +200,7 @@ public class CacheEditor extends EditorPart{
 
 			public void keyReleased(KeyEvent e) {
 				// TODO Auto-generated method stub
-				cache.setFilter(text.getText());
+				pakManager.setFilter(text.getText());
 				System.out.println("filtering: " + text.getText());
 				gallery.clearAll();
 				gallery.setItemCount(TYPES.length);

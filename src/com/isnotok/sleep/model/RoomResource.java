@@ -10,7 +10,7 @@ public class RoomResource extends Resource{
 	public static final int GRID = 13;
 	public static final int BYTES_PER_PIXEL = 4;
 	public static final int BYTES_TOTAL = GRID * GRID * UniqueId.MAX_DIGITS;
-	private CacheManager cache = new CacheManager();
+	//private CacheManager cache = new CacheManager();
 	
 	public RoomResource(File file){
 		super(file);
@@ -50,7 +50,7 @@ public class RoomResource extends Resource{
 				File tile = new File(parent, new UniqueId(b).toHexString());
 				
 				
-				tiles[x][y] = cache.getResource(tile);
+				tiles[x][y] = CacheManager.getInstance().getResource(tile);
 				//tiles[x][y].load();
 			}
 		}

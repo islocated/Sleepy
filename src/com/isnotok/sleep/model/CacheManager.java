@@ -1,9 +1,7 @@
 package com.isnotok.sleep.model;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.util.HashMap;
-import java.util.regex.Pattern;
 
 //Cache Manager should probably not be singleton...
 //We want to use this to manage other resources as well
@@ -11,21 +9,17 @@ public class CacheManager {
 	private File cacheDirectory;
 	HashMap<File, Resource> cache = new HashMap<File, Resource>();
 
-	private String filter = "";
-
-	private FileFilter fileFilter;
+	private final static CacheManager instance = new CacheManager();
 	
-	//private final static CacheManager instance = new CacheManager();
-	
-	public CacheManager(){
+	private CacheManager(){
 	}
 	
-	/*
 	public static CacheManager getInstance(){
 		return instance;
 	}
-	*/
 	
+	//How do we prevent cache manager from growing too big?
+	//Store a list of the last thousand or so
 	public void setCacheDirectory(File file){
 		cacheDirectory = file;
 		cache.clear();
@@ -43,36 +37,6 @@ public class CacheManager {
 				getResource(resource);
 			}
 		}
-	}
-	
-	public int getFileCount(String type){
-		File resources = new File(cacheDirectory, type);
-		
-		File [] files = resources.listFiles(fileFilter);
-		if(files == null)
-			return 0;
-		
-		return files.length;
-	}
-	
-	public File[] getFilesByType(String type){
-		File resources = new File(cacheDirectory, type);
-		
-		return resources.listFiles(fileFilter);
-	}
-	
-	public void setFilter(String text){
-		filter  = text;
-		
-		fileFilter = new FileFilter(){
-			Pattern p = Pattern.compile(".*" + filter + ".*", Pattern.CASE_INSENSITIVE);
-			
-			public boolean accept(File file) {
-				Resource resource = getResource(file);
-				
-				return (p.matcher(resource.getResourceName()).matches());
-			}
-		};
 	}
 	
 	public Resource getResource(File file){

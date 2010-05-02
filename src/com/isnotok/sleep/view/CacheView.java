@@ -31,6 +31,7 @@ import org.eclipse.ui.part.ViewPart;
 
 import com.isnotok.sleep.gallery.GalleryViewer;
 import com.isnotok.sleep.model.CacheManager;
+import com.isnotok.sleep.model.PakManager;
 import com.isnotok.sleep.model.Resource;
 import com.isnotok.sleep.model.TileResource;
 
@@ -40,7 +41,8 @@ public class CacheView extends ViewPart implements ISelectionListener{
 	
 	//private File resourceCache;
 	private GalleryViewer gallery;
-	private CacheManager cache = new CacheManager();
+	//private CacheManager cache = new CacheManager();
+	private PakManager pakManager = new PakManager();
 
 	public CacheView() {
 		// TODO Auto-generated constructor stub
@@ -113,7 +115,7 @@ public class CacheView extends ViewPart implements ISelectionListener{
 					int index = gallery.indexOf(item);
 					if(index >= 0 && index < TYPES.length){
 						item.setText(TYPES[index]);
-						item.setItemCount(cache.getFileCount(TYPES[index]));
+						item.setItemCount(pakManager.getFileCount(TYPES[index]));
 						item.setExpanded(true);
 					}
 					else {
@@ -127,11 +129,11 @@ public class CacheView extends ViewPart implements ISelectionListener{
 					// Get item index
 					int index = parentItem.indexOf(item);
 					
-					File [] files = cache.getFilesByType(parentItem.getText());
+					File [] files = pakManager.getFilesByType(parentItem.getText());
 					
 					File resourceFile = files[index];
 					
-					Resource resource = cache.getResource(resourceFile);
+					Resource resource = CacheManager.getInstance().getResource(resourceFile);
 					
 					item.setText(resource.getResourceName());
 
@@ -158,7 +160,7 @@ public class CacheView extends ViewPart implements ISelectionListener{
 
 			public void keyReleased(KeyEvent e) {
 				// TODO Auto-generated method stub
-				cache.setFilter(text.getText());
+				pakManager.setFilter(text.getText());
 				System.out.println("filtering: " + text.getText());
 				gallery.clearAll();
 				gallery.setItemCount(TYPES.length);
@@ -190,7 +192,7 @@ public class CacheView extends ViewPart implements ISelectionListener{
 				for(File f : file.listFiles()){
 					for(String s : TYPES){
 						if(f.getName().equals(s)){
-							cache.setCacheDirectory(file);
+							CacheManager.getInstance().setCacheDirectory(file);
 							
 							//if(file.getName().equals("resourceCache")){
 							//resourceCache = file;
