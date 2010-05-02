@@ -57,7 +57,6 @@ public class GalleryViewer extends Gallery{
 		// TODO Auto-generated method stub
 		site.setSelectionProvider(provider);
 		
-		/*
 		this.addMouseListener(new MouseListener(){
 
 			public void mouseDoubleClick(MouseEvent e) {
@@ -67,17 +66,21 @@ public class GalleryViewer extends Gallery{
 
 			public void mouseDown(MouseEvent e) {
 				// TODO Auto-generated method stub
-				System.out.println("gallery generated mouse down event");
-				provider.setSelection(getISelection());
 			}
 
 			public void mouseUp(MouseEvent e) {
 				// TODO Auto-generated method stub
+				//Fix bug in gallery where if the user starts 
+				//Left click item 1
+				//Shift click item 2
+				//Left click item 1
+				//No listeners are notified, but the selection size did change, so we need to
 				
+				//This hack just makes it so that the provider will notify all listeners
+				provider.setSelection(getISelection());
 			}
 			
 		});
-		*/
 		
 		addSelectionListener(new SelectionListener(){
 			public void widgetDefaultSelected(SelectionEvent e) {
@@ -105,10 +108,13 @@ public class GalleryViewer extends Gallery{
 	private class StructuredSelection implements IStructuredSelection{
 
 		public boolean isEmpty() {
+			System.out.println("is empty");
 			return getSelectionCount() == 0;
 		}
 		
 		public List<GalleryItem> toList() {
+			System.out.println("to list");
+			
 			List<GalleryItem> list = new ArrayList<GalleryItem>();
 			for(GalleryItem gi : getSelection()){
 				list.add(gi);
@@ -118,21 +124,29 @@ public class GalleryViewer extends Gallery{
 		}
 		
 		public Object[] toArray() {
+			System.out.println("to array");
+			
 			// TODO Auto-generated method stub
 			return getSelection();
 		}
 		
 		public int size() {
+			System.out.println("size");
+			
 			// TODO Auto-generated method stub
 			return getSelectionCount();
 		}
 		
 		public Iterator<GalleryItem> iterator() {
+			System.out.println("iterator");
+			
 			// TODO Auto-generated method stub
 			return toList().iterator();
 		}
 		
 		public Object getFirstElement() {
+			System.out.println("get first element");
+			
 			if(getSelectionCount() == 0)
 				return null;
 			// TODO Auto-generated method stub
