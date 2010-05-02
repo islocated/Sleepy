@@ -19,6 +19,10 @@ public class NavigatorView extends CommonNavigator {
 		return new File("/");
 	}
 	
+	public void refresh(){
+		this.getCommonViewer().refresh();
+	}
+	
 	/*
 	@Override
 	protected void handleDoubleClick(DoubleClickEvent anEvent) {

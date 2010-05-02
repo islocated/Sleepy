@@ -15,7 +15,6 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 import com.isnotok.sleep.editor.CacheEditor;
-import com.isnotok.sleep.editor.PakEditor;
 import com.isnotok.sleep.input.PakFileInput;
 import com.isnotok.sleep.view.NavigatorView;
 
@@ -36,8 +35,7 @@ public class OpenCache implements IHandler {
 		IWorkbenchPage page = window.getActivePage();
 		IViewPart view = page.findView(NavigatorView.ID);
 		// Get the selection
-		ISelection selection = view.getSite().getSelectionProvider()
-				.getSelection();
+		ISelection selection = view.getSite().getSelectionProvider().getSelection();
 
 		if(selection != null){
 			if (selection != null && selection instanceof IStructuredSelection) {

@@ -106,37 +106,7 @@ public class CacheEditor extends EditorPart{
 		//getSite().getPage().addSelectionListener(this);
 
 		//Drag drop
-		int ops = DND.DROP_COPY | DND.DROP_MOVE;
-        Transfer[] transfers = new Transfer[] { FileTransfer.getInstance() };
-        DragSource source = new DragSource(gallery, ops);
-        source.setTransfer(transfers);
-        source.addDragListener(new DragSourceListener(){
-
-			public void dragFinished(DragSourceEvent event) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			public void dragSetData(DragSourceEvent event) {
-				// TODO Auto-generated method stub
-				 if (FileTransfer.getInstance().isSupportedType(event.dataType)) {
-					 GalleryItem [] galleryItems = gallery.getSelection();
-					 String [] files = new String[galleryItems.length];
-					 for(int i = 0; i < files.length; i++){
-						 files[i] = ((File) galleryItems[i].getData()).getAbsolutePath();
-					 }
-					 event.data = files;
-				}
-			}
-
-			public void dragStart(DragSourceEvent event) {
-				// TODO Auto-generated method stub
-				if(gallery.getSelection() == null){
-					event.doit = false;
-				}
-			}
-        });
-		
+		addDragNDrop();
 		
 		//Set the filter for the keywords
 		setFilterField(grid);
@@ -180,6 +150,39 @@ public class CacheEditor extends EditorPart{
 		});
 		
 		gallery.setItemCount(TYPES.length);
+	}
+
+	private void addDragNDrop() {
+		int ops = DND.DROP_COPY | DND.DROP_MOVE;
+        Transfer[] transfers = new Transfer[] { FileTransfer.getInstance() };
+        DragSource source = new DragSource(gallery, ops);
+        source.setTransfer(transfers);
+        source.addDragListener(new DragSourceListener(){
+
+			public void dragFinished(DragSourceEvent event) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			public void dragSetData(DragSourceEvent event) {
+				// TODO Auto-generated method stub
+				 if (FileTransfer.getInstance().isSupportedType(event.dataType)) {
+					 GalleryItem [] galleryItems = gallery.getSelection();
+					 String [] files = new String[galleryItems.length];
+					 for(int i = 0; i < files.length; i++){
+						 files[i] = ((File) galleryItems[i].getData()).getAbsolutePath();
+					 }
+					 event.data = files;
+				}
+			}
+
+			public void dragStart(DragSourceEvent event) {
+				// TODO Auto-generated method stub
+				if(gallery.getSelection() == null){
+					event.doit = false;
+				}
+			}
+        });
 	}
 	
 

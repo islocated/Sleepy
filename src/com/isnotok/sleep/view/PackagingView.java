@@ -70,6 +70,8 @@ public class PackagingView extends ViewPart implements ISelectionListener{
 		gallery.setLayoutData(gridData);
 		
 		gallery.setDefaultRenderers();
+		
+		addDragNDrop();
 
 		// SetData is called when Gallery creates an item.
 		gallery.addListener(SWT.SetData, new Listener() {
@@ -109,7 +111,9 @@ public class PackagingView extends ViewPart implements ISelectionListener{
 				}
 			}
 		});
-		
+	}
+
+	private void addDragNDrop() {
 		//Drag drop
 		int ops = DND.DROP_COPY | DND.DROP_MOVE;
         Transfer[] transfers = new Transfer[] { FileTransfer.getInstance() };
@@ -157,10 +161,7 @@ public class PackagingView extends ViewPart implements ISelectionListener{
 				// TODO Auto-generated method stub
 				
 			}
-        	
         });
-
-		
 	}
 
 	@Override
@@ -173,42 +174,4 @@ public class PackagingView extends ViewPart implements ISelectionListener{
 		// TODO Auto-generated method stub
 		//addSelection(selection);
 	}
-
-	/*
-	public void addSelection(ISelection selection) {
-		// TODO Auto-generated method stub
-		if(selection instanceof IStructuredSelection){
-			IStructuredSelection sel = (IStructuredSelection) selection;
-			Object element = sel.getFirstElement();
-			if(element == null){
-				return;
-			}
-			
-			System.out.println(element.getClass());
-			
-			if(element instanceof GalleryItem){
-				GalleryItem [] gi = (GalleryItem[]) sel.toArray();
-				
-				for(GalleryItem item: gi){
-					if(!galleryItems.contains(gi))
-						galleryItems.add(item);
-				}
-				
-				gallery.clearAll();
-				gallery.setItemCount(1);
-			}
-		}
-	}*/
-
-	/*
-	public List<PakRecord> getInventory() {
-		List<PakRecord> list = new ArrayList<PakRecord>();
-		
-		for(GalleryItem g : galleryItems){
-			list.add((PakRecord) g.getData());
-		}
-		// TODO Auto-generated method stub
-		return list;
-	}
-	*/
 }

@@ -163,4 +163,30 @@ public class MagnifyView extends ViewPart implements ISelectionListener{
 			}
 		}
 	}
+
+	public void zoom(boolean in) {
+		// TODO Auto-generated method stub
+		DefaultGalleryGroupRenderer gr = (DefaultGalleryGroupRenderer) gallery.getGroupRenderer();
+		int height = gr.getItemHeight();
+		int width = gr.getItemWidth();
+		
+		if(in){
+			height *= 2;
+			width *= 2;
+		}else{
+			height /= 2;
+			width /= 2;
+		}
+		
+		if(height < 64 || width < 64){
+			return;
+		}
+		
+		if(height > 256 || width > 256){
+			return;
+		}
+		
+		gr.setItemSize(width, height);
+		gallery.setItemCount(1);
+	}
 }

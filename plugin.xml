@@ -152,6 +152,21 @@
             id="com.isnotok.sleep.command.OpenCache"
             name="Open Cache">
       </command>
+      <command
+            defaultHandler="com.isnotok.sleep.handler.RefreshNavigator"
+            id="com.isnotok.sleep.command.RefreshNavigator"
+            name="Refresh">
+      </command>
+      <command
+            defaultHandler="com.isnotok.sleep.handler.Zoomin"
+            id="com.isnotok.sleep.command.Zoomin"
+            name="Zoom in">
+      </command>
+      <command
+            defaultHandler="com.isnotok.sleep.handler.Zoomout"
+            id="com.isnotok.sleep.command.Zoomout"
+            name="Zoom out">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -175,21 +190,34 @@
                style="push"
                tooltip="Open Pak File">
          </command>
+         <command
+               commandId="com.isnotok.sleep.command.OpenCache"
+               icon="IMG_OBJ_FOLDER"
+               label="Open Cache Folder"
+               style="push"
+               tooltip="Open Cache Folder">
+         </command>
          <separator
-               name="com.isnotok.sleep.separator1">
+               name="com.isnotok.sleep.separator1"
+               visible="true">
          </separator>
          <command
                commandId="com.isnotok.sleep.command.DeleteFile"
                icon="IMG_TOOL_DELETE"
                label="Delete File"
                style="push"
-               tooltip="Delete File">
-         </command>
-         <command
-               commandId="com.isnotok.sleep.command.OpenCache"
-               label="Open Cache"
-               style="push"
                tooltip="Open Cache">
+         </command>
+         <separator
+               name="com.isnotok.sleep.separator2"
+               visible="true">
+         </separator>
+         <command
+               commandId="com.isnotok.sleep.command.RefreshNavigator"
+               icon="IMG_OBJ_FILE"
+               label="Refresh"
+               style="push"
+               tooltip="Refresh">
          </command>
       </menuContribution>
       <menuContribution
@@ -210,6 +238,23 @@
                label="Save Pak"
                style="push"
                tooltip="Save Pak">
+         </command>
+      </menuContribution>
+      <menuContribution
+            locationURI="toolbar:com.isnotok.sleep.view.MagnifyView">
+         <command
+               commandId="com.isnotok.sleep.command.Zoomout"
+               icon="IMG_TOOL_BACK"
+               label="Zoom out"
+               style="push"
+               tooltip="Zoom out">
+         </command>
+         <command
+               commandId="com.isnotok.sleep.command.Zoomin"
+               icon="IMG_TOOL_FORWARD"
+               label="Zoom in"
+               style="push"
+               tooltip="Zoom in">
          </command>
       </menuContribution>
    </extension>
