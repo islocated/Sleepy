@@ -11,9 +11,11 @@ import java.util.regex.Pattern;
 //We want to use this to manage other resources as well
 public class PakManager {
 	HashMap<String, List<File>> cache = new HashMap<String, List<File>>();
+	HashMap<String, List<File>> filtered = new HashMap<String, List<File>>();
+	
 	private String filter = "";
 
-	private Pattern p = Pattern.compile(".*", Pattern.CASE_INSENSITIVE);;
+	private Pattern p = Pattern.compile(".*", Pattern.CASE_INSENSITIVE);
 	
 	public PakManager(){
 		
@@ -27,6 +29,7 @@ public class PakManager {
 			return;
 		
 		for(File type : types){
+			System.out.println("initing: " + type);
 			File [] files = type.listFiles();
 			if(files == null)
 				continue;
@@ -35,12 +38,47 @@ public class PakManager {
 				addFile(type.getName(), file);
 			}
 		}
+		
+		setFilteredList();
 	}
 	
+	private void setFilteredList() {
+		//Clearing this list allows it to remove types which may not be present
+		//This is important because otherwise, one pack might not have the types
+		//of the previous and these would stay...
+		filtered.clear();
+		
+		// TODO Auto-generated method stub
+		for(String type : cache.keySet()){
+			List<File> list = cache.get(type);
+			if(list == null){
+				continue;
+			}
+			
+			List<File> flist = filtered.get(type);
+			if(flist == null){
+				flist = new ArrayList<File>();
+				filtered.put(type, flist);
+			}
+			flist.clear();
+			
+			for(File file : list){
+				Resource resource = CacheManager.getInstance().getResource(file);
+				//Unsupported resource from cache manager
+				if(resource == null){
+					continue;
+				}
+				if(p.matcher(resource.getResourceName()).matches()){
+					flist.add(file);
+				}
+			}
+		}
+	}
+
 	public void addFile(String type, File file){
 		List<File> list = cache.get(type);
 		if(list == null){
-			list = new LinkedList<File>();
+			list = new ArrayList<File>();
 			cache.put(type, list);
 		}
 		
@@ -58,8 +96,10 @@ public class PakManager {
 		list.remove(file);
 	}
 	
+	//Uses filtered list
 	public int getFileCount(String type){
-		List<File> list = cache.get(type);
+		//HashMap<String, List<File>> map = filter.equals("") ? cache : filtered;
+		List<File> list = filtered.get(type);
 		if(list == null){
 			return 0;
 		}
@@ -67,43 +107,25 @@ public class PakManager {
 		return list.size();
 	}
 	
-	public File[] getFilesByType(String type, int index){
-		List<File> list = cache.get(type);
+	//Uses filtered list
+	public File getFilesByType(String type, int index){
+		List<File> list = filtered.get(type);
 		if(list == null){
-			return new File[0];
+			return null;
 		}
 		
-		List<File> files = new ArrayList<File>();
-		for(File file : list){
-			Resource resource = CacheManager.getInstance().getResource(file);
-			if(p.matcher(resource.getResourceName()).matches()){
-				files.add(file);
-			}
-		}
+		if(index < 0 || index >= list.size())
+			return null;
 		
-		return files.toArray(new File[0]);
-	}
-	
-	public File[] getFilesByType(String type){
-		List<File> list = cache.get(type);
-		if(list == null){
-			return new File[0];
-		}
-		
-		List<File> files = new ArrayList<File>();
-		for(File file : list){
-			Resource resource = CacheManager.getInstance().getResource(file);
-			if(p.matcher(resource.getResourceName()).matches()){
-				files.add(file);
-			}
-		}
-		
-		return files.toArray(new File[0]);
+		//Just return the items from the filtered list
+		return list.get(index);
 	}
 	
 	public void setFilter(String text){
 		filter  = text;
 		
 		p = Pattern.compile(".*" + filter + ".*", Pattern.CASE_INSENSITIVE);
+		
+		setFilteredList();
 	}
 }

@@ -37,7 +37,7 @@ import com.isnotok.sleep.model.TileResource;
 
 public class CacheView extends ViewPart implements ISelectionListener{
 	public final static String ID = "com.isnotok.sleep.view.CacheView";
-	private static final String[] TYPES = {"tile", "sprite", "room", "music", "timbre", "scale"};;
+	private static final String[] TYPES = {"tile", "sprite", "room", "music", "timbre", "scale"};
 	
 	//private File resourceCache;
 	private GalleryViewer gallery;
@@ -129,9 +129,7 @@ public class CacheView extends ViewPart implements ISelectionListener{
 					// Get item index
 					int index = parentItem.indexOf(item);
 					
-					File [] files = pakManager.getFilesByType(parentItem.getText());
-					
-					File resourceFile = files[index];
+					File resourceFile = pakManager.getFilesByType(parentItem.getText(), index);
 					
 					Resource resource = CacheManager.getInstance().getResource(resourceFile);
 					
@@ -189,15 +187,20 @@ public class CacheView extends ViewPart implements ISelectionListener{
 					return;
 				}
 				
+				System.out.println("detect view:" + file.getName());
+				
 				for(File f : file.listFiles()){
+					System.out.println("   listing: " + f.getName());
 					for(String s : TYPES){
 						if(f.getName().equals(s)){
-							CacheManager.getInstance().setCacheDirectory(file);
-							
+							//CacheManager.getInstance().setCacheDirectory(file);
+							pakManager.initDirectory(file);
 							//if(file.getName().equals("resourceCache")){
 							//resourceCache = file;
 							gallery.clearAll();
 							gallery.setItemCount(TYPES.length);
+							
+							System.out.println("   view should be refreshed: " + file.getName());
 							return;
 						}
 					}

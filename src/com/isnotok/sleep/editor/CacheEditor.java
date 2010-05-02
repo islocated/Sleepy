@@ -134,9 +134,9 @@ public class CacheEditor extends EditorPart{
 					// Get item index
 					int index = parentItem.indexOf(item);
 					
-					File [] files = pakManager.getFilesByType(parentItem.getText());//cache.getFilesByType(parentItem.getText());
+					//File [] files = pakManager.getFilesByType(parentItem.getText());//cache.getFilesByType(parentItem.getText());
 					
-					File resourceFile = files[index];
+					File resourceFile = pakManager.getFilesByType(parentItem.getText(), index);//files[index];
 					
 					Resource resource = CacheManager.getInstance().getResource(resourceFile);
 					
