@@ -1,6 +1,8 @@
 package com.isnotok.sleep.view;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -86,11 +88,15 @@ public class CacheView extends ViewPart implements ISelectionListener{
 				// TODO Auto-generated method stub
 				 if (FileTransfer.getInstance().isSupportedType(event.dataType)) {
 					 GalleryItem [] galleryItems = gallery.getSelection();
-					 String [] files = new String[galleryItems.length];
-					 for(int i = 0; i < files.length; i++){
-						 files[i] = ((File) galleryItems[i].getData()).getAbsolutePath();
+					 List<String> files = new ArrayList<String>(galleryItems.length);
+					 //String [] files = new String[galleryItems.length];
+					 for(int i = 0; i < galleryItems.length; i++){
+						 File file = (File) galleryItems[i].getData();
+						 if(file == null)
+							 continue;
+						 files.add(file.getAbsolutePath());
 					 }
-					 event.data = files;
+					 event.data = files.toArray(new String[0]);
 				}
 			}
 

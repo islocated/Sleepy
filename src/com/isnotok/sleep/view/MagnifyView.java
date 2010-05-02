@@ -1,33 +1,39 @@
 package com.isnotok.sleep.view;
 
-import org.eclipse.jface.action.MenuManager;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.nebula.widgets.gallery.DefaultGalleryGroupRenderer;
 import org.eclipse.nebula.widgets.gallery.DefaultGalleryItemRenderer;
-import org.eclipse.nebula.widgets.gallery.Gallery;
 import org.eclipse.nebula.widgets.gallery.GalleryItem;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.ISelectionListener;
-import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
 
 import com.isnotok.sleep.gallery.GalleryViewer;
+import com.isnotok.sleep.model.CacheManager;
+import com.isnotok.sleep.model.PakManager;
+import com.isnotok.sleep.model.Resource;
 
 //Implement ISelectionProvider if we want this view to return the zoom
 public class MagnifyView extends ViewPart implements ISelectionListener{
 	public final static String ID = "com.isnotok.sleep.view.MagnifyView";
+	private static final String[] TYPES = {"tile", "sprite", "room", "music", "timbre", "scale"};
+	
 	private GalleryViewer gallery;
 	
-	private GalleryItem[] gi;
+	//private GalleryItem[] gi;
+	private PakManager pakManager = new PakManager();
 
 	public MagnifyView() {
 		// TODO Auto-generated constructor stub
@@ -52,46 +58,21 @@ public class MagnifyView extends ViewPart implements ISelectionListener{
 		gridData.horizontalSpan = 2;
 		gallery.setLayoutData(gridData);
 		
-		
-		final DefaultGalleryGroupRenderer gr = new DefaultGalleryGroupRenderer();
-		gr.setMinMargin(2);
-		gr.setItemHeight(128);
-		gr.setItemWidth(128);
-		gr.setAutoMargin(true);
-		gallery.setGroupRenderer(gr);
-		gallery.setAntialias(SWT.OFF);
-
-		
-		DefaultGalleryItemRenderer ir = new DefaultGalleryItemRenderer();
-		ir.setShowLabels(true);
-		ir.setDropShadows(true);
-		ir.setDropShadowsSize(2);
-		gallery.setItemRenderer(ir);
+		gallery.setDefaultRenderers();
 
 		// SetData is called when Gallery creates an item.
 		gallery.addListener(SWT.SetData, new Listener() {
 			public void handleEvent(Event event) {
-				if(gi == null){
-					return;
-				}
-				
 				GalleryItem item = (GalleryItem) event.item;
 				if (item.getParentItem() == null) {
 					// It's a group
 					int index = gallery.indexOf(item);
-					/*
 					if (index >= 0 && index < TYPES.length) {
 						// This is group 1
 						item.setText(TYPES[index]);
-						item.setItemCount(pakfile.getResourceType(TYPES[index]).length);
+						item.setItemCount(pakManager.getFileCount(TYPES[index]));
 						item.setExpanded(true);
 					} 
-					*/
-					if(index == 0){
-						item.setText("IMAGE");
-						item.setItemCount(gi.length);
-						item.setExpanded(true);
-					}
 					else {
 						// Should never be used
 						item.setItemCount(0);
@@ -103,9 +84,15 @@ public class MagnifyView extends ViewPart implements ISelectionListener{
 					// Get item index
 					int index = parentItem.indexOf(item);
 					
-					item.setText(gi[index].getText());
-					item.setImage(gi[index].getImage());
-					item.setData(gi[index].getData());
+					File resourceFile = pakManager.getFilesByType(parentItem.getText(), index);
+					
+					Resource resource = CacheManager.getInstance().getResource(resourceFile);
+					
+					item.setText(resource.getResourceName());
+
+					Image img = new Image(parent.getDisplay(), resource.getImageData());
+					item.setImage(img);
+					item.setData(resourceFile);
 				}
 			}
 		});
@@ -157,9 +144,20 @@ public class MagnifyView extends ViewPart implements ISelectionListener{
 			System.out.println(element.getClass());
 			
 			if(element instanceof GalleryItem){
-				gi = (GalleryItem[]) sel.toArray();
+				pakManager.clear();
+				GalleryItem [] galleryItems = (GalleryItem []) sel.toArray();
+				 //List<String> files = new ArrayList<String>(galleryItems.length);
+				 for(int i = 0; i < galleryItems.length; i++){
+					 File file = (File) galleryItems[i].getData();
+					 if(file == null)
+						 continue;
+					 File parent = file.getParentFile();
+					 pakManager.addFile(parent.getName(), file);
+				 }
+				
+				pakManager.setFilter("");//gi = (GalleryItem[]) sel.toArray();
 				gallery.clearAll();
-				gallery.setItemCount(1);
+				gallery.setItemCount(TYPES.length);
 			}
 		}
 	}
@@ -182,11 +180,11 @@ public class MagnifyView extends ViewPart implements ISelectionListener{
 			return;
 		}
 		
-		if(height > 256 || width > 256){
+		if(height > 512 || width > 512){
 			return;
 		}
 		
 		gr.setItemSize(width, height);
-		gallery.setItemCount(1);
+		gallery.setItemCount(TYPES.length);
 	}
 }

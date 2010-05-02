@@ -3,8 +3,6 @@ package com.isnotok.sleep.model;
 import java.io.File;
 import java.util.HashMap;
 
-//Cache Manager should probably not be singleton...
-//We want to use this to manage other resources as well
 public class CacheManager {
 	private File cacheDirectory;
 	HashMap<File, Resource> cache = new HashMap<File, Resource>();

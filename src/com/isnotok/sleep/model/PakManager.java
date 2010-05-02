@@ -3,12 +3,9 @@ package com.isnotok.sleep.model;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-//Cache Manager should probably not be singleton...
-//We want to use this to manage other resources as well
 public class PakManager {
 	HashMap<String, List<File>> cache = new HashMap<String, List<File>>();
 	HashMap<String, List<File>> filtered = new HashMap<String, List<File>>();
@@ -42,6 +39,12 @@ public class PakManager {
 		setFilteredList();
 	}
 	
+	public void clear() {
+		// TODO Auto-generated method stub
+		filtered.clear();
+		cache.clear();
+	}
+	
 	private void setFilteredList() {
 		//Clearing this list allows it to remove types which may not be present
 		//This is important because otherwise, one pack might not have the types
@@ -73,7 +76,7 @@ public class PakManager {
 				}
 			}
 		}
-	}
+	} 
 
 	public void addFile(String type, File file){
 		List<File> list = cache.get(type);
@@ -98,7 +101,6 @@ public class PakManager {
 	
 	//Uses filtered list
 	public int getFileCount(String type){
-		//HashMap<String, List<File>> map = filter.equals("") ? cache : filtered;
 		List<File> list = filtered.get(type);
 		if(list == null){
 			return 0;

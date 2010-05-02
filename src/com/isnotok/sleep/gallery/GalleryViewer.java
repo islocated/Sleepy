@@ -15,6 +15,8 @@ import org.eclipse.nebula.widgets.gallery.DefaultGalleryItemRenderer;
 import org.eclipse.nebula.widgets.gallery.Gallery;
 import org.eclipse.nebula.widgets.gallery.GalleryItem;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Composite;
@@ -55,14 +57,38 @@ public class GalleryViewer extends Gallery{
 		// TODO Auto-generated method stub
 		site.setSelectionProvider(provider);
 		
-		addSelectionListener(new SelectionListener(){
-			public void widgetDefaultSelected(SelectionEvent e) {
+		/*
+		this.addMouseListener(new MouseListener(){
+
+			public void mouseDoubleClick(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			public void mouseDown(MouseEvent e) {
+				// TODO Auto-generated method stub
+				System.out.println("gallery generated mouse down event");
+				provider.setSelection(getISelection());
+			}
+
+			public void mouseUp(MouseEvent e) {
 				// TODO Auto-generated method stub
 				
 			}
 			
+		});
+		*/
+		
+		addSelectionListener(new SelectionListener(){
+			public void widgetDefaultSelected(SelectionEvent e) {
+				// TODO Auto-generated method stub
+				System.out.println("gallery generated default selection event");
+				provider.setSelection(getISelection());
+			}
+			
 			//Notify the site selection provider to fire selection event to listeners
 			public void widgetSelected(SelectionEvent e) {
+				System.out.println("gallery generated selection event");
 				provider.setSelection(getISelection());
 			}	
 		});
