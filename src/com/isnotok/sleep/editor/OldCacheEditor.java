@@ -6,10 +6,6 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.nebula.jface.galleryviewer.GalleryTreeViewer;
-import org.eclipse.nebula.widgets.gallery.DefaultGalleryGroupRenderer;
-import org.eclipse.nebula.widgets.gallery.DefaultGalleryItemRenderer;
-import org.eclipse.nebula.widgets.gallery.Gallery;
 import org.eclipse.nebula.widgets.gallery.GalleryItem;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
@@ -37,27 +33,22 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
 import com.isnotok.sleep.gallery.GalleryViewer;
-import com.isnotok.sleep.model.CacheDirectory;
 import com.isnotok.sleep.model.CacheManager;
 import com.isnotok.sleep.model.PakFile;
 import com.isnotok.sleep.model.PakManager;
 import com.isnotok.sleep.model.PakRecord;
 import com.isnotok.sleep.model.Resource;
-import com.isnotok.sleep.provider.CacheContentProvider;
-import com.isnotok.sleep.provider.CacheLabelProvider;
 
-public class CacheEditor extends EditorPart{
+public class OldCacheEditor extends EditorPart{
 	public static final String ID = "com.isnotok.sleep.editor.CacheEditor";
 	
 	private static final String[] TYPES = {"tile", "sprite", "scale", "music", "room"};
 	
-	private GalleryTreeViewer gallery;
+	private GalleryViewer gallery;
 	//private CacheManager cache = new CacheManager();
 	private PakManager pakManager = new PakManager();
-	
-	private CacheDirectory cacheDirectory;
 
-	public CacheEditor() {
+	public OldCacheEditor() {
 		// TODO Auto-generated constructor stub
 	}
 
@@ -80,8 +71,6 @@ public class CacheEditor extends EditorPart{
 		setInput(input);
 		
 		pakManager.initDirectory((File) input.getAdapter(File.class));
-		
-		cacheDirectory = new CacheDirectory((File) input.getAdapter(File.class));
 	}
 
 	@Override
@@ -107,48 +96,24 @@ public class CacheEditor extends EditorPart{
 		GridData gridData;
 
 		//Add Gallery to grid
-		gallery = new GalleryTreeViewer(grid, SWT.V_SCROLL | SWT.VIRTUAL | SWT.MULTI);
+		gallery = new GalleryViewer(grid, SWT.V_SCROLL | SWT.VIRTUAL | SWT.MULTI);
 		gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
-		gallery.getControl().setLayoutData(gridData);
+		gallery.setLayoutData(gridData);
 		
-		gallery.setContentProvider(new CacheContentProvider());
-		gallery.setLabelProvider(new CacheLabelProvider());
-		gallery.setInput(cacheDirectory);
+		gallery.setAsSelectionProvider(getSite());
 		
-		
-		DefaultGalleryGroupRenderer gr = new DefaultGalleryGroupRenderer();
-		gr.setMinMargin(2);
-		gr.setItemHeight(64);
-		gr.setItemWidth(84);
-		gr.setAutoMargin(true);
-		((Gallery)gallery.getControl()).setGroupRenderer(gr);
-		((Gallery)gallery.getControl()).setAntialias(SWT.OFF);
-		
-		DefaultGalleryItemRenderer ir = new DefaultGalleryItemRenderer();
-		ir.setShowLabels(true);
-		ir.setDropShadows(true);
-		ir.setDropShadowsSize(2);
-		((Gallery)gallery.getControl()).setItemRenderer(ir);
-		
-		
-		getSite().setSelectionProvider(gallery);
-		
-		
-		//gallery.setAsSelectionProvider(getSite());
-		
-		//gallery.setDefaultRenderers();
+		gallery.setDefaultRenderers();
 
 		//Sets up the ability for this view to get selection events from all views
 		//getSite().getPage().addSelectionListener(this);
 
 		//Drag drop
-		//addDragNDrop();
+		addDragNDrop();
 		
 		//Set the filter for the keywords
-		//setFilterField(grid);
+		setFilterField(grid);
 		
 		// SetData is called when Gallery creates an item.
-		/*
 		gallery.addListener(SWT.SetData, new Listener() {
 			public void handleEvent(Event event) {
 				GalleryItem item = (GalleryItem) event.item;
@@ -187,10 +152,8 @@ public class CacheEditor extends EditorPart{
 		});
 		
 		gallery.setItemCount(TYPES.length);
-		*/
 	}
 
-	/*
 	private void addDragNDrop() {
 		int ops = DND.DROP_COPY | DND.DROP_MOVE;
         Transfer[] transfers = new Transfer[] { FileTransfer.getInstance() };
@@ -250,10 +213,9 @@ public class CacheEditor extends EditorPart{
 			
 		});
 	}
-	*/
 
 	@Override
 	public void setFocus() {
-		gallery.getControl().setFocus();
+		gallery.setFocus();
 	}
 }
