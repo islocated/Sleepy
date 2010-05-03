@@ -6,16 +6,20 @@ import java.util.List;
 
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.nebula.jface.galleryviewer.GalleryTreeViewer;
 import org.eclipse.nebula.widgets.gallery.DefaultGalleryGroupRenderer;
 import org.eclipse.nebula.widgets.gallery.DefaultGalleryItemRenderer;
 import org.eclipse.nebula.widgets.gallery.GalleryItem;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Scale;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
@@ -52,6 +56,8 @@ public class MagnifyView extends ViewPart implements ISelectionListener{
 		
 		//Sets up the ability for this view to get selection events from all views
 		getSite().getPage().addSelectionListener(this);
+		
+		//GalleryTreeViewer
 
 		gallery = new GalleryViewer(canvas, SWT.V_SCROLL | SWT.VIRTUAL);
 		gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
@@ -97,6 +103,26 @@ public class MagnifyView extends ViewPart implements ISelectionListener{
 			}
 		});
 		
+		final Scale scale = new Scale(canvas, SWT.NONE);
+		scale.setMinimum(2);
+		scale.setMaximum(9);
+		scale.setIncrement(1);
+		gridData = new GridData(SWT.FILL, SWT.CENTER, true, false);
+		scale.setLayoutData(gridData);
+		scale.addSelectionListener(new SelectionListener(){
+
+			public void widgetDefaultSelected(SelectionEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			public void widgetSelected(SelectionEvent e) {
+				// TODO Auto-generated method stub
+				DefaultGalleryGroupRenderer gr = (DefaultGalleryGroupRenderer) gallery.getGroupRenderer();
+				gr.setItemSize(32 * scale.getSelection()+ 10, 32 * scale.getSelection());
+			}
+			
+		});
 		
 		//Button button = new Button(canvas, SWT.NONE);
 		//
