@@ -19,6 +19,7 @@ import com.isnotok.sleep.model.PakFile;
 import com.isnotok.sleep.model.PakManager;
 import com.isnotok.sleep.model.PakRecord;
 import com.isnotok.sleep.view.InventoryView;
+import com.isnotok.sleep.view.NavigatorView;
 import com.isnotok.sleep.view.PackagingView;
 
 public class SavePakHandler implements IHandler {
@@ -39,7 +40,7 @@ public class SavePakHandler implements IHandler {
 		
 		FileDialog fd = new FileDialog(window.getShell(), SWT.SAVE);
         fd.setText("Save");
-        fd.setFilterPath("/");
+        //fd.setFilterPath("/");
         String[] filterExt = { "*.pak" };
         fd.setFilterExtensions(filterExt);
         String selected = fd.open();
@@ -62,6 +63,11 @@ public class SavePakHandler implements IHandler {
         	PackagingView packaging = (PackagingView) page.findView(PackagingView.ID);
     		PakManager pakManager = packaging.getPakManager();
     		
+    		pakManager.save(selected);
+    		
+    		NavigatorView view = (NavigatorView) page.findView(NavigatorView.ID);
+    		
+    		view.getCommonViewer().refresh();
     		//pakManager.save(selected);
     		
     		//pakfile.save();

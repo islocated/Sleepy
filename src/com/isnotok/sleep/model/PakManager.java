@@ -1,10 +1,16 @@
 package com.isnotok.sleep.model;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Pattern;
+import java.util.zip.Deflater;
+
+import com.isnotok.sleep.util.BytesUtil;
 
 public class PakManager {
 	HashMap<String, List<File>> cache = new HashMap<String, List<File>>();
@@ -129,5 +135,61 @@ public class PakManager {
 		p = Pattern.compile(".*" + filter + ".*", Pattern.CASE_INSENSITIVE);
 		
 		setFilteredList();
+	}
+
+	public void save(String selected) {
+		// TODO Auto-generated method stub
+		File file = new File(selected);
+		//PakFile pakFile = new PakFile(file);
+		
+		ByteArrayOutputStream stream = new ByteArrayOutputStream();
+		
+		
+		byte [] data;
+		try {
+			FileOutputStream fos = new FileOutputStream(file);
+			
+			int count = 0;
+			for(String type : cache.keySet()){
+				System.out.println(type);
+				List<File> list = cache.get(type);
+				count += list.size();
+			}
+			
+			//Write the count at top of pak
+			stream.write(BytesUtil.writeInt(count));
+			
+			System.out.println("HHHHHHHHHHHNEW");
+			for(String type : cache.keySet()){
+				System.out.println(type);
+				List<File> list = cache.get(type);
+				for(File f : list){
+					Resource resource = CacheManager.getInstance().getResource(f);
+					stream.write(BytesUtil.writeString(resource.getType()));
+					stream.write(UniqueId.computeFromData(resource.getData()).getBytes());
+					stream.write(BytesUtil.writeString(resource.getResourceName()));
+					stream.write(BytesUtil.writeInt(resource.getData().length));
+					stream.write(resource.getData());
+				}
+			}
+			
+			data = stream.toByteArray();
+			
+			// Compress the bytes
+			 byte[] output = new byte[data.length];
+			 Deflater compresser = new Deflater();
+			 compresser.setInput(data);
+			 compresser.finish();
+			 int compressedDataLength = compresser.deflate(output);
+
+			fos.write(BytesUtil.writeInt(data.length));	//Write size of uncompressed data
+			fos.write(output, 0, compressedDataLength);
+			fos.close();
+					
+		} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+		}
+		
 	}
 }

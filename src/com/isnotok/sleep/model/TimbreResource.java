@@ -22,7 +22,7 @@ public class TimbreResource extends Resource{
 		else{
 			StringBuffer sb = new StringBuffer();
 			
-			for(int i = BYTES_TOTAL; i < data.length; i++){
+			for(int i = BYTES_TOTAL; i < data.length-1; i++){
 				sb.append((char)data[i]);
 			}
 			
@@ -30,6 +30,11 @@ public class TimbreResource extends Resource{
 		}
 	}
 	
+	@Override
+	public String getType() {
+		return "timbre";
+	};
+
 	@Override
 	public ImageData getImageData(){
 		if(data == null || data.length < BYTES_TOTAL)

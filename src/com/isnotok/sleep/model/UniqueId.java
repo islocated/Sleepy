@@ -96,4 +96,9 @@ public class UniqueId {
 			return null;
 		}
 	}
+
+	public byte[] getBytes() {
+		// TODO Auto-generated method stub
+		return id;
+	}
 }

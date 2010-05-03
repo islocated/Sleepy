@@ -9,7 +9,9 @@ public class RoomResource extends Resource{
 	public static final int SIZE = 16;
 	public static final int GRID = 13;
 	public static final int BYTES_PER_PIXEL = 4;
-	public static final int BYTES_TOTAL = GRID * GRID * UniqueId.MAX_DIGITS;
+	public static final int BYTES_FOR_ROOM = GRID * GRID * UniqueId.MAX_DIGITS;
+	public static final int BYTES_FOR_WALL = GRID * GRID;
+	public static final int BYTES_TOTAL = BYTES_FOR_ROOM + BYTES_FOR_WALL;
 
 	public RoomResource(File file){
 		super(file);
@@ -22,12 +24,20 @@ public class RoomResource extends Resource{
 		}
 		else{
 			StringBuffer sb = new StringBuffer();
-			for(int i = BYTES_TOTAL; i < data.length; i++){
+			for(int i = BYTES_TOTAL; i < data.length - 1; i++){
 				sb.append((char)data[i]);
 			}
+			System.out.println(sb.toString());
+			
 			return sb.toString();
 		}
 	}
+	
+	@Override
+	public String getType() {
+		return "room";
+	};
+
 
 	@Override
 	public ImageData getImageData(){

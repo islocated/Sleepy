@@ -21,12 +21,18 @@ public class MusicResource extends Resource{
 		}
 		else{
 			StringBuffer sb = new StringBuffer();
-			for(int i = BYTES_TOTAL; i < data.length; i++){
+			for(int i = BYTES_TOTAL; i < data.length-1; i++){
 				sb.append((char)data[i]);
 			}
 			return sb.toString();
 		}
 	}
+	
+	@Override
+	public String getType() {
+		return "music";
+	};
+
 
 	@Override
 	public ImageData getImageData(){

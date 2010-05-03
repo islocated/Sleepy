@@ -17,6 +17,20 @@ public class SpriteResource extends TileResource{
 	}
 	
 	@Override
+	public String getResourceName() {
+		if(data == null){
+			return null;
+		}
+		else{
+			StringBuffer sb = new StringBuffer();
+			for(int i = BYTES_TOTAL; i < data.length-1; i++){
+				sb.append((char)data[i]);
+			}
+			return sb.toString();
+		}
+	}
+	
+	@Override
 	public ImageData getImageData(){
 		if(data == null || data.length < BYTES_TOTAL)
 			return null;
@@ -36,6 +50,12 @@ public class SpriteResource extends TileResource{
 		
 		return imgData;
 	}
+	
+	@Override
+	public String getType() {
+		return "sprite";
+	};
+
 	
 	public static void main(String [] args){
 		File file = new File(".", "input/0A3A96732EF2");

@@ -30,6 +30,7 @@ public class Resource {
 		return null;
 	}
 	
+	//We should reuse this function
 	public String getResourceName(){
 		return null;
 	}
