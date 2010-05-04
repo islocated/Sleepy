@@ -3,15 +3,16 @@ package com.isnotok.sleep.model;
 import java.io.File;
 
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
 
 public class ResourceFile extends ModelObject {
-	//private File root;
+	private File root;
 	private ResourceDirectory parent;
 	private Resource resource;
 	
 	public ResourceFile(ResourceDirectory resourceDirectory, File root){
 		this.parent = resourceDirectory;
-		//this.root = root;
+		this.root = root;
 		
 		//resource can be null because we can't suppport all objects yet
 		resource = CacheManager.getInstance().getResource(root);
@@ -52,7 +53,16 @@ public class ResourceFile extends ModelObject {
 
 	@Override
 	public Image getImage() {
+		if(resource == null){
+			return null;
+		}
 		// TODO Auto-generated method stub
-		return null;//resource.getImageData();
+		return new Image(Display.getCurrent(), resource.getImageData());//resource.getImageData();
+	}
+
+	@Override
+	public Object getFile() {
+		// TODO Auto-generated method stub
+		return root;
 	}
 }

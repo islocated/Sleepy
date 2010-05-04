@@ -22,4 +22,6 @@ public abstract class ModelObject {
 	abstract public String getText();
 
 	abstract public Image getImage();
+
+	abstract public Object getFile();
 }

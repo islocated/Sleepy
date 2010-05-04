@@ -57,4 +57,10 @@ public class CacheDirectory extends ModelObject{
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public Object getFile() {
+		// TODO Auto-generated method stub
+		return root;
+	}
 }
