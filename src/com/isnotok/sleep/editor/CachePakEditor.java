@@ -39,7 +39,7 @@ import com.isnotok.sleep.model.PakManager;
 import com.isnotok.sleep.model.PakRecord;
 import com.isnotok.sleep.model.Resource;
 
-public class OldCacheEditor extends EditorPart{
+public class CachePakEditor extends EditorPart{
 	public static final String ID = "com.isnotok.sleep.editor.CacheEditor";
 	
 	private static final String[] TYPES = {"tile", "sprite", "scale", "music", "room"};
@@ -48,7 +48,7 @@ public class OldCacheEditor extends EditorPart{
 	//private CacheManager cache = new CacheManager();
 	private PakManager pakManager = new PakManager();
 
-	public OldCacheEditor() {
+	public CachePakEditor() {
 		// TODO Auto-generated constructor stub
 	}
 
