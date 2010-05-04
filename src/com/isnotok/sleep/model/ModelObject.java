@@ -1,5 +1,7 @@
 package com.isnotok.sleep.model;
 
+import java.io.File;
+
 import org.eclipse.swt.graphics.Image;
 
 
@@ -23,5 +25,5 @@ public abstract class ModelObject {
 
 	abstract public Image getImage();
 
-	abstract public Object getFile();
+	abstract public File getFile();
 }

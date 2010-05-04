@@ -36,6 +36,7 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
+import com.isnotok.sleep.filter.ResourceFilter;
 import com.isnotok.sleep.gallery.GalleryViewer;
 import com.isnotok.sleep.model.CacheDirectory;
 import com.isnotok.sleep.model.CacheManager;
@@ -45,6 +46,7 @@ import com.isnotok.sleep.model.PakRecord;
 import com.isnotok.sleep.model.Resource;
 import com.isnotok.sleep.provider.CacheContentProvider;
 import com.isnotok.sleep.provider.CacheLabelProvider;
+import com.isnotok.sleep.sorter.ResourceSorter;
 
 public class CacheEditor extends EditorPart{
 	public static final String ID = "com.isnotok.sleep.editor.CacheEditor";
@@ -114,7 +116,8 @@ public class CacheEditor extends EditorPart{
 		gallery.setContentProvider(new CacheContentProvider());
 		gallery.setLabelProvider(new CacheLabelProvider());
 		gallery.setInput(cacheDirectory);
-		
+		//gallery.addFilter(new ResourceFilter());
+		//gallery.setSorter(new ResourceSorter());
 		
 		DefaultGalleryGroupRenderer gr = new DefaultGalleryGroupRenderer();
 		gr.setMinMargin(2);
@@ -133,6 +136,7 @@ public class CacheEditor extends EditorPart{
 		
 		getSite().setSelectionProvider(gallery);
 		
+		//gallery.addDragSupport(operations, transferTypes, listener)
 		
 		//gallery.setAsSelectionProvider(getSite());
 		

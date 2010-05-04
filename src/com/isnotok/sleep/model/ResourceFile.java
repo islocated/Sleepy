@@ -61,7 +61,7 @@ public class ResourceFile extends ModelObject {
 	}
 
 	@Override
-	public Object getFile() {
+	public File getFile() {
 		// TODO Auto-generated method stub
 		return root;
 	}

@@ -41,7 +41,7 @@ public class CacheLabelProvider extends LabelProvider implements ILabelProvider,
 					//return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FILE);
 				}
 				
-				images.put((File)model.getFile(), image);
+				images.put(model.getFile(), image);
 			}
 			return image;
 		}

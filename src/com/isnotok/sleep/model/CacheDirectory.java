@@ -59,7 +59,7 @@ public class CacheDirectory extends ModelObject{
 	}
 
 	@Override
-	public Object getFile() {
+	public File getFile() {
 		// TODO Auto-generated method stub
 		return root;
 	}
