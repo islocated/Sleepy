@@ -39,11 +39,10 @@ import com.isnotok.sleep.model.PakFile;
 import com.isnotok.sleep.model.PakManager;
 import com.isnotok.sleep.model.PakRecord;
 import com.isnotok.sleep.model.Resource;
+import com.isnotok.sleep.model.ResourceTypes;
 
 public class CachePakEditor extends EditorPart{
 	public static final String ID = "com.isnotok.sleep.editor.CachePakEditor";
-	
-	private static final String[] TYPES = {"tile", "sprite", "scale", "music", "room"};
 	
 	private HashMap<String, Image> map = new HashMap<String, Image>();
 	
@@ -124,9 +123,9 @@ public class CachePakEditor extends EditorPart{
 				if (item.getParentItem() == null) {
 					// It's a group
 					int index = gallery.indexOf(item);
-					if(index >= 0 && index < TYPES.length){
-						item.setText(TYPES[index]);
-						item.setItemCount(pakManager.getFileCount(TYPES[index]));//cache.getFileCount(TYPES[index]));
+					if(index >= 0 && index < ResourceTypes.TYPES.length){
+						item.setText(ResourceTypes.TYPES[index]);
+						item.setItemCount(pakManager.getFileCount(ResourceTypes.TYPES[index]));//cache.getFileCount(TYPES[index]));
 						item.setExpanded(true);
 					}
 					else {
@@ -160,7 +159,7 @@ public class CachePakEditor extends EditorPart{
 			}
 		});
 		
-		gallery.setItemCount(TYPES.length);
+		gallery.setItemCount(ResourceTypes.TYPES.length);
 	}
 
 	private void addDragNDrop() {
@@ -218,7 +217,7 @@ public class CachePakEditor extends EditorPart{
 				System.out.println("filtering: " + text.getText());
 				gallery.clearAll();
 				disposeGalleryItems();
-				gallery.setItemCount(TYPES.length);
+				gallery.setItemCount(ResourceTypes.TYPES.length);
 			}
 			
 		});

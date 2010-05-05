@@ -12,6 +12,7 @@ public class TileResource extends Resource{
 	
 	public TileResource(File file){
 		super(file);
+		load();
 	}
 	
 	@Override

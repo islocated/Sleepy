@@ -66,6 +66,9 @@ public class CacheManager {
 		else if(type.equals("timbre")){
 			resource = new TimbreResource(file);
 		}
+		else if(type.equals("object")){
+			resource = new ObjectResource(file);
+		}
 		
 		cache.put(file, resource);
 		

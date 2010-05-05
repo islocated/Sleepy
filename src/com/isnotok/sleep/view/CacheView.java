@@ -36,11 +36,12 @@ import com.isnotok.sleep.gallery.GalleryViewer;
 import com.isnotok.sleep.model.CacheManager;
 import com.isnotok.sleep.model.PakManager;
 import com.isnotok.sleep.model.Resource;
+import com.isnotok.sleep.model.ResourceTypes;
 import com.isnotok.sleep.model.TileResource;
 
 public class CacheView extends ViewPart implements ISelectionListener{
 	public final static String ID = "com.isnotok.sleep.view.CacheView";
-	private static final String[] TYPES = {"tile", "sprite", "room", "music", "timbre", "scale"};
+	//private static final String[] TYPES = {"object", "tile", "sprite", "room", "music", "timbre", "scale"};
 	
 	private HashMap<String, Image> map = new HashMap<String, Image>();
 	
@@ -123,9 +124,9 @@ public class CacheView extends ViewPart implements ISelectionListener{
 				if (item.getParentItem() == null) {
 					// It's a group
 					int index = gallery.indexOf(item);
-					if(index >= 0 && index < TYPES.length){
-						item.setText(TYPES[index]);
-						item.setItemCount(pakManager.getFileCount(TYPES[index]));
+					if(index >= 0 && index < ResourceTypes.TYPES.length){
+						item.setText(ResourceTypes.TYPES[index]);
+						item.setItemCount(pakManager.getFileCount(ResourceTypes.TYPES[index]));
 						item.setExpanded(true);
 					}
 					else {
@@ -177,7 +178,7 @@ public class CacheView extends ViewPart implements ISelectionListener{
 				System.out.println("filtering: " + text.getText());
 				gallery.clearAll();
 				disposeGalleryItems();
-				gallery.setItemCount(TYPES.length);
+				gallery.setItemCount(ResourceTypes.TYPES.length);
 			}
 			
 		});
@@ -207,7 +208,7 @@ public class CacheView extends ViewPart implements ISelectionListener{
 				
 				for(File f : file.listFiles()){
 					System.out.println("   listing: " + f.getName());
-					for(String s : TYPES){
+					for(String s : ResourceTypes.TYPES){
 						if(f.getName().equals(s)){
 							//CacheManager.getInstance().setCacheDirectory(file);
 							pakManager.initDirectory(file);
@@ -216,7 +217,7 @@ public class CacheView extends ViewPart implements ISelectionListener{
 							//gallery.re
 							gallery.clearAll();
 							disposeGalleryItems();	
-							gallery.setItemCount(TYPES.length);
+							gallery.setItemCount(ResourceTypes.TYPES.length);
 							
 							System.out.println("   view should be refreshed: " + file.getName());
 							return;

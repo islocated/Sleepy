@@ -15,7 +15,7 @@
 
    <splash
       startupProgressRect="5,275,445,15" />
-   <launcher>
+   <launcher name="Sleepy">
       <solaris/>
       <win useIco="false">
          <bmp/>
@@ -25,6 +25,7 @@
 
    <vm>
    </vm>
+
 
    <plugins>
       <plugin id="com.ibm.icu"/>

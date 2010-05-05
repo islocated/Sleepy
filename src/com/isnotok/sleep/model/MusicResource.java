@@ -12,6 +12,7 @@ public class MusicResource extends Resource{
 	
 	public MusicResource(File file){
 		super(file);
+		load();
 	}
 	
 	@Override

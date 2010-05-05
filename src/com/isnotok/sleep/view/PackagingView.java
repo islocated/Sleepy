@@ -31,11 +31,11 @@ import com.isnotok.sleep.model.CacheManager;
 import com.isnotok.sleep.model.PakManager;
 import com.isnotok.sleep.model.PakRecord;
 import com.isnotok.sleep.model.Resource;
+import com.isnotok.sleep.model.ResourceTypes;
 
 //Implement ISelectionProvider if we want this view to return the zoom
 public class PackagingView extends ViewPart implements ISelectionListener{
 	public final static String ID = "com.isnotok.sleep.view.PackagingView";
-	private static final String[] TYPES = {"tile", "sprite", "room", "music", "timbre", "scale"};
 	
 	private GalleryViewer gallery;
 	
@@ -94,7 +94,7 @@ public class PackagingView extends ViewPart implements ISelectionListener{
 					pakManager.setFilter("");
 					gallery.clearAll();
 					disposeGalleryItems();
-					gallery.setItemCount(TYPES.length);
+					gallery.setItemCount(ResourceTypes.TYPES.length);
 				}
 			}
 			
@@ -107,10 +107,10 @@ public class PackagingView extends ViewPart implements ISelectionListener{
 				if (item.getParentItem() == null) {
 					// It's a group
 					int index = gallery.indexOf(item);
-					if (index >= 0 && index < TYPES.length) {
+					if (index >= 0 && index < ResourceTypes.TYPES.length) {
 						// This is group 1
-						item.setText(TYPES[index]);
-						item.setItemCount(pakManager.getFileCount(TYPES[index]));
+						item.setText(ResourceTypes.TYPES[index]);
+						item.setItemCount(pakManager.getFileCount(ResourceTypes.TYPES[index]));
 						item.setExpanded(true);
 					} 
 					else {
@@ -192,7 +192,7 @@ public class PackagingView extends ViewPart implements ISelectionListener{
 				System.out.println("dropped");
 				gallery.clearAll();
 				disposeGalleryItems();
-				gallery.setItemCount(TYPES.length);
+				gallery.setItemCount(ResourceTypes.TYPES.length);
 			}
 
 			public void dropAccept(DropTargetEvent event) {

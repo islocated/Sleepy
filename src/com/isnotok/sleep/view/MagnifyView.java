@@ -29,11 +29,11 @@ import com.isnotok.sleep.gallery.GalleryViewer;
 import com.isnotok.sleep.model.CacheManager;
 import com.isnotok.sleep.model.PakManager;
 import com.isnotok.sleep.model.Resource;
+import com.isnotok.sleep.model.ResourceTypes;
 
 //Implement ISelectionProvider if we want this view to return the zoom
 public class MagnifyView extends ViewPart implements ISelectionListener{
 	public final static String ID = "com.isnotok.sleep.view.MagnifyView";
-	private static final String[] TYPES = {"tile", "sprite", "room", "music", "timbre", "scale"};
 	
 	private HashMap<String, Image> map = new HashMap<String, Image>();
 	
@@ -76,10 +76,10 @@ public class MagnifyView extends ViewPart implements ISelectionListener{
 				if (item.getParentItem() == null) {
 					// It's a group
 					int index = gallery.indexOf(item);
-					if (index >= 0 && index < TYPES.length) {
+					if (index >= 0 && index < ResourceTypes.TYPES.length) {
 						// This is group 1
-						item.setText(TYPES[index]);
-						item.setItemCount(pakManager.getFileCount(TYPES[index]));
+						item.setText(ResourceTypes.TYPES[index]);
+						item.setItemCount(pakManager.getFileCount(ResourceTypes.TYPES[index]));
 						item.setExpanded(true);
 					} 
 					else {
@@ -185,7 +185,7 @@ public class MagnifyView extends ViewPart implements ISelectionListener{
 				pakManager.setFilter("");//gi = (GalleryItem[]) sel.toArray();
 				gallery.clearAll();
 				disposeGalleryItems();
-				gallery.setItemCount(TYPES.length);
+				gallery.setItemCount(ResourceTypes.TYPES.length);
 			}
 		}
 	}
@@ -213,6 +213,6 @@ public class MagnifyView extends ViewPart implements ISelectionListener{
 		}
 		
 		gr.setItemSize(width, height);
-		gallery.setItemCount(TYPES.length);
+		gallery.setItemCount(ResourceTypes.TYPES.length);
 	}
 }

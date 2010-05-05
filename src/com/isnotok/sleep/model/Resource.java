@@ -15,7 +15,6 @@ public class Resource {
 	
 	public Resource(File file){
 		this.file = file;
-		load();
 	}
 	
 	public File getFile(){
@@ -35,7 +34,7 @@ public class Resource {
 		return null;
 	}
 	
-	private void load() {
+	protected void load() {
 		// TODO Auto-generated method stub
 		try {
 			FileInputStream fis = new FileInputStream(file);

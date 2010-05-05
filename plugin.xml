@@ -28,7 +28,7 @@
             name="Sleepy">
          <property
                name="windowImages"
-               value="icons/alt_window_16.gif,icons/alt_window_32.gif">
+               value="icons/alt_window_16.gif,icons/alt_window_32.gif,icons/alt_window_48.gif,icons/alt_window_64.gif,icons/alt_window_128.gif">
          </property>
          <property
                name="appName"

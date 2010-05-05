@@ -13,6 +13,7 @@ public class ScaleResource extends Resource{
 	
 	public ScaleResource(File file){
 		super(file);
+		load();
 	}
 	
 	@Override

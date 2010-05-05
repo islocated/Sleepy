@@ -12,6 +12,7 @@ public class TimbreResource extends Resource{
 	
 	public TimbreResource(File file){
 		super(file);
+		load();
 	}
 	
 	@Override

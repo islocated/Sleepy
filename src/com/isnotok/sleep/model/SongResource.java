@@ -5,7 +5,7 @@ import java.io.File;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.PaletteData;
 
-public class RoomResource extends Resource{
+public class SongResource extends Resource{
 	public static final int SIZE = 16;
 	public static final int GRID = 13;
 	public static final int BYTES_PER_PIXEL = 4;
@@ -13,7 +13,7 @@ public class RoomResource extends Resource{
 	public static final int BYTES_FOR_WALL = GRID * GRID;
 	public static final int BYTES_TOTAL = BYTES_FOR_ROOM + BYTES_FOR_WALL;
 
-	public RoomResource(File file){
+	public SongResource(File file){
 		super(file);
 		load();
 	}
@@ -36,7 +36,7 @@ public class RoomResource extends Resource{
 	
 	@Override
 	public String getType() {
-		return "room";
+		return "song";
 	};
 
 
@@ -87,7 +87,7 @@ public class RoomResource extends Resource{
 	
 	public static void main(String [] args){
 		File file = new File(".", "input/0A3A96732EF2");
-		RoomResource resourceFile = new RoomResource(file);
+		SongResource resourceFile = new SongResource(file);
 		//resourceFile.getImageData();
 		//resourceFile.load();
 	}
