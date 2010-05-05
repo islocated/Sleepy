@@ -2,6 +2,7 @@ package com.isnotok.sleep.editor;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -40,9 +41,12 @@ import com.isnotok.sleep.model.PakRecord;
 import com.isnotok.sleep.model.Resource;
 
 public class CachePakEditor extends EditorPart{
-	public static final String ID = "com.isnotok.sleep.editor.CacheEditor";
+	public static final String ID = "com.isnotok.sleep.editor.CachePakEditor";
 	
 	private static final String[] TYPES = {"tile", "sprite", "scale", "music", "room"};
+	
+	private HashMap<String, Image> map = new HashMap<String, Image>();
+	
 	
 	private GalleryViewer gallery;
 	//private CacheManager cache = new CacheManager();
@@ -144,7 +148,12 @@ public class CachePakEditor extends EditorPart{
 					
 					item.setText(resource.getResourceName());
 
-					Image img = new Image(parent.getDisplay(), resource.getImageData());
+					Image img = map.get(resource.getFile().getAbsolutePath());
+					if(img == null){
+						img = new Image(parent.getDisplay(), resource.getImageData());
+						map.put(resource.getFile().getAbsolutePath(), img);
+					}
+					
 					item.setImage(img);
 					item.setData(resourceFile);
 				}
@@ -208,6 +217,7 @@ public class CachePakEditor extends EditorPart{
 				pakManager.setFilter(text.getText());
 				System.out.println("filtering: " + text.getText());
 				gallery.clearAll();
+				disposeGalleryItems();
 				gallery.setItemCount(TYPES.length);
 			}
 			
@@ -217,5 +227,23 @@ public class CachePakEditor extends EditorPart{
 	@Override
 	public void setFocus() {
 		gallery.setFocus();
+	}
+	
+	@Override
+	public void dispose() {
+		disposeGalleryItems();
+		// TODO Auto-generated method stub
+		super.dispose();
+	}
+
+	private void disposeGalleryItems() {
+		// TODO Auto-generated method stub
+		for(Image img : map.values()){
+			if(img != null && !img.isDisposed()){
+				img.dispose();
+				System.out.println("disposing images");
+			}
+		}
+		map.clear();
 	}
 }

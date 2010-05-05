@@ -14,9 +14,10 @@
    <extension
          point="org.eclipse.ui.perspectives">
       <perspective
-            name="RCP Perspective"
             class="com.isnotok.sleep.Perspective"
-            id="com.isnotok.sleep.perspective">
+            fixed="false"
+            id="com.isnotok.sleep.perspective"
+            name="RCP Perspective">
       </perspective>
    </extension>
    <extension
@@ -32,6 +33,14 @@
          <property
                name="appName"
                value="Sleepy">
+         </property>
+         <property
+               name="startupProgressRect"
+               value="5,275,445,15">
+         </property>
+         <property
+               name="preferenceCustomization"
+               value="plugin_customization.ini">
          </property>
       </product>
    </extension>
@@ -275,6 +284,12 @@
             default="false"
             id="com.isnotok.sleep.editor.CacheEditor"
             name="Cache Editor">
+      </editor>
+      <editor
+            class="com.isnotok.sleep.editor.CachePakEditor"
+            default="false"
+            id="com.isnotok.sleep.editor.CachePakEditor"
+            name="Cache Pak Editor">
       </editor>
    </extension>
 

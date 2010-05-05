@@ -15,6 +15,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 import com.isnotok.sleep.editor.CacheEditor;
+import com.isnotok.sleep.editor.CachePakEditor;
 import com.isnotok.sleep.input.PakFileInput;
 import com.isnotok.sleep.view.NavigatorView;
 
@@ -46,7 +47,7 @@ public class OpenCache implements IHandler {
 					if(file.getName().endsWith(".pak"));
 					try {
 						PakFileInput pakFile = new PakFileInput(file);
-						page.openEditor(pakFile, CacheEditor.ID);
+						page.openEditor(pakFile, CachePakEditor.ID);
 						
 					} catch (PartInitException e) {
 						// TODO Auto-generated catch block

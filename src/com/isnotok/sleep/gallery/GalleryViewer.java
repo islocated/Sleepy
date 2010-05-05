@@ -45,7 +45,10 @@ public class GalleryViewer extends Gallery{
 		gr.setAutoMargin(true);
 		setGroupRenderer(gr);
 		setAntialias(SWT.OFF);
-		
+		setLowQualityOnUserAction(true);
+		setHigherQualityDelay(500);
+		setInterpolation(SWT.LOW);
+
 		ir = new DefaultGalleryItemRenderer();
 		ir.setShowLabels(true);
 		ir.setDropShadows(true);

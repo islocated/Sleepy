@@ -2,6 +2,7 @@ package com.isnotok.sleep.view;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.eclipse.jface.viewers.ISelection;
@@ -33,6 +34,8 @@ import com.isnotok.sleep.model.Resource;
 public class MagnifyView extends ViewPart implements ISelectionListener{
 	public final static String ID = "com.isnotok.sleep.view.MagnifyView";
 	private static final String[] TYPES = {"tile", "sprite", "room", "music", "timbre", "scale"};
+	
+	private HashMap<String, Image> map = new HashMap<String, Image>();
 	
 	private GalleryViewer gallery;
 	
@@ -96,7 +99,12 @@ public class MagnifyView extends ViewPart implements ISelectionListener{
 					
 					item.setText(resource.getResourceName());
 
-					Image img = new Image(parent.getDisplay(), resource.getImageData());
+					Image img = map.get(resource.getFile().getAbsolutePath());
+					if(img == null){
+						img = new Image(parent.getDisplay(), resource.getImageData());
+						map.put(resource.getFile().getAbsolutePath(), img);
+					}
+					
 					item.setImage(img);
 					item.setData(resourceFile);
 				}
@@ -124,37 +132,30 @@ public class MagnifyView extends ViewPart implements ISelectionListener{
 			
 		});
 		
-		//Button button = new Button(canvas, SWT.NONE);
-		//
-		//MenuManager menuManager = new MenuManager ();
-		//Menu menu = menuManager.createContextMenu (gallery);
-		//gallery.setMenu(menu);
-		//getSite ().registerContextMenu (menuManager, gallery.getProvider());
-		
-		//ISharedImages.IMG_ETOOL_SAVEALL_EDIT
-		
-		//slider.setLayoutData(gridData);
-		/*
-		slider.addSelectionListener(new SelectionListener() {
-			
-			public void widgetSelected(SelectionEvent e) {
-				// TODO Auto-generated method stub
-				int zoom = (int) (16 * Math.pow(2, slider.getSelection()));
-				System.out.println("zoom: " + zoom);
-				gr.setItemSize(zoom, zoom);
-			}
-			
-			public void widgetDefaultSelected(SelectionEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-		});
-		*/
+		scale.setSelection(3);
 	}
 
 	@Override
 	public void setFocus() {
 		gallery.setFocus();
+	}
+	
+	@Override
+	public void dispose() {
+		disposeGalleryItems();
+		// TODO Auto-generated method stub
+		super.dispose();
+	}
+
+	private void disposeGalleryItems() {
+		// TODO Auto-generated method stub
+		for(Image img : map.values()){
+			if(img != null && !img.isDisposed()){
+				img.dispose();
+				System.out.println("disposing images");
+			}
+		}
+		map.clear();
 	}
 	
 	//ISelectionListner interface
@@ -183,6 +184,7 @@ public class MagnifyView extends ViewPart implements ISelectionListener{
 				
 				pakManager.setFilter("");//gi = (GalleryItem[]) sel.toArray();
 				gallery.clearAll();
+				disposeGalleryItems();
 				gallery.setItemCount(TYPES.length);
 			}
 		}

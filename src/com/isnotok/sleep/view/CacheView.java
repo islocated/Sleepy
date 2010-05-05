@@ -2,6 +2,7 @@ package com.isnotok.sleep.view;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.eclipse.jface.viewers.ISelection;
@@ -40,6 +41,9 @@ import com.isnotok.sleep.model.TileResource;
 public class CacheView extends ViewPart implements ISelectionListener{
 	public final static String ID = "com.isnotok.sleep.view.CacheView";
 	private static final String[] TYPES = {"tile", "sprite", "room", "music", "timbre", "scale"};
+	
+	private HashMap<String, Image> map = new HashMap<String, Image>();
+	
 	
 	//private File resourceCache;
 	private GalleryViewer gallery;
@@ -141,7 +145,12 @@ public class CacheView extends ViewPart implements ISelectionListener{
 					
 					item.setText(resource.getResourceName());
 
-					Image img = new Image(parent.getDisplay(), resource.getImageData());
+					Image img = map.get(resource.getFile().getAbsolutePath());
+					if(img == null){
+						img = new Image(parent.getDisplay(), resource.getImageData());
+						map.put(resource.getFile().getAbsolutePath(), img);
+					}
+						
 					item.setImage(img);
 					item.setData(resourceFile);
 				}
@@ -167,6 +176,7 @@ public class CacheView extends ViewPart implements ISelectionListener{
 				pakManager.setFilter(text.getText());
 				System.out.println("filtering: " + text.getText());
 				gallery.clearAll();
+				disposeGalleryItems();
 				gallery.setItemCount(TYPES.length);
 			}
 			
@@ -203,7 +213,9 @@ public class CacheView extends ViewPart implements ISelectionListener{
 							pakManager.initDirectory(file);
 							//if(file.getName().equals("resourceCache")){
 							//resourceCache = file;
+							//gallery.re
 							gallery.clearAll();
+							disposeGalleryItems();	
 							gallery.setItemCount(TYPES.length);
 							
 							System.out.println("   view should be refreshed: " + file.getName());
@@ -214,5 +226,22 @@ public class CacheView extends ViewPart implements ISelectionListener{
 			}
 		}
 	}
+	
+	@Override
+	public void dispose() {
+		disposeGalleryItems();
+		// TODO Auto-generated method stub
+		super.dispose();
+	}
 
+	private void disposeGalleryItems() {
+		// TODO Auto-generated method stub
+		for(Image img : map.values()){
+			if(img != null && !img.isDisposed()){
+				img.dispose();
+				System.out.println("disposing images");
+			}
+		}
+		map.clear();
+	}
 }

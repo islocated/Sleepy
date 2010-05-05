@@ -16,7 +16,7 @@ public class NavigatorView extends CommonNavigator {
 	protected Object getInitialInput()
 	{
 		this.getCommonViewer().refresh();
-		return new File("/");
+		return File.listRoots()[0];//File("/");
 	}
 	
 	public void refresh(){

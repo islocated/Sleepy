@@ -2,6 +2,7 @@ package com.isnotok.sleep.view;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.eclipse.jface.viewers.ISelection;
@@ -37,6 +38,9 @@ public class PackagingView extends ViewPart implements ISelectionListener{
 	private static final String[] TYPES = {"tile", "sprite", "room", "music", "timbre", "scale"};
 	
 	private GalleryViewer gallery;
+	
+	private HashMap<String, Image> map = new HashMap<String, Image>();
+	
 	
 	private PakManager pakManager = new PakManager();
 	
@@ -89,6 +93,7 @@ public class PackagingView extends ViewPart implements ISelectionListener{
 					
 					pakManager.setFilter("");
 					gallery.clearAll();
+					disposeGalleryItems();
 					gallery.setItemCount(TYPES.length);
 				}
 			}
@@ -125,7 +130,12 @@ public class PackagingView extends ViewPart implements ISelectionListener{
 					
 					item.setText(resource.getResourceName());
 
-					Image img = new Image(parent.getDisplay(), resource.getImageData());
+					Image img = map.get(resource.getFile().getAbsolutePath());
+					if(img == null){
+						img = new Image(parent.getDisplay(), resource.getImageData());
+						map.put(resource.getFile().getAbsolutePath(), img);
+					}
+					
 					item.setImage(img);
 					item.setData(resourceFile);
 				}
@@ -181,6 +191,7 @@ public class PackagingView extends ViewPart implements ISelectionListener{
 				
 				System.out.println("dropped");
 				gallery.clearAll();
+				disposeGalleryItems();
 				gallery.setItemCount(TYPES.length);
 			}
 
@@ -205,5 +216,23 @@ public class PackagingView extends ViewPart implements ISelectionListener{
 	public PakManager getPakManager() {
 		// TODO Auto-generated method stub
 		return pakManager;
+	}
+	
+	@Override
+	public void dispose() {
+		disposeGalleryItems();
+		// TODO Auto-generated method stub
+		super.dispose();
+	}
+
+	private void disposeGalleryItems() {
+		// TODO Auto-generated method stub
+		for(Image img : map.values()){
+			if(img != null && !img.isDisposed()){
+				img.dispose();
+				System.out.println("disposing images");
+			}
+		}
+		map.clear();
 	}
 }
