@@ -16,9 +16,14 @@
    <splash
       startupProgressRect="5,275,445,15" />
    <launcher name="Sleepy">
+      <linux icon="/com.isnotok.sleep/icons/alt_launcher.xpm"/>
+      <macosx icon="/com.isnotok.sleep/icons/alt_launcher.icns"/>
       <solaris/>
       <win useIco="false">
-         <bmp/>
+         <bmp
+            winSmallHigh="/com.isnotok.sleep/icons/16_32.bmp"
+            winMediumHigh="/com.isnotok.sleep/icons/32_32.bmp"
+            winLargeHigh="/com.isnotok.sleep/icons/48_32.bmp"/>
       </win>
    </launcher>
 
@@ -75,5 +80,8 @@
       <plugin id="org.eclipse.ui.workbench"/>
    </plugins>
 
+   <configurations>
+      <plugin id="com.isnotok.sleep" autoStart="true" startLevel="0" />
+   </configurations>
 
 </product>

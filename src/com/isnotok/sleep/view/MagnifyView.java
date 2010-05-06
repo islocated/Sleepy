@@ -8,9 +8,12 @@ import java.util.List;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.nebula.jface.galleryviewer.GalleryTreeViewer;
+import org.eclipse.nebula.widgets.gallery.AbstractGalleryGroupRenderer;
+import org.eclipse.nebula.widgets.gallery.AbstractGridGroupRenderer;
 import org.eclipse.nebula.widgets.gallery.DefaultGalleryGroupRenderer;
 import org.eclipse.nebula.widgets.gallery.DefaultGalleryItemRenderer;
 import org.eclipse.nebula.widgets.gallery.GalleryItem;
+import org.eclipse.nebula.widgets.gallery.NoGroupRenderer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -67,7 +70,24 @@ public class MagnifyView extends ViewPart implements ISelectionListener{
 		gridData.horizontalSpan = 2;
 		gallery.setLayoutData(gridData);
 		
-		gallery.setDefaultRenderers();
+		AbstractGridGroupRenderer gr = new NoGroupRenderer();//DefaultGalleryGroupRenderer();
+		//gr.setMinMargin(2);
+		gr.setItemHeight(64);
+		gr.setItemWidth(84);
+		//gr.setAutoMargin(true);
+		gallery.setGroupRenderer(gr);
+		gallery.setAntialias(SWT.OFF);
+		//gallery.setLowQualityOnUserAction(true);
+		//gallery.setHigherQualityDelay(500);
+		gallery.setInterpolation(SWT.NONE);
+		
+		DefaultGalleryItemRenderer ir = new DefaultGalleryItemRenderer();
+		ir.setShowLabels(true);
+		ir.setDropShadows(true);
+		ir.setDropShadowsSize(2);
+		gallery.setItemRenderer(ir);
+		
+		//gallery.setDefaultRenderers();
 
 		// SetData is called when Gallery creates an item.
 		gallery.addListener(SWT.SetData, new Listener() {
@@ -126,7 +146,7 @@ public class MagnifyView extends ViewPart implements ISelectionListener{
 
 			public void widgetSelected(SelectionEvent e) {
 				// TODO Auto-generated method stub
-				DefaultGalleryGroupRenderer gr = (DefaultGalleryGroupRenderer) gallery.getGroupRenderer();
+				AbstractGridGroupRenderer gr = (AbstractGridGroupRenderer) gallery.getGroupRenderer();
 				gr.setItemSize(32 * scale.getSelection()+ 10, 32 * scale.getSelection());
 			}
 			
@@ -192,7 +212,7 @@ public class MagnifyView extends ViewPart implements ISelectionListener{
 
 	public void zoom(boolean in) {
 		// TODO Auto-generated method stub
-		DefaultGalleryGroupRenderer gr = (DefaultGalleryGroupRenderer) gallery.getGroupRenderer();
+		AbstractGridGroupRenderer gr = (AbstractGridGroupRenderer) gallery.getGroupRenderer();
 		int height = gr.getItemHeight();
 		int width = gr.getItemWidth();
 		
