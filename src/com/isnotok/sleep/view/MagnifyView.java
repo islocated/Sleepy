@@ -28,6 +28,7 @@ import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
 
+import com.isnotok.sleep.gallery.CustomItemRenderer;
 import com.isnotok.sleep.gallery.GalleryViewer;
 import com.isnotok.sleep.model.CacheManager;
 import com.isnotok.sleep.model.PakManager;
@@ -81,7 +82,7 @@ public class MagnifyView extends ViewPart implements ISelectionListener{
 		//gallery.setHigherQualityDelay(500);
 		gallery.setInterpolation(SWT.NONE);
 		
-		DefaultGalleryItemRenderer ir = new DefaultGalleryItemRenderer();
+		DefaultGalleryItemRenderer ir = new CustomItemRenderer();//DefaultGalleryItemRenderer();
 		ir.setShowLabels(true);
 		ir.setDropShadows(true);
 		ir.setDropShadowsSize(2);
