@@ -157,25 +157,30 @@ public class ObjectResource extends Resource{
 							
 						float colorTrans = (float) (srdata[index + SpriteResource.BYTES_USED] & 0xFF) == 1 ? 0 : layerTrans;
 						
-							
+						//If pixel is transparent, skip
 						if(colorTrans > 0){
+							//If not transparent, draw the pixel
 							
 							int fullPixelIndex = fullIndex * 4;
 							float [] color = new float[4];
 							
-							if((int) (alpha[index] & 0xFF) > 0){
-								if((int) (layerGlow & 0xFF) > 0){
-									color[0] = (float) bytes[fullPixelIndex] * colorTrans + srdata[pixelindex] * (1-colorTrans);
-									color[1] = (float) bytes[fullPixelIndex+1] * colorTrans + srdata[pixelindex+1] * (1-colorTrans);
-									color[2] = (float) bytes[fullPixelIndex+2] * colorTrans + srdata[pixelindex+2] * (1-colorTrans);
-									color[3] = (float) bytes[fullPixelIndex+3] * colorTrans + srdata[pixelindex+3] * (1-colorTrans);
+							System.out.println("WHAT HSH ISFIASF : " + (alpha[index] & 0xFF));
+							//What is the alpha of my full object pixel
+							if((alpha[index] & 0xFF) > 0){
+								if((layerGlow & 0xFF) != 1){
+									System.out.println("combine");
+									color[0] = (bytes[fullPixelIndex] & 0xFF)/255.0f * (1-colorTrans) + (srdata[pixelindex] & 0xFF)/255.0f* (colorTrans);
+									color[1] = (bytes[fullPixelIndex+1] & 0xFF)/255.0f  * (1-colorTrans) + (srdata[pixelindex+1] & 0xFF)/255.0f * (colorTrans);
+									color[2] = (bytes[fullPixelIndex+2] & 0xFF)/255.0f  * (1-colorTrans) + (srdata[pixelindex+2] & 0xFF)/255.0f * (colorTrans);
+									color[3] = (bytes[fullPixelIndex+3] & 0xFF)/255.0f  * (1-colorTrans) + (srdata[pixelindex+3] & 0xFF)/255.0f* (colorTrans);
 								}
 								else{
-									color[0] = bytes[fullPixelIndex] * colorTrans;
-									color[1] = bytes[fullPixelIndex+1] * colorTrans;
-									color[2] = bytes[fullPixelIndex+2] * colorTrans;
-									color[3] = bytes[fullPixelIndex+3] * colorTrans;
-									
+									System.out.println("glow");
+									color[0] = (bytes[fullPixelIndex] & 0xFF)/255.0f  + (srdata[pixelindex] & 0xFF)/255.0f* (colorTrans);
+									color[1] = (bytes[fullPixelIndex+1] & 0xFF)/255.0f + (srdata[pixelindex+1] & 0xFF)/255.0f * (colorTrans);
+									color[2] = (bytes[fullPixelIndex+2] & 0xFF)/255.0f + (srdata[pixelindex+2] & 0xFF)/255.0f * (colorTrans);
+									color[3] = (bytes[fullPixelIndex+3] & 0xFF)/255.0f + (srdata[pixelindex+3] & 0xFF)/255.0f* (colorTrans);
+								
 									color[0] = color[0] > 1 ? 1 : color[0];
 									color[1] = color[1] > 1 ? 1 : color[1];
 									color[2] = color[2] > 1 ? 1 : color[2];
@@ -183,6 +188,7 @@ public class ObjectResource extends Resource{
 								}
 							}
 							else{
+								System.out.println("replace color");
 								System.out.println(pixelindex + ": " +srdata[pixelindex]);
 								System.out.println(pixelindex+1 + ": " +srdata[pixelindex+1]);
 								System.out.println(pixelindex+2 + ": " +srdata[pixelindex+2]);
