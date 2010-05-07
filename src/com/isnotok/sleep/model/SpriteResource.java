@@ -14,7 +14,7 @@ public class SpriteResource extends TileResource{
 	
 	
 	private byte[] offset = new byte[2];
-	private float trans = 0f;
+	private byte trans = 0;
 	private byte glow = 0;
 	
 	public SpriteResource(File file){
@@ -70,11 +70,11 @@ public class SpriteResource extends TileResource{
 		this.offset = offs;
 	}
 
-	public float getTrans() {
+	public byte getTrans() {
 		return trans;
 	}
 
-	public void setTrans(float trans) {
+	public void setTrans(byte trans) {
 		this.trans = trans;
 	}
 
