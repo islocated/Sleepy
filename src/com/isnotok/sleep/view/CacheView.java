@@ -64,7 +64,7 @@ public class CacheView extends ViewPart implements ISelectionListener{
 		Composite grid = new Composite(parent, SWT.NONE);
 		
 		GridLayout gridLayout = new GridLayout();
-		gridLayout.numColumns = 1;
+		gridLayout.numColumns = 3;
 		grid.setLayout(gridLayout);
 		
 		GridData gridData;
@@ -72,6 +72,7 @@ public class CacheView extends ViewPart implements ISelectionListener{
 		//Add Gallery to grid
 		gallery = new GalleryViewer(grid, SWT.V_SCROLL | SWT.VIRTUAL | SWT.MULTI);
 		gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
+		gridData.horizontalSpan = 3;
 		gallery.setLayoutData(gridData);
 		
 		gallery.setAsSelectionProvider(getSite());
@@ -118,6 +119,9 @@ public class CacheView extends ViewPart implements ISelectionListener{
         });
 		
 		
+
+		setupScale(grid);
+        
 		//Set the filter for the keywords
 		setFilterField(grid);
 		
@@ -161,13 +165,16 @@ public class CacheView extends ViewPart implements ISelectionListener{
 				}
 			}
 		});
-		
-		
+	}
+
+	private void setupScale(Composite grid) {
+		GridData gridData;
 		final Scale scale = new Scale(grid, SWT.NONE);
 		scale.setMinimum(2);
 		scale.setMaximum(15);
 		scale.setIncrement(1);
-		gridData = new GridData(SWT.FILL, SWT.CENTER, true, false);
+		gridData = new GridData(SWT.LEFT, SWT.CENTER, false, false);
+		gridData.horizontalSpan = 1;
 		scale.setLayoutData(gridData);
 		scale.addSelectionListener(new SelectionListener(){
 
@@ -191,6 +198,8 @@ public class CacheView extends ViewPart implements ISelectionListener{
 	private void setFilterField(Composite grid) {
 		final Text text = new Text(grid, SWT.SEARCH);
 		GridData gridData = new GridData(SWT.FILL, SWT.CENTER, true, false);
+		//gridData.h
+		gridData.horizontalSpan = 2;
 		text.setLayoutData(gridData);
 		
 		text.setMessage("Filter by keyword");
