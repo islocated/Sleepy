@@ -110,10 +110,20 @@
             labelProvider="com.isnotok.sleep.provider.NavigatorLabelProvider"
             name="Navigator Content">
          <triggerPoints>
+            <or>
+               <instanceof
+                     value="com.isnotok.sleep.model.ModelObject">
+               </instanceof>
+               <instanceof
+                     value="java.io.File">
+               </instanceof>
+            </or>
+         </triggerPoints>
+         <possibleChildren>
             <instanceof
                   value="java.io.File">
             </instanceof>
-         </triggerPoints>
+         </possibleChildren>
       </navigatorContent>
    </extension>
    <extension

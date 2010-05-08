@@ -7,6 +7,8 @@ import java.util.regex.Pattern;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
+import com.isnotok.sleep.model.ModelObject;
+
 public class NavigatorContentProvider implements ITreeContentProvider {
 	private static FileFilter fileFilter = new FileFilter(){
 		Pattern p = Pattern.compile(".*jpg|.*gif|.*png|.*bmp|.*pak|[A-F0-9]*", Pattern.CASE_INSENSITIVE);
@@ -20,6 +22,11 @@ public class NavigatorContentProvider implements ITreeContentProvider {
 	};
 	
 	public Object[] getChildren(Object parentElement) {
+		if(parentElement instanceof ModelObject){
+			ModelObject model = (ModelObject) parentElement;
+			return model.getChildren();
+		}
+		
 		File file = (File) parentElement;
 		
 		Object [] files = file.listFiles(fileFilter);
@@ -28,10 +35,20 @@ public class NavigatorContentProvider implements ITreeContentProvider {
 	}
 
 	public Object getParent(Object element) {
+		if(element instanceof ModelObject){
+			ModelObject model = (ModelObject) element;
+			return model.getParent();
+		}
+		
 		return ((File)element).getParent();
 	}
 
 	public boolean hasChildren(Object element) {
+		if(element instanceof ModelObject){
+			ModelObject model = (ModelObject) element;
+			return model.hasChildren();
+		}
+		
 		return ((File) element).isDirectory() && getChildren(element).length > 0;
 	}
 

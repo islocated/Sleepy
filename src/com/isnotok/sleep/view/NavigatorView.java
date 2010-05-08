@@ -4,6 +4,8 @@ import java.io.File;
 
 import org.eclipse.ui.navigator.CommonNavigator;
 
+import com.isnotok.sleep.model.RootDirectory;
+
 public class NavigatorView extends CommonNavigator {
 	public final static String ID = "com.isnotok.sleep.view.NavigatorView";
 	
@@ -16,7 +18,9 @@ public class NavigatorView extends CommonNavigator {
 	protected Object getInitialInput()
 	{
 		this.getCommonViewer().refresh();
-		return File.listRoots()[0];//File("/");
+		//File f1 = new File("/");
+		//File f2 = new File("/");
+		return new RootDirectory();//new File [] {f1, f2}; //File.listRoots()[0];//File("/");
 	}
 	
 	public void refresh(){
