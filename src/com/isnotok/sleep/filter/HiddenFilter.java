@@ -1,23 +1,28 @@
 package com.isnotok.sleep.filter;
 
+import java.io.File;
+
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 
 import com.isnotok.sleep.model.ModelObject;
 
-public class ResourceFilter extends ViewerFilter {
+public class HiddenFilter extends ViewerFilter {
+
+	public HiddenFilter() {
+		// TODO Auto-generated constructor stub
+	}
 
 	@Override
 	public boolean select(Viewer viewer, Object parentElement, Object element) {
-		if(element instanceof ModelObject){
-			ModelObject model = (ModelObject) element;
-			boolean accept = model.getFile().isDirectory()
-				|| (model.getFile().getName().length() == 12);
+		if(element instanceof File){
+			File file = (File) element;
 			
-			return accept;
+			return !file.isHidden();
 		}
+		
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 }

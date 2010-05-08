@@ -124,7 +124,24 @@
                   value="java.io.File">
             </instanceof>
          </possibleChildren>
+         <commonSorter
+               class="com.isnotok.sleep.sorter.DirectorySorter">
+         </commonSorter>
       </navigatorContent>
+      <commonFilter
+            activeByDefault="true"
+            class="com.isnotok.sleep.filter.NonResourceFilter"
+            description="Filters NonResource Files"
+            id="com.isnotok.sleep.filter.NonResourceFilter"
+            name="Non-Resource Filter">
+      </commonFilter>
+      <commonFilter
+            activeByDefault="true"
+            class="com.isnotok.sleep.filter.HiddenFilter"
+            description="Filters Hidden Files"
+            id="com.isnotok.sleep.filter.HiddenFilter"
+            name="Hidden Filter">
+      </commonFilter>
    </extension>
    <extension
          point="org.eclipse.ui.navigator.viewer">
@@ -136,6 +153,12 @@
          <includes>
             <contentExtension
                   pattern="com.isnotok.sleep.VirtualContent">
+            </contentExtension>
+            <contentExtension
+                  pattern="com.isnotok.sleep.filter.NonResourceFilter">
+            </contentExtension>
+            <contentExtension
+                  pattern="com.isnotok.sleep.filter.HiddenFilter">
             </contentExtension>
          </includes>
       </viewerContentBinding>
@@ -190,6 +213,16 @@
             id="com.isnotok.sleep.command.Zoomout"
             name="Zoom out">
       </command>
+      <command
+            defaultHandler="com.isnotok.sleep.handler.Exit"
+            id="com.isnotok.sleep.command.Exit"
+            name="Exit">
+      </command>
+      <command
+            defaultHandler="com.isnotok.sleep.handler.OpenFile"
+            id="com.isnotok.sleep.command.OpenFile"
+            name="Open File">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -198,9 +231,20 @@
          <menu
                label="File">
             <command
-                  commandId="com.isnotok.sleep.command.OpenPak"
-                  label="Open Pak"
-                  style="push">
+                  commandId="com.isnotok.sleep.command.OpenFile"
+                  label="Open File..."
+                  style="push"
+                  tooltip="Open File">
+            </command>
+            <separator
+                  name="com.isnotok.sleep.separator1"
+                  visible="true">
+            </separator>
+            <command
+                  commandId="com.isnotok.sleep.command.Exit"
+                  label="Exit"
+                  style="push"
+                  tooltip="Exit">
             </command>
          </menu>
       </menuContribution>

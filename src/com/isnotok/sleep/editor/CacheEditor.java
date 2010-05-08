@@ -36,7 +36,7 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
-import com.isnotok.sleep.filter.ResourceFilter;
+import com.isnotok.sleep.filter.NonResourceFilter;
 import com.isnotok.sleep.gallery.GalleryViewer;
 import com.isnotok.sleep.model.CacheDirectory;
 import com.isnotok.sleep.model.CacheManager;
