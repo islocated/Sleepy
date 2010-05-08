@@ -51,8 +51,8 @@ public class GalleryViewer extends Gallery{
 
 		ir = new DefaultGalleryItemRenderer();
 		ir.setShowLabels(true);
-		ir.setDropShadows(true);
-		ir.setDropShadowsSize(2);
+		//ir.setDropShadows(true);
+		//ir.setDropShadowsSize(2);
 		setItemRenderer(ir);
 	}
 	

@@ -59,6 +59,7 @@ public class TimbreResource extends Resource{
 	public static void main(String [] args){
 		File file = new File(".", "input/0A3A96732EF2");
 		TimbreResource resourceFile = new TimbreResource(file);
+		//file.delete();
 		//resourceFile.load();
 	}
 }

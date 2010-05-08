@@ -51,6 +51,8 @@ public class Resource {
 			
 			int byteRead = fis.read(data);
 			
+			fis.close();
+			
 			System.out.println("done reading resource file: " + byteRead);
 			
 		} catch (FileNotFoundException e) {
