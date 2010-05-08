@@ -12,11 +12,6 @@ public class SpriteResource extends TileResource{
 	public static final int ALPHA_USED = SIZE * SIZE;
 	public static final int BYTES_TOTAL = BYTES_USED + ALPHA_USED;
 	
-	
-	private byte[] offset = new byte[2];
-	private byte trans = 0;
-	private byte glow = 0;
-	
 	public SpriteResource(File file){
 		super(file);
 		load();
@@ -62,30 +57,6 @@ public class SpriteResource extends TileResource{
 		return "sprite";
 	};
 	
-	public byte[] getOffset() {
-		return offset;
-	}
-
-	public void setOffset(byte[] offs) {
-		this.offset = offs;
-	}
-
-	public byte getTrans() {
-		return trans;
-	}
-
-	public void setTrans(byte trans) {
-		this.trans = trans;
-	}
-
-	public byte getGlow() {
-		return glow;
-	}
-
-	public void setGlow(byte glow) {
-		this.glow = glow;
-	}
-
 	public static void main(String [] args){
 		File file = new File(".", "input/0A3A96732EF2");
 		SpriteResource resourceFile = new SpriteResource(file);

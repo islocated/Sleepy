@@ -12,6 +12,9 @@ public class Resource {
 	protected File file;
 	protected String type;
 	protected byte [] data;
+	protected String name;
+	protected byte[] imgBytes;
+	protected byte[] imgAlpha;
 	
 	public Resource(File file){
 		this.file = file;
