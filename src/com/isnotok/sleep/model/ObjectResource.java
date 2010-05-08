@@ -172,7 +172,7 @@ public class ObjectResource extends Resource{
 							float [] color = new float[4];
 							
 							//What is the alpha of my full object pixel
-							if((alpha[index] & 0xFF) > 0){
+							if((alpha[fullIndex] & 0xFF) > 0){
 								if((layerGlow & 0xFF) != 1){
 									color[0] = (bytes[fullPixelIndex] & 0xFF)/255.0f * (1-colorTrans) + (srdata[pixelindex] & 0xFF)/255.0f* (colorTrans);
 									color[1] = (bytes[fullPixelIndex+1] & 0xFF)/255.0f  * (1-colorTrans) + (srdata[pixelindex+1] & 0xFF)/255.0f * (colorTrans);
@@ -193,24 +193,21 @@ public class ObjectResource extends Resource{
 								color[3] = (float) (srdata[pixelindex++] & 0xFF) /255.0f;
 							}
 							
-							bytes[fullPixelIndex++] = (byte) (color[0] * 255);
-							bytes[fullPixelIndex++] = (byte) (color[1] * 255);
-							bytes[fullPixelIndex++] = (byte) (color[2] * 255);
-							bytes[fullPixelIndex++] = (byte) (color[3] * 255);
-							alpha[index] = (byte) (color[3] * 255);
+							bytes[fullPixelIndex++] = (byte) (color[0] * 255.0f);
+							bytes[fullPixelIndex++] = (byte) (color[1] * 255.0f);
+							bytes[fullPixelIndex++] = (byte) (color[2] * 255.0f);
+							bytes[fullPixelIndex++] = (byte) (color[3] * 255.0f);
+							alpha[fullIndex] = (byte) (color[3] * 255.0f);
+							
+							//System.out.println(alpha[index]);
 						}
 					}
 				}
 			}
 		}
 		
-		/*
-		for(int i=0;i<alpha.length;i++){
-			alpha[i] = (byte) 128;
-		}*/
-		
 		ImageData imgData = new ImageData(13*16, 13*16, 32, palette, 1, bytes);
-		//imgData.alphaData = alpha;
+		imgData.alphaData = alpha;
 		
 		//imgBytes = bytes;
 		//imgAlpha = alpha;
