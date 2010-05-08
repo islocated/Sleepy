@@ -83,29 +83,13 @@ public class ObjectResource extends Resource{
 			}
 		}
 		
-		StringBuffer sb = new StringBuffer();
-		for(int i = offset; i < data.length - 1; i++){
-			sb.append((char)data[i]);
-		}
-		System.out.println(sb.toString());
-		
-		resourceName = sb.toString();
-		
-	}
-	
-	@Override
-	public String getResourceName(){
-		if(data == null){
-			return null;
-		}
-		return resourceName;
+		nameOffset = offset;
 	}
 	
 	@Override
 	public String getType() {
 		return "object";
 	};
-
 
 	@Override
 	public ImageData getImageData(){

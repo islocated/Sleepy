@@ -13,8 +13,7 @@ public class Resource {
 	protected String type;
 	protected byte [] data;
 	protected String name;
-	protected byte[] imgBytes;
-	protected byte[] imgAlpha;
+	protected int nameOffset;
 	
 	public Resource(File file){
 		this.file = file;
@@ -32,9 +31,20 @@ public class Resource {
 		return null;
 	}
 	
-	//We should reuse this function
 	public String getResourceName(){
-		return null;
+		if(name == null){
+			name = getNameFromData();
+		}
+		
+		return name;
+	}
+	
+	protected String getNameFromData(){
+		StringBuffer sb = new StringBuffer();
+		for(int i = nameOffset; i < data.length-1; i++){
+			sb.append((char)data[i]);
+		}
+		return sb.toString();
 	}
 	
 	protected void load() {

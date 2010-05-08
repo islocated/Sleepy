@@ -16,22 +16,8 @@ public class RoomResource extends Resource{
 	public RoomResource(File file){
 		super(file);
 		load();
-	}
-	
-	@Override
-	public String getResourceName(){
-		if(data == null){
-			return null;
-		}
-		else{
-			StringBuffer sb = new StringBuffer();
-			for(int i = BYTES_TOTAL; i < data.length - 1; i++){
-				sb.append((char)data[i]);
-			}
-			System.out.println(sb.toString());
-			
-			return sb.toString();
-		}
+		
+		nameOffset = BYTES_TOTAL;
 	}
 	
 	@Override

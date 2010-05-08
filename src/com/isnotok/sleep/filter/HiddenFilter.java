@@ -5,8 +5,6 @@ import java.io.File;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 
-import com.isnotok.sleep.model.ModelObject;
-
 public class HiddenFilter extends ViewerFilter {
 
 	public HiddenFilter() {
@@ -17,6 +15,11 @@ public class HiddenFilter extends ViewerFilter {
 	public boolean select(Viewer viewer, Object parentElement, Object element) {
 		if(element instanceof File){
 			File file = (File) element;
+			
+			//C:\ on windows is hidden
+			if(file.getParent() == null && file.getPath().equals("C:\\")){
+				return true;
+			}
 			
 			return !file.isHidden();
 		}

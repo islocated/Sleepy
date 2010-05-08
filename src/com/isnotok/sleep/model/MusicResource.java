@@ -13,27 +13,14 @@ public class MusicResource extends Resource{
 	public MusicResource(File file){
 		super(file);
 		load();
-	}
-	
-	@Override
-	public String getResourceName(){
-		if(data == null){
-			return null;
-		}
-		else{
-			StringBuffer sb = new StringBuffer();
-			for(int i = BYTES_TOTAL; i < data.length-1; i++){
-				sb.append((char)data[i]);
-			}
-			return sb.toString();
-		}
+		
+		nameOffset = BYTES_TOTAL;
 	}
 	
 	@Override
 	public String getType() {
 		return "music";
 	};
-
 
 	@Override
 	public ImageData getImageData(){
