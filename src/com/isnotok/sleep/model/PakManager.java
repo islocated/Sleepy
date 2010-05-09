@@ -2,8 +2,11 @@ package com.isnotok.sleep.model;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,21 +22,50 @@ public class PakManager {
 	private String filter = "";
 
 	private Pattern p = Pattern.compile(".*", Pattern.CASE_INSENSITIVE);
+	private FileFilter filterTypes = new FileFilter(){
+
+		public boolean accept(File pathname) {
+			// TODO Auto-generated method stub
+			if(!pathname.isDirectory())
+				return false;
+			
+			for(String name : ResourceTypes.TYPES){
+				if(pathname.getName().equals(name)){
+					return true;
+				}
+			}
+			
+			return false;
+		}
+	};
+	
+	private FileFilter filterResources = new FileFilter(){
+
+		public boolean accept(File pathname) {
+			// TODO Auto-generated method stub
+			if(pathname.isDirectory() || pathname.isHidden())
+				return false;
+			
+			return true;
+		}
+	};
 	
 	public PakManager(){
 		
 	}
 	
+	
+	
 	public void initDirectory(File root){
 		cache.clear();
 		
-		File [] types = root.listFiles();
+		File [] types = root.listFiles(filterTypes);
 		if(types == null)
 			return;
 		
 		for(File type : types){
 			System.out.println("initing: " + type);
-			File [] files = type.listFiles();
+			File [] files = type.listFiles(filterResources);
 			if(files == null)
 				continue;
 			

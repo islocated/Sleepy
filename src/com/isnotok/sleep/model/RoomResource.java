@@ -5,6 +5,8 @@ import java.io.File;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.PaletteData;
 
+import com.isnotok.sleep.util.BytesUtil;
+
 public class RoomResource extends Resource{
 	public static final int SIZE = 16;
 	public static final int GRID = 13;
@@ -13,6 +15,8 @@ public class RoomResource extends Resource{
 	public static final int BYTES_FOR_WALL = GRID * GRID;
 	public static final int BYTES_TOTAL = BYTES_FOR_ROOM + BYTES_FOR_WALL;
 
+	Resource [][] tiles;
+	
 	public RoomResource(File file){
 		super(file);
 		load();
@@ -25,13 +29,11 @@ public class RoomResource extends Resource{
 		return "room";
 	};
 
-
 	@Override
-	public ImageData getImageData(){
-		if(data == null || data.length < BYTES_TOTAL)
-			return null;
+	protected void load() {
+		super.load();
 		
-		Resource [][] tiles = new Resource[GRID][GRID];
+		tiles = new Resource[GRID][GRID];
 		
 		for(int y = 0; y < GRID; y++){
 			for(int x = 0; x < GRID; x++){
@@ -45,6 +47,12 @@ public class RoomResource extends Resource{
 				tiles[x][y] = CacheManager.getInstance().getResource(tile);
 			}
 		}
+	}
+
+	@Override
+	public ImageData getImageData(){
+		if(data == null || data.length < BYTES_TOTAL)
+			return null;
 		
 		PaletteData palette = new PaletteData(0xFF000000, 0xFF0000, 0xFF00);
 		
@@ -52,45 +60,23 @@ public class RoomResource extends Resource{
 		
 		for(int y = 0; y < GRID; y++){
 			for(int x = 0; x < GRID; x++){
-				//Copy tile[x][y] to bytes location
 				Resource tile = tiles[x][y];
 				int yoffset = y * GRID * SIZE * BYTES_PER_PIXEL * GRID;
 				int xoffset = x * SIZE * BYTES_PER_PIXEL;
 				int offset = yoffset + xoffset;
 				
-				System.out.println(tile.getResourceName());
-
-				copyBlock(tile.getData(), TileResource.SIZE * TileResource.BYTES_PER_PIXEL, TileResource.SIZE, bytes, SIZE * GRID * BYTES_PER_PIXEL, SIZE * GRID, offset);
-				
-				/*
-				//Index is for all the pixels in here
-				//int index = 0;
-				for(int j = 0; j < SIZE; j++){
-					for(int i = 0; i < SIZE; i++){
-						int index = j * SIZE + i;
-						int fullY = y * GRID * SIZE + 
-						setPixel(bytes, sindex, getPixel(index));
-						/*
-						for(int k = 0; k < BYTES_PER_PIXEL; k++){
-							int bindex = k + i*4 + x*(16*4) + j*16*13*4 + y*16*13*13*4;
-							bytes[bindex] = tile.getData()[index++];
-						}*/
-				//	}
-			//	}
-				//*/
+				BytesUtil.copyBlock(
+					tile.getData(), 
+					TileResource.SIZE * TileResource.BYTES_PER_PIXEL, 
+					TileResource.SIZE, 
+					bytes, 
+					SIZE * GRID * BYTES_PER_PIXEL, 
+					SIZE * GRID, 
+					offset);
 			}
 		}
 		
 		return new ImageData(13*16, 13*16, 32, palette, 1, bytes);
-	}
-	
-	public void copyBlock(byte [] src, int srcWidth, int srcHeight, byte [] dest, int destWidth, int destHeight, int offset){
-		for(int y = 0; y < srcHeight; y++){
-			int srcPos = y * srcWidth;
-			int desPos = offset + (y * destWidth);
-			//Copy from source to dest srcWidth wide at offset
-			System.arraycopy(src, srcPos, dest, desPos, srcWidth);
-		}
 	}
 	
 	public static void main(String [] args){

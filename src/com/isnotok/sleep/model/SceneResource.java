@@ -13,7 +13,7 @@ import org.eclipse.swt.widgets.Display;
 
 import com.isnotok.sleep.util.BytesUtil;
 
-public class ObjectResource extends Resource{
+public class SceneResource extends Resource{
 	public static final int SIZE = 16;//P
 	public static final int GRID = 13;
 	public static final int BYTES_PER_PIXEL = 4;
@@ -28,10 +28,10 @@ public class ObjectResource extends Resource{
 	//BUGGY, this is called after load... so it gets over written
 	private byte objectVersion = 0;
 	private byte numLayers = 0;
-	List<SpriteLayer> sprites = new ArrayList<SpriteLayer>(MAX_LAYERS);
+	List<ObjectLayer> objects = new ArrayList<ObjectLayer>(MAX_LAYERS);
 	private String resourceName = "";
 	
-	public ObjectResource(File file){
+	public SceneResource(File file){
 		super(file);
 		load();
 	}
@@ -58,8 +58,69 @@ public class ObjectResource extends Resource{
 			offset = 0;
 		}
 		
-		numLayers = data[offset++];
+		//numLayers = data[offset++];
 		
+		byte [] b = BytesUtil.readBytes(data, offset, UniqueId.MAX_DIGITS);
+		offset += UniqueId.MAX_DIGITS;
+		
+		System.out.println("roomid needed:" + new UniqueId(b).toHexString());
+		
+		File parent = new File(file.getParentFile().getParentFile(), "room");
+		File roomFile = new File(parent, new UniqueId(b).toHexString());
+		
+		RoomResource room = (RoomResource) CacheManager.getInstance().getResource(roomFile);
+		
+		byte roomTrans = data[offset++];
+		
+		byte numObjectsFrozen = data[offset++];
+		
+		byte numObjects = data[offset++];
+		
+		for(int i = 0; i < numObjects; i++){
+			ObjectLayer object = new ObjectLayer(file);
+			objects.add(object);
+			
+			b = BytesUtil.readBytes(data, offset, UniqueId.MAX_DIGITS);
+			offset += UniqueId.MAX_DIGITS;
+			
+			//TODO:setid
+			object.setId(b);
+			
+			//get objectoffset
+			int [] offs = new int[2];
+			offs[0] = BytesUtil.readInt(data, offset);
+			offset += 4;
+			offs[1] = BytesUtil.readInt(data, offset);
+			offset += 4;
+			object.setOffset(offs);
+			
+			//get speechoffsets
+			int [] speechOffs = new int[2];
+			speechOffs[0] = BytesUtil.readInt(data, offset);
+			offset += 4;
+			speechOffs[1] = BytesUtil.readInt(data, offset);
+			offset += 4;
+			object.setOffset(speechOffs);
+			
+			//get flipflag
+			byte isFlipped = data[offset++];
+			object.setFlip(isFlipped);
+			
+			//get boxflag
+			byte isBox = data[offset++];
+			object.setBox(isBox);
+			
+			//get lock flag
+			byte isLocked = data[offset++];
+			object.setLock(isLocked);
+			
+			//get trans flag
+			byte trans = data[offset++];
+			object.setTrans(trans);
+		}
+		
+		
+		/*
 		for(int i = 0; i < numLayers; i++){
 			SpriteLayer spriteLayer = new SpriteLayer(file);
 			sprites.add(spriteLayer);
@@ -90,6 +151,7 @@ public class ObjectResource extends Resource{
 				spriteLayer.setTrans((byte)255);
 			}
 		}
+		*/
 		
 		nameOffset = offset;
 	}
@@ -122,6 +184,7 @@ public class ObjectResource extends Resource{
 		
 		System.out.println(resourceName);
 		
+		/*
 		for(SpriteLayer sr : sprites){
 			float layerTrans = (sr.getTrans() & 0xFF) / 255.0f;
 			byte layerGlow = sr.getGlow();
@@ -198,6 +261,8 @@ public class ObjectResource extends Resource{
 			}
 		}
 		
+		*/
+		
 		ImageData imgData = new ImageData(13*16, 13*16, 32, palette, 1, bytes);
 		imgData.alphaData = alpha;
 		
@@ -216,7 +281,7 @@ public class ObjectResource extends Resource{
 	
 	public static void main(String [] args){
 		File file = new File(".", "input/0A3A96732EF2");
-		ObjectResource resourceFile = new ObjectResource(file);
+		SceneResource resourceFile = new SceneResource(file);
 		//resourceFile.getImageData();
 		//resourceFile.load();
 	}

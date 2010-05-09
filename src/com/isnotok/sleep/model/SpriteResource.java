@@ -5,7 +5,7 @@ import java.io.File;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.PaletteData;
 
-public class SpriteResource extends TileResource{
+public class SpriteResource extends Resource{
 	public static final int SIZE = 16;
 	public static final int BYTES_PER_PIXEL = 4;
 	public static final int BYTES_USED = SIZE * SIZE * BYTES_PER_PIXEL;

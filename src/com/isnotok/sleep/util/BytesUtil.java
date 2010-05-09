@@ -54,4 +54,16 @@ public class BytesUtil {
 		
 		return bytes;
 	}
+	
+	//Copying blocks
+	public static void copyBlock(byte [] src, int srcWidth, int srcHeight, byte [] dest, int destWidth, int destHeight, int offset){
+		for(int y = 0; y < srcHeight; y++){
+			int srcPos = y * srcWidth;
+			int desPos = offset + (y * destWidth);
+			//Copy from source to dest srcWidth wide at offset
+			System.arraycopy(src, srcPos, dest, desPos, srcWidth);
+		}
+	}
+	
+	
 }

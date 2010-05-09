@@ -1,16 +1,12 @@
 package com.isnotok.sleep.model;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.eclipse.swt.graphics.Image;
 
 public class RootDirectory extends ModelObject{
-	private File root;
 	
 	public RootDirectory(){
-		root = null;
 	}
 
 	@Override
@@ -34,13 +30,13 @@ public class RootDirectory extends ModelObject{
 	@Override
 	public String getDescription() {
 		// TODO Auto-generated method stub
-		return "/";
+		return "";
 	}
 
 	@Override
 	public String getText() {
 		// TODO Auto-generated method stub
-		return "/FOOOOOO";
+		return "";
 	}
 
 	@Override

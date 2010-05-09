@@ -38,6 +38,11 @@ public class CacheManager {
 	}
 	
 	public Resource getResource(File file){
+		if(!file.exists()){
+			System.out.println(file.getAbsolutePath() + " does not exist");
+			return null;
+		}
+		
 		File parent = file.getParentFile();
 		
 		Resource resource = cache.get(file);
@@ -68,6 +73,9 @@ public class CacheManager {
 		}
 		else if(type.equals("object")){
 			resource = new ObjectResource(file);
+		}
+		else if(type.equals("scene")){
+			resource = new SceneResource(file);
 		}
 		
 		cache.put(file, resource);

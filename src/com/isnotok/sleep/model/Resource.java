@@ -57,6 +57,8 @@ public class Resource {
 				throw new IOException();
 			}
 			
+			System.out.println("reading file: " + file.getAbsolutePath());
+			
 			data = new byte[(int)fileSize];
 			
 			int byteRead = fis.read(data);
