@@ -30,6 +30,10 @@ public class SceneResource extends Resource{
 	private byte numLayers = 0;
 	List<ObjectLayer> objects = new ArrayList<ObjectLayer>(MAX_LAYERS);
 	private String resourceName = "";
+	private RoomResource room;
+	private byte roomTrans;
+	private byte numObjectsFrozen;
+	private byte numObjects;
 	
 	public SceneResource(File file){
 		super(file);
@@ -68,13 +72,13 @@ public class SceneResource extends Resource{
 		File parent = new File(file.getParentFile().getParentFile(), "room");
 		File roomFile = new File(parent, new UniqueId(b).toHexString());
 		
-		RoomResource room = (RoomResource) CacheManager.getInstance().getResource(roomFile);
+		room = (RoomResource) CacheManager.getInstance().getResource(roomFile);
 		
-		byte roomTrans = data[offset++];
+		roomTrans = data[offset++];
 		
-		byte numObjectsFrozen = data[offset++];
+		numObjectsFrozen = data[offset++];
 		
-		byte numObjects = data[offset++];
+		numObjects = data[offset++];
 		
 		for(int i = 0; i < numObjects; i++){
 			ObjectLayer object = new ObjectLayer(file);
@@ -83,7 +87,6 @@ public class SceneResource extends Resource{
 			b = BytesUtil.readBytes(data, offset, UniqueId.MAX_DIGITS);
 			offset += UniqueId.MAX_DIGITS;
 			
-			//TODO:setid
 			object.setId(b);
 			
 			//get objectoffset
@@ -100,7 +103,7 @@ public class SceneResource extends Resource{
 			offset += 4;
 			speechOffs[1] = BytesUtil.readInt(data, offset);
 			offset += 4;
-			object.setOffset(speechOffs);
+			object.setSpeechOffset(speechOffs);
 			
 			//get flipflag
 			byte isFlipped = data[offset++];
@@ -119,40 +122,6 @@ public class SceneResource extends Resource{
 			object.setTrans(trans);
 		}
 		
-		
-		/*
-		for(int i = 0; i < numLayers; i++){
-			SpriteLayer spriteLayer = new SpriteLayer(file);
-			sprites.add(spriteLayer);
-			
-			byte [] b = BytesUtil.readBytes(data, offset, UniqueId.MAX_DIGITS);
-			offset += UniqueId.MAX_DIGITS;
-			
-			spriteLayer.setId(b);
-			
-			byte [] offs = new byte[2];
-			offs[0] = data[offset++];
-			offs[1] = data[offset++];
-			spriteLayer.setOffset(offs);
-			
-			if(objectVersion >= 2){
-				byte trans = data[offset++];
-				spriteLayer.setTrans(trans);
-				
-				if(objectVersion >= 3){
-					byte glow = data[offset++];
-					spriteLayer.setGlow(glow);
-				}
-				else{
-					spriteLayer.setGlow((byte)0);
-				}
-			}
-			else{
-				spriteLayer.setTrans((byte)255);
-			}
-		}
-		*/
-		
 		nameOffset = offset;
 	}
 	
@@ -168,6 +137,17 @@ public class SceneResource extends Resource{
 		
 		PaletteData palette = new PaletteData(0xFF000000, 0xFF0000, 0xFF00);
 
+		byte [] bytes;// = new byte[SIZE * GRID * SIZE * GRID * BYTES_PER_PIXEL];
+		
+		if(room != null){
+			bytes = room.getImageData().data;
+			//System.arraycopy(room.getImageData().data, 0, bytes, 0, SIZE * GRID * SIZE * GRID * BYTES_PER_PIXEL);
+			//System.out.println("have data");
+		}
+		else{
+			bytes = new byte[SIZE * GRID * SIZE * GRID * BYTES_PER_PIXEL];
+		}
+		
 		/*
 		if(imgBytes != null && imgAlpha != null){
 		//	ImageData imgData = new ImageData(13*16, 13*16, 32, palette, 1, imgBytes);
@@ -176,13 +156,70 @@ public class SceneResource extends Resource{
 		}
 		*/
 		
-		byte [] bytes = new byte[SIZE * GRID * SIZE * GRID * BYTES_PER_PIXEL];
-		byte [] alpha = new byte[SIZE * GRID * SIZE * GRID];
 		
 		int imageCenter = (GRID * SIZE)/2;
-		int spriteCenter = SIZE/2;
+		int objectCenter = (GRID * SIZE)/2;
+		
+		//int spriteCenter = SIZE/2;
 		
 		System.out.println(resourceName);
+		
+		float mroomTrans = roomTrans / 255.0f;
+		
+		
+		//Don't have to worry about darkening until later?
+		
+		for(int i = 0; i < numObjects; i++){
+			ObjectLayer object = objects.get(i);
+			
+			ImageData imgData = object.getImageData();
+			byte [] img = imgData.data;
+			byte [] alpha = imgData.alphaData;
+			
+			System.out.println("offset: x:" + object.getOffset()[0] + " y:" + object.getOffset()[1]);
+			
+			//int yoffset = object.getOffset()[1];// * SIZE * GRID;// * BYTES_PER_PIXEL;
+			//int xoffset = object.getOffset()[0];// * SIZE;// * BYTES_PER_PIXEL;
+			//int offset = -yoffset + xoffset;
+			
+			//Convert bl to tl
+			
+			//xoffset = -objectCenter + object.getOffset()[0];//SIZE * GRID - (yoffset - spriteCenter) + xoffset + spriteCenter;
+			
+			//With 0 offset, object is drawn right in the middle (this is because the top left is blank)
+			//This sets up all objects to be drawn at top left
+			int yoffset = -(GRID * SIZE * GRID * SIZE)/2;	//move object up half a screen
+			int xoffset = -(GRID * SIZE)/2;					//move object to the left half a screen
+			int offset = yoffset + xoffset;					//this is offset at top left
+			
+			//Add offset of image
+			yoffset = -(SIZE)*2 * (GRID * SIZE);
+			xoffset = (SIZE)/2;
+			offset += yoffset + xoffset;
+			
+			//Convert bottom left to top left (take size - yoffset of object)
+			int objOffsety = (GRID * SIZE) - object.getOffset()[1];
+			objOffsety *= (GRID * SIZE);
+			
+			int objOffsetx = object.getOffset()[0];
+			//objOffsetx *= (GRID * SIZE);
+			
+			offset += objOffsety + objOffsetx;
+			
+			//offset += -(SIZE) * (GRID * SIZE) ;
+			
+			//int objOffsetx = 
+			
+			System.out.println(offset);
+			
+			BytesUtil.copyBytesTrans(
+					img, 
+					ObjectResource.SIZE * ObjectResource.GRID,// * ObjectResource.BYTES_PER_PIXEL,
+					ObjectResource.SIZE * ObjectResource.GRID,
+					bytes,
+					SIZE * GRID,// * BYTES_PER_PIXEL,
+					SIZE * GRID, offset, alpha);
+		}
 		
 		/*
 		for(SpriteLayer sr : sprites){
@@ -264,7 +301,7 @@ public class SceneResource extends Resource{
 		*/
 		
 		ImageData imgData = new ImageData(13*16, 13*16, 32, palette, 1, bytes);
-		imgData.alphaData = alpha;
+		//imgData.alphaData = alpha;
 		
 		//imgBytes = bytes;
 		//imgAlpha = alpha;

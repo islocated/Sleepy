@@ -60,10 +60,68 @@ public class BytesUtil {
 		for(int y = 0; y < srcHeight; y++){
 			int srcPos = y * srcWidth;
 			int desPos = offset + (y * destWidth);
+			
+			if(desPos < 0){
+				System.out.println("under pixel");
+				continue;
+			}
+			
+			if(desPos >= destWidth * destHeight){
+				System.out.println("out of bounds pixel copy");
+				return;
+			}
+			
+			if(desPos + srcWidth > destWidth * destHeight){
+				srcWidth = destWidth * destHeight - desPos;
+				System.out.println("lowering the srcwidth");
+			}
+			
 			//Copy from source to dest srcWidth wide at offset
 			System.arraycopy(src, srcPos, dest, desPos, srcWidth);
 		}
 	}
 	
-	
+	//Copying blocks
+	public static void copyBytesTrans(byte [] src, int srcWidth, int srcHeight, byte [] dest, int destWidth, int destHeight, int offset, byte [] alpha){
+		int alphaIndex = 0;
+		for(int y = 0; y < srcHeight; y++){
+			for(int x = 0; x < srcWidth; x++){
+				int srcPos = y * srcWidth + x;
+				
+				int desPos = offset + (y * destWidth + x);
+				
+				if((alpha[alphaIndex++] & 0xFF) == 0){
+					//System.arraycopy(src, srcPos, dest, desPos, 4);
+					continue;
+				}
+				
+				if(x > destWidth){
+					System.out.println("x is greater than dest width" + x + " :" + destWidth);
+					continue;
+				}
+				
+				if(desPos < 0){
+					System.out.println("under pixel");
+					continue;
+				}
+				
+				if(desPos >= destWidth * destHeight){
+					System.out.println("out of bounds pixel copy");
+					return;
+				}
+				
+				
+				
+				/*
+				if(desPos + srcWidth > destWidth * destHeight){
+					srcWidth = destWidth * destHeight - desPos;
+					System.out.println("lowering the srcwidth");
+				}
+				*/
+				
+				//Copy from source to dest 4 bytes wide at offset
+				System.arraycopy(src, srcPos*4, dest, desPos*4, 4);
+			}
+		}
+	}
 }

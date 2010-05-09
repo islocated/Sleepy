@@ -43,6 +43,7 @@ public class SpriteLayer {
 		
 		if(!sprite.exists()){
 			System.out.println("why is this not present?");
+			return null;
 		}
 		
 		return CacheManager.getInstance().getResource(sprite).getData();

@@ -2,6 +2,8 @@ package com.isnotok.sleep.model;
 
 import java.io.File;
 
+import org.eclipse.swt.graphics.ImageData;
+
 public class ObjectLayer {
 	private UniqueId id;
 	private int[] offset = new int[2];
@@ -45,6 +47,8 @@ public class ObjectLayer {
 		
 		return CacheManager.getInstance().getResource(object).getImageData().data;//getData();
 	}
+	
+	
 
 	public int[] getSoffset() {
 		return speechOffset;
@@ -77,4 +81,32 @@ public class ObjectLayer {
 	public void setLock(byte lock) {
 		this.lock = lock;
 	}
+
+	public ImageData getImageData() {
+		File parent = new File(file.getParentFile().getParentFile(), "object");
+		File object = new File(parent, id.toHexString());
+		
+		if(!object.exists()){
+			System.out.println("why is this not present?");
+		}
+		
+		return CacheManager.getInstance().getResource(object).getImageData();
+	}
+	
+	public byte[] getCenter() {
+		File parent = new File(file.getParentFile().getParentFile(), "object");
+		File object = new File(parent, id.toHexString());
+		
+		if(!object.exists()){
+			System.out.println("why is this not present?");
+		}
+		
+		ObjectResource o = (ObjectResource) CacheManager.getInstance().getResource(object);
+		
+		return null;
+		//o.get
+		
+	}
+	
+	
 }
