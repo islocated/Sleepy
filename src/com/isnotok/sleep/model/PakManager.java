@@ -64,7 +64,7 @@ public class PakManager {
 			return;
 		
 		for(File type : types){
-			System.out.println("initing: " + type);
+			//System.out.println("initing: " + type);
 			File [] files = type.listFiles(filterResources);
 			if(files == null)
 				continue;
@@ -183,7 +183,7 @@ public class PakManager {
 			
 			int count = 0;
 			for(String type : cache.keySet()){
-				System.out.println(type);
+				//System.out.println(type);
 				List<File> list = cache.get(type);
 				count += list.size();
 			}
@@ -191,9 +191,9 @@ public class PakManager {
 			//Write the count at top of pak
 			stream.write(BytesUtil.writeInt(count));
 			
-			System.out.println("HHHHHHHHHHHNEW");
+			//System.out.println("HHHHHHHHHHHNEW");
 			for(String type : cache.keySet()){
-				System.out.println(type);
+				//System.out.println(type);
 				List<File> list = cache.get(type);
 				for(File f : list){
 					Resource resource = CacheManager.getInstance().getResource(f);

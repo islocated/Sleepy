@@ -212,7 +212,7 @@ public class CacheView extends ViewPart implements ISelectionListener{
 			public void keyReleased(KeyEvent e) {
 				// TODO Auto-generated method stub
 				pakManager.setFilter(text.getText());
-				System.out.println("filtering: " + text.getText());
+				//System.out.println("filtering: " + text.getText());
 				gallery.clearAll();
 				disposeGalleryItems();
 				gallery.setItemCount(ResourceTypes.TYPES.length);
@@ -241,10 +241,10 @@ public class CacheView extends ViewPart implements ISelectionListener{
 					return;
 				}
 				
-				System.out.println("detect view:" + file.getName());
+				//System.out.println("detect view:" + file.getName());
 				
 				for(File f : file.listFiles()){
-					System.out.println("   listing: " + f.getName());
+					//System.out.println("   listing: " + f.getName());
 					for(String s : ResourceTypes.TYPES){
 						if(f.getName().equals(s)){
 							//CacheManager.getInstance().setCacheDirectory(file);
@@ -256,7 +256,7 @@ public class CacheView extends ViewPart implements ISelectionListener{
 							disposeGalleryItems();	
 							gallery.setItemCount(ResourceTypes.TYPES.length);
 							
-							System.out.println("   view should be refreshed: " + file.getName());
+							//System.out.println("   view should be refreshed: " + file.getName());
 							return;
 						}
 					}

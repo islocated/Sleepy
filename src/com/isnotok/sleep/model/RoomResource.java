@@ -65,8 +65,8 @@ public class RoomResource extends Resource{
 				int xoffset = x * SIZE * BYTES_PER_PIXEL;
 				int offset = yoffset + xoffset;
 				
-				System.out.println("yoffset: " + yoffset);
-				System.out.println("yoffset: " + yoffset);
+				//System.out.println("yoffset: " + yoffset);
+				//System.out.println("yoffset: " + yoffset);
 				
 				
 				BytesUtil.copyBlock(

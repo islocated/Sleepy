@@ -63,18 +63,18 @@ public class BytesUtil {
 			int desPos = offset + (y * destWidth);
 			
 			if(desPos < 0){
-				System.out.println("under pixel");
+				//System.out.println("under pixel");
 				continue;
 			}
 			
 			if(desPos >= destWidth * destHeight){
-				System.out.println("out of bounds pixel copy");
+				//System.out.println("out of bounds pixel copy");
 				return;
 			}
 			
 			if(desPos + srcWidth > destWidth * destHeight){
 				srcWidth = destWidth * destHeight - desPos;
-				System.out.println("lowering the srcwidth");
+				//System.out.println("lowering the srcwidth");
 			}
 			
 			//System.out.println("des Pos:" + desPos);
@@ -167,7 +167,7 @@ public class BytesUtil {
 					color[2] = (byte) (fcolor[2] * 255);
 					color[3] = (byte) (fcolor[3]);
 					
-					
+					/*
 					if(color[0] < 10 && color[1] < 10 && color[2] < 10){
 						System.out.println("here: " + color[3]);
 						
@@ -188,6 +188,7 @@ public class BytesUtil {
 						System.out.println("fcolor: " + fcolor[2]);
 						System.out.println("fcolor: " + fcolor[3]);
 					}
+					*/
 				//}
 				//else{
 					
@@ -211,7 +212,7 @@ public class BytesUtil {
 				
 				
 				if(desPos >= destWidth * destHeight){
-					System.out.println("out of bounds pixel copy");
+					//System.out.println("out of bounds pixel copy");
 					return;
 				}
 				

@@ -60,7 +60,7 @@ public class ObjectResource extends Resource{
 		
 		numLayers = data[offset++];
 		
-		for(int i = 0; i < numLayers; i++){
+		for(int i = 0; i < (numLayers & 0xFF); i++){
 			SpriteLayer spriteLayer = new SpriteLayer(file);
 			sprites.add(spriteLayer);
 			
@@ -120,7 +120,7 @@ public class ObjectResource extends Resource{
 		int imageCenter = (GRID * SIZE)/2;
 		int spriteCenter = SIZE/2;
 		
-		System.out.println(resourceName);
+		//System.out.println(resourceName);
 		
 		for(SpriteLayer sr : sprites){
 			float layerTrans = (sr.getTrans() & 0xFF) / 255.0f;

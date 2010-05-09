@@ -80,7 +80,7 @@ public class SceneResource extends Resource{
 		
 		numObjects = data[offset++];
 		
-		for(int i = 0; i < numObjects; i++){
+		for(int i = 0; i < (numObjects & 0xFF); i++){
 			ObjectLayer object = new ObjectLayer(file);
 			objects.add(object);
 			
@@ -149,7 +149,7 @@ public class SceneResource extends Resource{
 			bytes = new byte[SIZE * GRID * SIZE * GRID * BYTES_PER_PIXEL];
 		}
 		
-		System.out.println(resourceName);
+		//System.out.println(resourceName);
 		
 		float mroomTrans = roomTrans / 255.0f;
 		
@@ -157,7 +157,7 @@ public class SceneResource extends Resource{
 		//Don't have to worry about darkening until later?
 		
 		//Draw locked objects first
-		for(int i = 1; i < numObjects; i++){
+		for(int i = 1; i < (numObjects & 0xFF); i++){
 			ObjectLayer object = objects.get(i);
 			
 			//if(object.getLock() == 1){
@@ -166,7 +166,9 @@ public class SceneResource extends Resource{
 		}
 		
 		//Draw player last (this can also have problems right?
-		drawObject(bytes, alpha, objects.get(0));
+		if(numObjects > 0){
+			drawObject(bytes, alpha, objects.get(0));
+		}
 		
 		/*
 		//Draw unlocked objects afterwards
