@@ -74,6 +74,14 @@ public class Resource {
 		}
 	}
 	
+	public Pixel getPixel(int index){
+		if(index < 0 || index >= nameOffset){
+			return null;
+		}
+		
+		return new Pixel(data, index * 4);
+	}
+	
 	public void saveToFile(){
 		UniqueId id = UniqueId.computeFromData(data);
 		File out = new File(file.getParentFile(), id.toHexString());

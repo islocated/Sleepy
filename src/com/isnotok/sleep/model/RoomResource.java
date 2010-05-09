@@ -54,21 +54,43 @@ public class RoomResource extends Resource{
 			for(int x = 0; x < GRID; x++){
 				//Copy tile[x][y] to bytes location
 				Resource tile = tiles[x][y];
+				int yoffset = y * GRID * SIZE * BYTES_PER_PIXEL * GRID;
+				int xoffset = x * SIZE * BYTES_PER_PIXEL;
+				int offset = yoffset + xoffset;
 				
+				System.out.println(tile.getResourceName());
+
+				copyBlock(tile.getData(), TileResource.SIZE * TileResource.BYTES_PER_PIXEL, TileResource.SIZE, bytes, SIZE * GRID * BYTES_PER_PIXEL, SIZE * GRID, offset);
+				
+				/*
 				//Index is for all the pixels in here
-				int index = 0;
+				//int index = 0;
 				for(int j = 0; j < SIZE; j++){
 					for(int i = 0; i < SIZE; i++){
+						int index = j * SIZE + i;
+						int fullY = y * GRID * SIZE + 
+						setPixel(bytes, sindex, getPixel(index));
+						/*
 						for(int k = 0; k < BYTES_PER_PIXEL; k++){
 							int bindex = k + i*4 + x*(16*4) + j*16*13*4 + y*16*13*13*4;
 							bytes[bindex] = tile.getData()[index++];
-						}
-					}
-				}
+						}*/
+				//	}
+			//	}
+				//*/
 			}
 		}
 		
 		return new ImageData(13*16, 13*16, 32, palette, 1, bytes);
+	}
+	
+	public void copyBlock(byte [] src, int srcWidth, int srcHeight, byte [] dest, int destWidth, int destHeight, int offset){
+		for(int y = 0; y < srcHeight; y++){
+			int srcPos = y * srcWidth;
+			int desPos = offset + (y * destWidth);
+			//Copy from source to dest srcWidth wide at offset
+			System.arraycopy(src, srcPos, dest, desPos, srcWidth);
+		}
 	}
 	
 	public static void main(String [] args){
