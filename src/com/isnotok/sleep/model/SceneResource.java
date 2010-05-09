@@ -138,6 +138,7 @@ public class SceneResource extends Resource{
 		PaletteData palette = new PaletteData(0xFF000000, 0xFF0000, 0xFF00);
 
 		byte [] bytes;// = new byte[SIZE * GRID * SIZE * GRID * BYTES_PER_PIXEL];
+		byte [] alpha = new byte[SIZE * GRID * SIZE * GRID];
 		
 		if(room != null){
 			bytes = room.getImageData().data;
@@ -147,20 +148,6 @@ public class SceneResource extends Resource{
 		else{
 			bytes = new byte[SIZE * GRID * SIZE * GRID * BYTES_PER_PIXEL];
 		}
-		
-		/*
-		if(imgBytes != null && imgAlpha != null){
-		//	ImageData imgData = new ImageData(13*16, 13*16, 32, palette, 1, imgBytes);
-			//imgData.alphaData = imgAlpha;
-		//	return imgData;
-		}
-		*/
-		
-		
-		int imageCenter = (GRID * SIZE)/2;
-		int objectCenter = (GRID * SIZE)/2;
-		
-		//int spriteCenter = SIZE/2;
 		
 		System.out.println(resourceName);
 		
@@ -174,7 +161,7 @@ public class SceneResource extends Resource{
 			ObjectLayer object = objects.get(i);
 			
 			if(object.getLock() == 1){
-				drawObject(bytes, object);
+				drawObject(bytes, alpha, object);
 			}
 		}
 		
@@ -183,7 +170,7 @@ public class SceneResource extends Resource{
 			ObjectLayer object = objects.get(i);
 			
 			if(object.getLock() != 1){
-				drawObject(bytes, object);
+				drawObject(bytes, alpha, object);
 			}
 		}
 		
@@ -203,23 +190,14 @@ public class SceneResource extends Resource{
 		return imgData;
 	}
 
-	private void drawObject(byte[] bytes, ObjectLayer object) {
+	private void drawObject(byte[] bytes, byte [] destAlpha, ObjectLayer object) {
 		ImageData imgData = object.getImageData();
 		byte [] img = imgData.data;
-		byte [] alpha = imgData.alphaData;
-		
-		System.out.println(object.getOffset()[0] + ":" + object.getOffset()[0]);
-		
-		//With 0 offset, object is drawn right in the middle (this is because the top left is blank)
-		//This sets up all objects to be drawn at top left
-		//int yoffset = -(GRID * SIZE * GRID * SIZE)/2;	//move object up half a screen
-		//int xoffset = -(GRID * SIZE)/2;					//move object to the left half a screen
-		//int offset = 0;//yoffset + xoffset;					//this is offset at top left
+		byte [] imgAlpha = imgData.alphaData;
 		
 		//Make the offsets put the images at the bottom left
-		int yoffset = (GRID * SIZE)/2;// - SIZE - object.getOffset()[1];
-		int xoffset = -(GRID * SIZE)/2;//object.getOffset()[0];//(GRID * SIZE)/2;
-		//offset += layerOffsetY + layerOffsetX;
+		int yoffset = (GRID * SIZE)/2;
+		int xoffset = -(GRID * SIZE)/2;
 		
 		//Move image up and right to compensate for the size of the sprite...
 		yoffset += -SIZE/2;
@@ -227,36 +205,14 @@ public class SceneResource extends Resource{
 		
 		yoffset += -object.getOffset()[1];
 		xoffset += object.getOffset()[0];
-		
-		//int spriteOffsetY = (SIZE/2) * (GRID * SIZE);
-		//int spriteOffsetX = (SIZE/2) * GRID;
-		//offset += -spriteOffsetY + spriteOffsetX;
-		
-		//int objectOffsetY = object.getOffset()[1] * (GRID * SIZE);
-		//int objectOffsetX = object.getOffset()[0] * SIZE;
-		//offset += -objectOffsetY + objectOffsetX;
-		
-		
-		//Add offset of image
-		//int yoffset = -(SIZE)/2 * (GRID * SIZE);
-		//int xoffset = (SIZE)/2;
-		//offset += yoffset + xoffset;
-		
-		//Convert bottom left to top left (take size - yoffset of object)
-		//int objOffsety = -object.getOffset()[1]/2 * (GRID * SIZE);
-		//objOffsety *= (GRID * SIZE);
-		
-		//int objOffsetx = object.getOffset()[0];
-		
-		//offset += objOffsety + objOffsetx;
-		
+	
 		BytesUtil.copyBytesTrans(
 				img, 
 				ObjectResource.SIZE * ObjectResource.GRID,// * ObjectResource.BYTES_PER_PIXEL,
 				ObjectResource.SIZE * ObjectResource.GRID,
 				bytes,
 				SIZE * GRID,// * BYTES_PER_PIXEL,
-				SIZE * GRID, xoffset, yoffset, alpha);
+				SIZE * GRID, xoffset, yoffset, imgAlpha, destAlpha);
 	}
 	
 	public static void main(String [] args){

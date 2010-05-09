@@ -182,7 +182,7 @@ public class ObjectResource extends Resource{
 								color[0] = (float) (srdata[pixelindex++] & 0xFF) /255.0f;
 								color[1] = (float) (srdata[pixelindex++] & 0xFF) /255.0f;
 								color[2] = (float) (srdata[pixelindex++] & 0xFF) /255.0f;
-								color[3] = (float) (srdata[pixelindex++] & 0xFF) /255.0f;
+								color[3] = colorTrans;//(float) (srdata[pixelindex++] & 0xFF) /255.0f;
 							}
 							
 							bytes[fullPixelIndex++] = (byte) (color[0] * 255.0f);
@@ -190,8 +190,13 @@ public class ObjectResource extends Resource{
 							bytes[fullPixelIndex++] = (byte) (color[2] * 255.0f);
 							bytes[fullPixelIndex++] = (byte) (color[3] * 255.0f);
 							alpha[fullIndex] = (byte) (color[3] * 255.0f);
-							
-							//System.out.println(alpha[index]);
+							/*
+							System.out.println("sprite alpha: " + alpha[fullIndex]);
+							System.out.println("color: 1:" + color[0] * 255.0f);
+							System.out.println("color: 2:" + color[1] * 255.0f);
+							System.out.println("color: 3:" + color[2] * 255.0f);
+							System.out.println("color: 4:" + color[3] * 255.0f);
+							*/
 						}
 					}
 				}
