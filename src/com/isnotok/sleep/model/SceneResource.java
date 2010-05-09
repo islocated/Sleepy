@@ -169,136 +169,23 @@ public class SceneResource extends Resource{
 		
 		//Don't have to worry about darkening until later?
 		
+		//Draw locked objects first
 		for(int i = 0; i < numObjects; i++){
 			ObjectLayer object = objects.get(i);
 			
-			ImageData imgData = object.getImageData();
-			byte [] img = imgData.data;
-			byte [] alpha = imgData.alphaData;
-			
-			System.out.println("offset: x:" + object.getOffset()[0] + " y:" + object.getOffset()[1]);
-			
-			//int yoffset = object.getOffset()[1];// * SIZE * GRID;// * BYTES_PER_PIXEL;
-			//int xoffset = object.getOffset()[0];// * SIZE;// * BYTES_PER_PIXEL;
-			//int offset = -yoffset + xoffset;
-			
-			//Convert bl to tl
-			
-			//xoffset = -objectCenter + object.getOffset()[0];//SIZE * GRID - (yoffset - spriteCenter) + xoffset + spriteCenter;
-			
-			//With 0 offset, object is drawn right in the middle (this is because the top left is blank)
-			//This sets up all objects to be drawn at top left
-			int yoffset = -(GRID * SIZE * GRID * SIZE)/2;	//move object up half a screen
-			int xoffset = -(GRID * SIZE)/2;					//move object to the left half a screen
-			int offset = yoffset + xoffset;					//this is offset at top left
-			
-			//Add offset of image
-			yoffset = -(SIZE)*2 * (GRID * SIZE);
-			xoffset = (SIZE)/2;
-			offset += yoffset + xoffset;
-			
-			//Convert bottom left to top left (take size - yoffset of object)
-			int objOffsety = (GRID * SIZE) - object.getOffset()[1];
-			objOffsety *= (GRID * SIZE);
-			
-			int objOffsetx = object.getOffset()[0];
-			//objOffsetx *= (GRID * SIZE);
-			
-			offset += objOffsety + objOffsetx;
-			
-			//offset += -(SIZE) * (GRID * SIZE) ;
-			
-			//int objOffsetx = 
-			
-			System.out.println(offset);
-			
-			BytesUtil.copyBytesTrans(
-					img, 
-					ObjectResource.SIZE * ObjectResource.GRID,// * ObjectResource.BYTES_PER_PIXEL,
-					ObjectResource.SIZE * ObjectResource.GRID,
-					bytes,
-					SIZE * GRID,// * BYTES_PER_PIXEL,
-					SIZE * GRID, offset, alpha);
-		}
-		
-		/*
-		for(SpriteLayer sr : sprites){
-			float layerTrans = (sr.getTrans() & 0xFF) / 255.0f;
-			byte layerGlow = sr.getGlow();
-			
-			
-			
-			byte [] srdata = sr.getData();
-			
-			
-			if(srdata == null){
-				continue;
-			}
-			
-			//System.out.println(sr.getResourceName());
-			
-			for(int y = 0; y < SIZE; y++){
-				for(int x = 0; x < SIZE; x++){
-					
-					int fullY = y - spriteCenter - (int)(sr.getOffset()[1]);
-					fullY += imageCenter;
-					
-					int fullX = x - spriteCenter + (int)(sr.getOffset()[0]);
-					fullX += imageCenter;
-					
-					
-					int fullIndex = fullY * SIZE * GRID + fullX;
-					//If the pixel is within the object frame
-					if(fullY < SIZE * GRID && fullY >= 0 && fullX < SIZE * GRID && fullX >= 0){
-						int index = y * SIZE + x;
-						//blend colors
-						int pixelindex = index * 4;
-							
-						float colorTrans = (float) (srdata[index + SpriteResource.BYTES_USED] & 0xFF) == 1 ? 0 : layerTrans;
-						
-						//If pixel is transparent, skip
-						if(colorTrans > 0){
-							//If not transparent, draw the pixel
-							
-							int fullPixelIndex = fullIndex * 4;
-							float [] color = new float[4];
-							
-							//What is the alpha of my full object pixel
-							if((alpha[fullIndex] & 0xFF) > 0){
-								if((layerGlow & 0xFF) != 1){
-									color[0] = (bytes[fullPixelIndex] & 0xFF)/255.0f * (1-colorTrans) + (srdata[pixelindex] & 0xFF)/255.0f* (colorTrans);
-									color[1] = (bytes[fullPixelIndex+1] & 0xFF)/255.0f  * (1-colorTrans) + (srdata[pixelindex+1] & 0xFF)/255.0f * (colorTrans);
-									color[2] = (bytes[fullPixelIndex+2] & 0xFF)/255.0f  * (1-colorTrans) + (srdata[pixelindex+2] & 0xFF)/255.0f * (colorTrans);
-									color[3] = (bytes[fullPixelIndex+3] & 0xFF)/255.0f  * (1-colorTrans) + (srdata[pixelindex+3] & 0xFF)/255.0f* (colorTrans);
-								}
-								else{
-									color[0] = color[0] > 1 ? 1 : color[0];
-									color[1] = color[1] > 1 ? 1 : color[1];
-									color[2] = color[2] > 1 ? 1 : color[2];
-									color[3] = color[3] > 1 ? 1 : color[3];
-								}
-							}
-							else{
-								color[0] = (float) (srdata[pixelindex++] & 0xFF) /255.0f;
-								color[1] = (float) (srdata[pixelindex++] & 0xFF) /255.0f;
-								color[2] = (float) (srdata[pixelindex++] & 0xFF) /255.0f;
-								color[3] = (float) (srdata[pixelindex++] & 0xFF) /255.0f;
-							}
-							
-							bytes[fullPixelIndex++] = (byte) (color[0] * 255.0f);
-							bytes[fullPixelIndex++] = (byte) (color[1] * 255.0f);
-							bytes[fullPixelIndex++] = (byte) (color[2] * 255.0f);
-							bytes[fullPixelIndex++] = (byte) (color[3] * 255.0f);
-							alpha[fullIndex] = (byte) (color[3] * 255.0f);
-							
-							//System.out.println(alpha[index]);
-						}
-					}
-				}
+			if(object.getLock() == 1){
+				drawObject(bytes, object);
 			}
 		}
 		
-		*/
+		//Draw unlocked objects afterwards
+		for(int i = 0; i < numObjects; i++){
+			ObjectLayer object = objects.get(i);
+			
+			if(object.getLock() != 1){
+				drawObject(bytes, object);
+			}
+		}
 		
 		ImageData imgData = new ImageData(13*16, 13*16, 32, palette, 1, bytes);
 		//imgData.alphaData = alpha;
@@ -314,6 +201,39 @@ public class SceneResource extends Resource{
 		//imageLoader.save(file.getAbsolutePath() + ".PNG", SWT.IMAGE_PNG);
 		
 		return imgData;
+	}
+
+	private void drawObject(byte[] bytes, ObjectLayer object) {
+		ImageData imgData = object.getImageData();
+		byte [] img = imgData.data;
+		byte [] alpha = imgData.alphaData;
+		
+		//With 0 offset, object is drawn right in the middle (this is because the top left is blank)
+		//This sets up all objects to be drawn at top left
+		int yoffset = -(GRID * SIZE * GRID * SIZE)/2;	//move object up half a screen
+		int xoffset = -(GRID * SIZE)/2;					//move object to the left half a screen
+		int offset = yoffset + xoffset;					//this is offset at top left
+		
+		//Add offset of image
+		yoffset = -(SIZE)/2 * (GRID * SIZE);
+		xoffset = (SIZE)/2;
+		offset += yoffset + xoffset;
+		
+		//Convert bottom left to top left (take size - yoffset of object)
+		int objOffsety = (GRID * SIZE) - object.getOffset()[1];
+		objOffsety *= (GRID * SIZE);
+		
+		int objOffsetx = object.getOffset()[0];
+		
+		offset += objOffsety + objOffsetx;
+		
+		BytesUtil.copyBytesTrans(
+				img, 
+				ObjectResource.SIZE * ObjectResource.GRID,// * ObjectResource.BYTES_PER_PIXEL,
+				ObjectResource.SIZE * ObjectResource.GRID,
+				bytes,
+				SIZE * GRID,// * BYTES_PER_PIXEL,
+				SIZE * GRID, offset, alpha);
 	}
 	
 	public static void main(String [] args){
