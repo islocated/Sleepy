@@ -157,14 +157,18 @@ public class SceneResource extends Resource{
 		//Don't have to worry about darkening until later?
 		
 		//Draw locked objects first
-		for(int i = 0; i < numObjects; i++){
+		for(int i = 1; i < numObjects; i++){
 			ObjectLayer object = objects.get(i);
 			
-			if(object.getLock() == 1){
+			//if(object.getLock() == 1){
 				drawObject(bytes, alpha, object);
-			}
+			//}
 		}
 		
+		//Draw player last (this can also have problems right?
+		drawObject(bytes, alpha, objects.get(0));
+		
+		/*
 		//Draw unlocked objects afterwards
 		for(int i = 0; i < numObjects; i++){
 			ObjectLayer object = objects.get(i);
@@ -172,7 +176,7 @@ public class SceneResource extends Resource{
 			if(object.getLock() != 1){
 				drawObject(bytes, alpha, object);
 			}
-		}
+		}*/
 		
 		ImageData imgData = new ImageData(13*16, 13*16, 32, palette, 1, bytes);
 		//imgData.alphaData = alpha;
