@@ -208,24 +208,47 @@ public class SceneResource extends Resource{
 		byte [] img = imgData.data;
 		byte [] alpha = imgData.alphaData;
 		
+		System.out.println(object.getOffset()[0] + ":" + object.getOffset()[0]);
+		
 		//With 0 offset, object is drawn right in the middle (this is because the top left is blank)
 		//This sets up all objects to be drawn at top left
-		int yoffset = -(GRID * SIZE * GRID * SIZE)/2;	//move object up half a screen
-		int xoffset = -(GRID * SIZE)/2;					//move object to the left half a screen
-		int offset = yoffset + xoffset;					//this is offset at top left
+		//int yoffset = -(GRID * SIZE * GRID * SIZE)/2;	//move object up half a screen
+		//int xoffset = -(GRID * SIZE)/2;					//move object to the left half a screen
+		//int offset = 0;//yoffset + xoffset;					//this is offset at top left
+		
+		//Make the offsets put the images at the bottom left
+		int yoffset = (GRID * SIZE)/2;// - SIZE - object.getOffset()[1];
+		int xoffset = -(GRID * SIZE)/2;//object.getOffset()[0];//(GRID * SIZE)/2;
+		//offset += layerOffsetY + layerOffsetX;
+		
+		//Move image up and right to compensate for the size of the sprite...
+		yoffset += -SIZE/2;
+		xoffset += SIZE/2;
+		
+		yoffset += -object.getOffset()[1];
+		xoffset += object.getOffset()[0];
+		
+		//int spriteOffsetY = (SIZE/2) * (GRID * SIZE);
+		//int spriteOffsetX = (SIZE/2) * GRID;
+		//offset += -spriteOffsetY + spriteOffsetX;
+		
+		//int objectOffsetY = object.getOffset()[1] * (GRID * SIZE);
+		//int objectOffsetX = object.getOffset()[0] * SIZE;
+		//offset += -objectOffsetY + objectOffsetX;
+		
 		
 		//Add offset of image
-		yoffset = -(SIZE)/2 * (GRID * SIZE);
-		xoffset = (SIZE)/2;
-		offset += yoffset + xoffset;
+		//int yoffset = -(SIZE)/2 * (GRID * SIZE);
+		//int xoffset = (SIZE)/2;
+		//offset += yoffset + xoffset;
 		
 		//Convert bottom left to top left (take size - yoffset of object)
-		int objOffsety = (GRID * SIZE) - object.getOffset()[1];
-		objOffsety *= (GRID * SIZE);
+		//int objOffsety = -object.getOffset()[1]/2 * (GRID * SIZE);
+		//objOffsety *= (GRID * SIZE);
 		
-		int objOffsetx = object.getOffset()[0];
+		//int objOffsetx = object.getOffset()[0];
 		
-		offset += objOffsety + objOffsetx;
+		//offset += objOffsety + objOffsetx;
 		
 		BytesUtil.copyBytesTrans(
 				img, 
@@ -233,7 +256,7 @@ public class SceneResource extends Resource{
 				ObjectResource.SIZE * ObjectResource.GRID,
 				bytes,
 				SIZE * GRID,// * BYTES_PER_PIXEL,
-				SIZE * GRID, offset, alpha);
+				SIZE * GRID, xoffset, yoffset, alpha);
 	}
 	
 	public static void main(String [] args){

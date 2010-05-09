@@ -57,6 +57,7 @@ public class BytesUtil {
 	
 	//Copying blocks
 	public static void copyBlock(byte [] src, int srcWidth, int srcHeight, byte [] dest, int destWidth, int destHeight, int offset){
+		
 		for(int y = 0; y < srcHeight; y++){
 			int srcPos = y * srcWidth;
 			int desPos = offset + (y * destWidth);
@@ -76,34 +77,62 @@ public class BytesUtil {
 				System.out.println("lowering the srcwidth");
 			}
 			
+			System.out.println("des Pos:" + desPos);
+			
 			//Copy from source to dest srcWidth wide at offset
 			System.arraycopy(src, srcPos, dest, desPos, srcWidth);
 		}
+		
+		System.out.println("srcHeight in pixel not bytes:" + srcHeight);
+		System.out.println("srcWidth in pixel :" + srcWidth/4);
+		
+		System.out.println("yoffset in pixel :" + (offset/destWidth)/4);
+		System.out.println("xoffset in pixel :" + (offset%destWidth)/4);
 	}
 	
 	//Copying blocks
-	public static void copyBytesTrans(byte [] src, int srcWidth, int srcHeight, byte [] dest, int destWidth, int destHeight, int offset, byte [] alpha){
-		int alphaIndex = 0;
+	public static void copyBytesTrans(byte [] src, int srcWidth, int srcHeight, byte [] dest, int destWidth, int destHeight, int xoff, int yoff, byte [] alpha){
+		int alphaIndex = -1;
 		for(int y = 0; y < srcHeight; y++){
 			for(int x = 0; x < srcWidth; x++){
+				alphaIndex++;
+				
 				int srcPos = y * srcWidth + x;
 				
-				int desPos = offset + (y * destWidth + x);
+				int desRow = yoff + y;
+				int desCol = xoff + x;
 				
-				if((alpha[alphaIndex++] & 0xFF) == 0){
+				
+				int desPos = desRow * destWidth + desCol;//offset + (y * destWidth + x);
+				
+				if((alpha[alphaIndex] & 0xFF) == 0){
 					//System.arraycopy(src, srcPos, dest, desPos, 4);
 					continue;
 				}
 				
-				if(x > destWidth){
-					System.out.println("x is greater than dest width" + x + " :" + destWidth);
+				if(desRow < 0){
 					continue;
 				}
 				
-				if(desPos < 0){
-					System.out.println("under pixel");
+				if(desRow >= destHeight){
+					return;
+				}
+				
+				//If we go over the row boundary
+				if(desCol >= destWidth){
 					continue;
 				}
+				
+				if(desCol < 0){
+					continue;
+				}
+				
+				/*
+				if(x > destWidth){
+					System.out.println("x is greater than dest width" + x + " :" + destWidth);
+					continue;
+				}*/
+				
 				
 				if(desPos >= destWidth * destHeight){
 					System.out.println("out of bounds pixel copy");

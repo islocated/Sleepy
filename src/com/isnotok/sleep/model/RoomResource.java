@@ -61,9 +61,13 @@ public class RoomResource extends Resource{
 		for(int y = 0; y < GRID; y++){
 			for(int x = 0; x < GRID; x++){
 				Resource tile = tiles[x][y];
-				int yoffset = y * GRID * SIZE * BYTES_PER_PIXEL * GRID;
+				int yoffset = y * GRID * SIZE * BYTES_PER_PIXEL * SIZE;
 				int xoffset = x * SIZE * BYTES_PER_PIXEL;
 				int offset = yoffset + xoffset;
+				
+				System.out.println("yoffset: " + yoffset);
+				System.out.println("yoffset: " + yoffset);
+				
 				
 				BytesUtil.copyBlock(
 					tile.getData(), 
