@@ -98,6 +98,120 @@ public class ObjectResource extends Resource{
 	public String getType() {
 		return "object";
 	};
+	
+	public ImageData getFullImageData(){
+		if(data == null)	// || data.length < BYTES_TOTAL)
+			return null;
+		
+		PaletteData palette = new PaletteData(0xFF000000, 0xFF0000, 0xFF00);
+
+		/*
+		if(imgBytes != null && imgAlpha != null){
+		//	ImageData imgData = new ImageData(13*16, 13*16, 32, palette, 1, imgBytes);
+			//imgData.alphaData = imgAlpha;
+		//	return imgData;
+		}
+		*/
+		
+		byte [] bytes = new byte[SIZE * GRID * SIZE * GRID * BYTES_PER_PIXEL];
+		byte [] alpha = new byte[SIZE * GRID * SIZE * GRID];
+		
+		int imageCenter = (GRID * SIZE)/2;
+		int spriteCenter = SIZE/2;
+		
+		//System.out.println(resourceName);
+		
+		int hix = 0;
+		int hiy = 0;
+		int lowx = SIZE * GRID;
+		int lowy = SIZE * GRID;
+		
+		for(SpriteLayer sr : sprites){
+			float layerTrans = (sr.getTrans() & 0xFF) / 255.0f;
+			byte layerGlow = sr.getGlow();
+			
+			
+			
+			byte [] srdata = sr.getData();
+			
+			
+			if(srdata == null){
+				continue;
+			}
+			
+			//System.out.println(sr.getResourceName());
+			
+			for(int y = 0; y < SIZE; y++){
+				for(int x = 0; x < SIZE; x++){
+					
+					int fullY = y - spriteCenter - (int)(sr.getOffset()[1]);
+					fullY += imageCenter;
+					
+					int fullX = x - spriteCenter + (int)(sr.getOffset()[0]);
+					fullX += imageCenter;
+					
+					
+					int fullIndex = fullY * SIZE * GRID + fullX;
+					//If the pixel is within the object frame
+					if(fullY < SIZE * GRID && fullY >= 0 && fullX < SIZE * GRID && fullX >= 0){
+						int index = y * SIZE + x;
+						//blend colors
+						int pixelindex = index * 4;
+							
+						float colorTrans = (float) (srdata[index + SpriteResource.BYTES_USED] & 0xFF) == 1 ? 0 : layerTrans;
+						
+						//If pixel is transparent, skip
+						if(colorTrans > 0){
+							//If not transparent, draw the pixel
+							
+							int fullPixelIndex = fullIndex * 4;
+							float [] color = new float[4];
+							
+							//What is the alpha of my full object pixel
+							if((alpha[fullIndex] & 0xFF) > 0){
+								if((layerGlow & 0xFF) != 1){
+									color[0] = (bytes[fullPixelIndex] & 0xFF)/255.0f * (1-colorTrans) + (srdata[pixelindex] & 0xFF)/255.0f* (colorTrans);
+									color[1] = (bytes[fullPixelIndex+1] & 0xFF)/255.0f  * (1-colorTrans) + (srdata[pixelindex+1] & 0xFF)/255.0f * (colorTrans);
+									color[2] = (bytes[fullPixelIndex+2] & 0xFF)/255.0f  * (1-colorTrans) + (srdata[pixelindex+2] & 0xFF)/255.0f * (colorTrans);
+									color[3] = (bytes[fullPixelIndex+3] & 0xFF)/255.0f  * (1-colorTrans) + (srdata[pixelindex+3] & 0xFF)/255.0f* (colorTrans);
+								}
+								else{
+									color[0] = color[0] > 1 ? 1 : color[0];
+									color[1] = color[1] > 1 ? 1 : color[1];
+									color[2] = color[2] > 1 ? 1 : color[2];
+									color[3] = color[3] > 1 ? 1 : color[3];
+								}
+							}
+							else{
+								color[0] = (float) (srdata[pixelindex++] & 0xFF) /255.0f;
+								color[1] = (float) (srdata[pixelindex++] & 0xFF) /255.0f;
+								color[2] = (float) (srdata[pixelindex++] & 0xFF) /255.0f;
+								color[3] = colorTrans;//(float) (srdata[pixelindex++] & 0xFF) /255.0f;
+							}
+							
+							bytes[fullPixelIndex++] = (byte) (color[0] * 255.0f);
+							bytes[fullPixelIndex++] = (byte) (color[1] * 255.0f);
+							bytes[fullPixelIndex++] = (byte) (color[2] * 255.0f);
+							bytes[fullPixelIndex++] = (byte) (color[3] * 255.0f);
+							alpha[fullIndex] = (byte) (color[3] * 255.0f);
+						}
+					}
+				}
+			}
+		}
+		
+		ImageData imgData = new ImageData(13*16, 13*16, 32, palette, 1, bytes);
+		imgData.alphaData = alpha;
+		
+		return imgData;
+	}
+	
+	public void saveImage(){
+		//Saving imgData to PNG file
+		ImageLoader imageLoader = new ImageLoader();
+		imageLoader.data = new ImageData[] {getImageData()};
+		imageLoader.save(file.getAbsolutePath() + ".PNG", SWT.IMAGE_PNG);
+	}
 
 	@Override
 	public ImageData getImageData(){
@@ -121,6 +235,11 @@ public class ObjectResource extends Resource{
 		int spriteCenter = SIZE/2;
 		
 		//System.out.println(resourceName);
+		
+		int hix = 0;
+		int hiy = 0;
+		int lowx = SIZE * GRID;
+		int lowy = SIZE * GRID;
 		
 		for(SpriteLayer sr : sprites){
 			float layerTrans = (sr.getTrans() & 0xFF) / 255.0f;
@@ -197,24 +316,62 @@ public class ObjectResource extends Resource{
 							System.out.println("color: 3:" + color[2] * 255.0f);
 							System.out.println("color: 4:" + color[3] * 255.0f);
 							*/
+							
+							if(lowx > fullX){
+								lowx = fullX;
+							}
+							if(lowy > fullY){
+								lowy = fullY;
+							}
+							if(hix < fullX){
+								hix = fullX;
+							}
+							if(hiy < fullY){
+								hiy = fullY;
+							}
 						}
 					}
 				}
 			}
 		}
 		
+		System.out.println("low: "  + lowx + ", " + lowy);
+		System.out.println("hi: "  + hix + ", " + hiy);
+		
+		if(lowx < hix && lowy < hiy){
+			//Can we get a smaller image
+			int width = hix - lowx;
+			int height = hiy - lowy;
+			int size = width * height;
+			
+			byte [] subimage = new byte[size * BYTES_PER_PIXEL];
+			byte [] alphadata = new byte[size];
+			
+			for(int y = 0; y < height; y++){
+				//for(int x = 0; x < width; x++){
+				int srcPos = (y + lowy) * (SIZE * GRID) + lowx;
+				int desPos = y * (width);
+				
+				System.out.println("srcPos: " + srcPos);
+				System.out.println("desPos: " + desPos);
+				
+				System.arraycopy(bytes, srcPos * BYTES_PER_PIXEL, subimage, desPos * BYTES_PER_PIXEL, width * BYTES_PER_PIXEL);
+				
+				srcPos = (y + lowy) * (SIZE * GRID) + lowx;
+				desPos = y * width;
+				
+				System.arraycopy(alpha, srcPos, alphadata, desPos, width);
+			}
+			
+			ImageData imgData = new ImageData(width, height, 32, palette, 1, subimage);
+			imgData.alphaData = alphadata;
+			
+			return imgData;
+		}
+		
+		
 		ImageData imgData = new ImageData(13*16, 13*16, 32, palette, 1, bytes);
 		imgData.alphaData = alpha;
-		
-		//imgBytes = bytes;
-		//imgAlpha = alpha;
-		
-		//Image image = new Image(Display.getCurrent(), imgData);
-		
-		//Saving imgData to PNG file
-		//ImageLoader imageLoader = new ImageLoader();
-		//imageLoader.data = new ImageData[] {imgData};
-		//imageLoader.save(file.getAbsolutePath() + ".PNG", SWT.IMAGE_PNG);
 		
 		return imgData;
 	}

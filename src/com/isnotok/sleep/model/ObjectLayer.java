@@ -90,7 +90,7 @@ public class ObjectLayer {
 			System.out.println("why is this not present?");
 		}
 		
-		return CacheManager.getInstance().getResource(object).getImageData();
+		return ((ObjectResource) CacheManager.getInstance().getResource(object)).getFullImageData();
 	}
 	
 	public byte[] getCenter() {
