@@ -1,10 +1,14 @@
 package com.isnotok.sleep.view;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.nebula.widgets.gallery.AbstractGridGroupRenderer;
@@ -34,6 +38,7 @@ import org.eclipse.swt.widgets.Scale;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.part.ViewPart;
 
 import com.isnotok.sleep.gallery.GalleryViewer;
@@ -247,8 +252,34 @@ public class CacheView extends ViewPart implements ISelectionListener{
 					//System.out.println("   listing: " + f.getName());
 					for(String s : ResourceTypes.TYPES){
 						if(f.getName().equals(s)){
-							//CacheManager.getInstance().setCacheDirectory(file);
+							
+							/*
+							ProgressMonitorDialog dialog = new ProgressMonitorDialog(this.getSite().getShell());
+						    try {
+								dialog.run(true, true, new IRunnableWithProgress(){
+								    public void run(IProgressMonitor monitor)
+											throws InvocationTargetException,
+											InterruptedException {
+										// TODO Auto-generated method stub
+										 monitor.beginTask("Loading cache resources...", 100);
+								            
+								            pakManager.initDirectory(file);
+											monitor.worked(100);
+								            // execute the task ...
+								            monitor.done();
+									}
+								});
+							} catch (InvocationTargetException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							} catch (InterruptedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}*/
+
 							pakManager.initDirectory(file);
+							
+							//CacheManager.getInstance().setCacheDirectory(file);
 							//if(file.getName().equals("resourceCache")){
 							//resourceCache = file;
 							//gallery.re

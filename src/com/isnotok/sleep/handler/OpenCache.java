@@ -1,11 +1,14 @@
 package com.isnotok.sleep.handler;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.commands.IHandlerListener;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IViewPart;
@@ -37,6 +40,34 @@ public class OpenCache implements IHandler {
 		IViewPart view = page.findView(NavigatorView.ID);
 		// Get the selection
 		ISelection selection = view.getSite().getSelectionProvider().getSelection();
+		
+		/*
+		try {
+			window.run(true, true, new IRunnableWithProgress(){
+
+				public void run(IProgressMonitor monitor)
+						throws InvocationTargetException, InterruptedException {
+					// TODO Auto-generated method stub
+					try{
+						monitor.beginTask("Loading File", 100);
+						
+						//monitor.worked(100);
+					}
+					finally{
+						monitor.done();
+					}
+					
+				}
+				
+			});
+		} catch (InvocationTargetException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		*/
 
 		if(selection != null){
 			if (selection != null && selection instanceof IStructuredSelection) {

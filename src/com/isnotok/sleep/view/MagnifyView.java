@@ -153,7 +153,8 @@ public class MagnifyView extends ViewPart implements ISelectionListener{
 			
 		});
 		
-		scale.setSelection(3);
+		scale.setSelection(9);
+		gr.setItemSize(32 * scale.getSelection()+ 10, 32 * scale.getSelection());
 	}
 
 	@Override

@@ -335,8 +335,8 @@ public class ObjectResource extends Resource{
 			}
 		}
 		
-		System.out.println("low: "  + lowx + ", " + lowy);
-		System.out.println("hi: "  + hix + ", " + hiy);
+		//System.out.println("low: "  + lowx + ", " + lowy);
+		//System.out.println("hi: "  + hix + ", " + hiy);
 		
 		if(lowx < hix && lowy < hiy){
 			//Can we get a smaller image
