@@ -7,9 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
@@ -51,7 +48,7 @@ import com.isnotok.sleep.model.Resource;
 import com.isnotok.sleep.model.ResourceTypes;
 import com.isnotok.sleep.model.TileResource;
 
-public class CacheView extends ViewPart implements ISelectionListener{
+public class OldCacheView extends ViewPart implements ISelectionListener{
 	public final static String ID = "com.isnotok.sleep.view.CacheView";
 	//private static final String[] TYPES = {"object", "tile", "sprite", "room", "music", "timbre", "scale"};
 	
@@ -63,7 +60,7 @@ public class CacheView extends ViewPart implements ISelectionListener{
 	//private CacheManager cache = new CacheManager();
 	private PakManager pakManager = new PakManager();
 
-	public CacheView() {
+	public OldCacheView() {
 		// TODO Auto-generated constructor stub
 	}
 
@@ -242,7 +239,7 @@ public class CacheView extends ViewPart implements ISelectionListener{
 			IStructuredSelection sel = (IStructuredSelection) selection;
 			Object element = sel.getFirstElement();
 			if(element instanceof File){
-				final File file = (File) element;
+				File file = (File) element;
 				File [] files = file.listFiles();
 				
 				if(files == null){
@@ -255,65 +252,6 @@ public class CacheView extends ViewPart implements ISelectionListener{
 					//System.out.println("   listing: " + f.getName());
 					for(String s : ResourceTypes.TYPES){
 						if(f.getName().equals(s)){
-							
-							CacheManager.getInstance().clearCache();
-							
-							Job job = new Job("Loading resources..."){
-
-								@Override
-								protected IStatus run(IProgressMonitor monitor) {
-									File [] types = file.listFiles();
-									if(types == null)
-										return Status.OK_STATUS;
-									
-									int count = 0;
-									int worked = 0;
-									for(File type : types){
-										File [] children = type.listFiles();
-										
-										if(children == null){
-											continue;
-										}
-										
-										count += children.length; //CacheManager.getInstance().getResource(res);
-									}
-									
-									
-									monitor.beginTask("Resource", count);
-									
-									
-									for(File type : types){
-										File [] children = type.listFiles();
-										
-										if(children == null){
-											continue;
-										}
-										
-										for(File res : children){
-											Resource resource = CacheManager.getInstance().getResource(res);
-											if(resource != null){
-												resource.getImageData();
-											}
-											else{
-												System.out.println("what happened here?: " + res.getAbsolutePath());
-											}
-											monitor.worked(1);
-											worked += 1;
-										}
-									}
-									
-									monitor.done();
-									
-									System.out.println(count + " : worked: " + worked);
-									
-									// TODO Auto-generated method stub
-									return Status.OK_STATUS;
-								}
-								
-							};
-							
-							//job.setUser(true);
-							job.schedule();
 							
 							/*
 							ProgressMonitorDialog dialog = new ProgressMonitorDialog(this.getSite().getShell());
@@ -370,7 +308,7 @@ public class CacheView extends ViewPart implements ISelectionListener{
 		for(Image img : map.values()){
 			if(img != null && !img.isDisposed()){
 				img.dispose();
-				//System.out.println("disposing images");
+				System.out.println("disposing images");
 			}
 		}
 		map.clear();

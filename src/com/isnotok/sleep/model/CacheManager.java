@@ -16,6 +16,10 @@ public class CacheManager {
 		return instance;
 	}
 	
+	public void clearCache(){
+		cache.clear();
+	}
+	
 	//How do we prevent cache manager from growing too big?
 	//Store a list of the last thousand or so
 	public void setCacheDirectory(File file){

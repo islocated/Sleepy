@@ -88,6 +88,7 @@ public class ObjectLayer {
 		
 		if(!object.exists()){
 			System.out.println("why is this not present?");
+			return null;
 		}
 		
 		return ((ObjectResource) CacheManager.getInstance().getResource(object)).getFullImageData();

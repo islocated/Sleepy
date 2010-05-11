@@ -15,6 +15,8 @@ public class Resource {
 	protected String name;
 	protected int nameOffset;
 	
+	protected ImageData imageData;
+	
 	public Resource(File file){
 		this.file = file;
 	}
@@ -102,9 +104,18 @@ public class Resource {
 	}
 	
 	public ImageData getImageData(){
-		return null;
+		if(imageData == null){
+			imageData = calculateImageData();
+		}
+		
+		return imageData;
 	}
 	
+	protected ImageData calculateImageData() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	public static void main(String [] args){
 		File file = new File(".", "input/0A3A96732EF2");
 		Resource resourceFile = new Resource(file);

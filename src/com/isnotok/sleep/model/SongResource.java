@@ -26,7 +26,7 @@ public class SongResource extends Resource{
 	};
 
 	@Override
-	public ImageData getImageData(){
+	protected ImageData calculateImageData(){
 		if(data == null || data.length < BYTES_TOTAL)
 			return null;
 		

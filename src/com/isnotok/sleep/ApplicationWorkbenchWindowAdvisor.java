@@ -22,5 +22,6 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         configurer.setShowCoolBar(false);
         configurer.setShowStatusLine(true);
         configurer.setTitle("Sleep is Death");
+        configurer.setShowProgressIndicator(true);
     }
 }

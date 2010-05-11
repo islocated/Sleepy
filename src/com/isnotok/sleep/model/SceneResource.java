@@ -131,7 +131,7 @@ public class SceneResource extends Resource{
 	};
 
 	@Override
-	public ImageData getImageData(){
+	protected ImageData calculateImageData(){
 		if(data == null)	// || data.length < BYTES_TOTAL)
 			return null;
 		
@@ -198,6 +198,11 @@ public class SceneResource extends Resource{
 
 	private void drawObject(byte[] bytes, byte [] destAlpha, ObjectLayer object) {
 		ImageData imgData = object.getImageData();
+		
+		if(imgData == null){
+			return;
+		}
+		
 		byte [] img = imgData.data;
 		byte [] imgAlpha = imgData.alphaData;
 		
