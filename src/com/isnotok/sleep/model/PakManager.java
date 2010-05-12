@@ -54,7 +54,9 @@ public class PakManager {
 		
 	}
 	
-	
+	public void clearCache(){
+		cache.clear();
+	}
 	
 	public void initDirectory(File root){
 		cache.clear();

@@ -35,6 +35,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Scale;
@@ -279,7 +280,7 @@ public class CacheView extends ViewPart implements ISelectionListener{
 									}
 									
 									
-									monitor.beginTask("Resource", count);
+									monitor.beginTask("Resource", count + 5);
 									
 									
 									for(File type : types){
@@ -302,9 +303,30 @@ public class CacheView extends ViewPart implements ISelectionListener{
 										}
 									}
 									
-									monitor.done();
 									
 									System.out.println(count + " : worked: " + worked);
+									
+									pakManager.initDirectory(file);
+									monitor.worked(5);
+									
+									//CacheManager.getInstance().setCacheDirectory(file);
+									//if(file.getName().equals("resourceCache")){
+									//resourceCache = file;
+									//gallery.re
+									
+									Display display = Display.getDefault();
+									display.syncExec(new Runnable(){
+
+										public void run() {
+											// TODO Auto-generated method stub
+											gallery.clearAll();
+											disposeGalleryItems();	
+											gallery.setItemCount(ResourceTypes.TYPES.length);
+										}
+										
+									});
+									
+									monitor.done();
 									
 									// TODO Auto-generated method stub
 									return Status.OK_STATUS;
@@ -339,15 +361,6 @@ public class CacheView extends ViewPart implements ISelectionListener{
 								e.printStackTrace();
 							}*/
 
-							pakManager.initDirectory(file);
-							
-							//CacheManager.getInstance().setCacheDirectory(file);
-							//if(file.getName().equals("resourceCache")){
-							//resourceCache = file;
-							//gallery.re
-							gallery.clearAll();
-							disposeGalleryItems();	
-							gallery.setItemCount(ResourceTypes.TYPES.length);
 							
 							//System.out.println("   view should be refreshed: " + file.getName());
 							return;
