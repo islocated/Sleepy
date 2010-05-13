@@ -223,6 +223,11 @@
             id="com.isnotok.sleep.command.OpenFile"
             name="Open File">
       </command>
+      <command
+            defaultHandler="com.isnotok.sleep.handler.Rename"
+            id="com.isnotok.sleep.command.Rename"
+            name="Rename File">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -285,6 +290,11 @@
                label="Refresh"
                style="push"
                tooltip="Refresh">
+         </command>
+         <command
+               commandId="com.isnotok.sleep.command.Rename"
+               label="Rename File"
+               style="push">
          </command>
       </menuContribution>
       <menuContribution

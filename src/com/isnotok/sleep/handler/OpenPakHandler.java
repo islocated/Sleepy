@@ -6,8 +6,13 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.commands.IHandlerListener;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
@@ -33,49 +38,72 @@ public class OpenPakHandler implements IHandler {
 
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindow(event);
-		IWorkbenchPage page = window.getActivePage();
-		NavigatorView view = (NavigatorView) page.findView(NavigatorView.ID);
-		
-		ISelection selection = view.getSite().getSelectionProvider().getSelection();
+		final IWorkbenchPage page = window.getActivePage();
+		final NavigatorView view = (NavigatorView) page
+				.findView(NavigatorView.ID);
 
-		if(selection != null){
+		ISelection selection = view.getSite().getSelectionProvider()
+				.getSelection();
+
+		if (selection != null) {
 			if (selection != null && selection instanceof IStructuredSelection) {
-				Object obj = ((IStructuredSelection) selection).getFirstElement();
+				Object obj = ((IStructuredSelection) selection)
+						.getFirstElement();
 				// If we had a selection lets open the editor
 				if (obj != null) {
-					File file = (File) obj;
-					if(!file.getName().endsWith(".pak"))
+					final File file = (File) obj;
+					if (!file.getName().endsWith(".pak"))
 						return null;
-					
-					try {
-						PakFile pfile = new PakFile(file);
-						pfile.load();
-						pfile.unpack();
-						
-						view.getCommonViewer().refresh();
-						
-						File newfile = new File(file.getParentFile(), file.getName().replace('.', '-'));
-						
-						PakFileInput pakFile = new PakFileInput(newfile);
-						page.openEditor(pakFile, CachePakEditor.ID);
-						
-					} catch (PartInitException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+
+					Job job = new Job("Unpacking pak file...") {
+
+						@Override
+						protected IStatus run(IProgressMonitor monitor) {
+							PakFile pfile = new PakFile(file);
+							pfile.load();
+							pfile.unpack();
+
+							Display display = Display.getDefault();
+							display.syncExec(new Runnable() {
+
+								public void run() {
+									// TODO Auto-generated method stub
+									view.getCommonViewer().refresh();
+									
+									File newfile = new File(file.getParentFile(), file
+											.getName().replace('.', '-'));
+
+									PakFileInput pakFile = new PakFileInput(newfile);
+									try {
+										page.openEditor(pakFile, CachePakEditor.ID);
+									} catch (PartInitException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
+								}
+
+							});
+
+							
+
+							// TODO Auto-generated method stub
+							return Status.OK_STATUS;
+						}
+
+					};
+					job.schedule();
 				}
 			}
 			return null;
 
 		}
-		
+
 		return null;
 	}
 
 	public boolean isEnabled() {
 		// TODO Auto-generated method stub
-		
-		
+
 		return true;
 	}
 

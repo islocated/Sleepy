@@ -73,7 +73,10 @@ public class CachePakEditor extends EditorPart{
 		setSite(site);
 		setInput(input);
 		
-		pakManager.initDirectory((File) input.getAdapter(File.class));
+		File file = (File) input.getAdapter(File.class);
+		setPartName(file.getName());
+		
+		pakManager.initDirectory(file);
 	}
 
 	@Override

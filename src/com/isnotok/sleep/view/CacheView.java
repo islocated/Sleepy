@@ -280,7 +280,7 @@ public class CacheView extends ViewPart implements ISelectionListener{
 									}
 									
 									
-									monitor.beginTask("Resource", count + 5);
+									monitor.beginTask("Resource", count*10 + 5);
 									
 									
 									for(File type : types){
@@ -298,8 +298,8 @@ public class CacheView extends ViewPart implements ISelectionListener{
 											else{
 												System.out.println("what happened here?: " + res.getAbsolutePath());
 											}
-											monitor.worked(1);
-											worked += 1;
+											monitor.worked(10);
+											worked += 10;
 										}
 									}
 									
