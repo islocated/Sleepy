@@ -198,7 +198,11 @@ public class PakManager {
 				//System.out.println(type);
 				List<File> list = cache.get(type);
 				for(File f : list){
+					System.out.print("type: " + type + " " + f.getName() + " - ");
 					Resource resource = CacheManager.getInstance().getResource(f);
+					System.out.print(resource.getResourceName() + " - ");
+					System.out.println(UniqueId.computeFromData(resource.getData()).toHexString());
+					
 					stream.write(BytesUtil.writeString(resource.getType()));
 					stream.write(UniqueId.computeFromData(resource.getData()).getBytes());
 					stream.write(BytesUtil.writeString(resource.getResourceName()));

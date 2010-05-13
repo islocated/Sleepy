@@ -127,7 +127,7 @@ public class SceneResource extends Resource{
 	
 	@Override
 	public String getType() {
-		return "object";
+		return "scene";
 	};
 
 	@Override
