@@ -225,17 +225,45 @@ public class CacheView extends ViewPart implements ISelectionListener{
 		text.setTextLimit(10);
 		text.setToolTipText("Changes the name of the resource.  Only gets updated on a save.");
 		/*
+		text.addKeyListener(new KeyListener(){
+
+			public void keyPressed(KeyEvent e) {
+				// TODO Auto-generated method stub
+				if(e.keyCode == SWT.BS){
+					//text.setText(text.getText(0, text.getCharCount()-1));
+				}
+				
+				if(text.getCharCount() >= 9){
+					text.setText(text.getText(0, 9));
+				}
+				
+			}
+
+			public void keyReleased(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
+		*/
+		
 		text.addVerifyListener(new VerifyListener(){
 
 			public void verifyText(VerifyEvent e) {
-				if(text.getCharCount() >= 10){
-					e.text = text.getText(0, 10);
+				if(e.character == SWT.BS || e.character == SWT.DEL){
+					return;
+				}
+				
+				String s = text.getText();
+				System.out.println(s + " " + s.length());
+				if (s.length() >= 10) {
+					e.text = s.substring(0, 10);
 				}
 				// TODO Auto-generated method stub
 				//e.text = text.getText().substring(0, 11);
 			}
 			
-		});*/
+		});
 		
 		final Button button = new Button(grid, SWT.BORDER);
 		gridData = new GridData(SWT.BEGINNING, SWT.CENTER, false, false);
