@@ -14,6 +14,7 @@ public class Resource {
 	protected byte [] data;
 	protected String name;
 	protected int nameOffset;
+	protected boolean isDirty;
 	
 	protected ImageData imageData;
 	
@@ -26,6 +27,19 @@ public class Resource {
 	}
 	
 	public byte [] getData(){
+		if(!isDirty){
+			return data;
+		}
+		//recompute data -- this is just adding the name back into the data
+		
+		byte [] bytes = new byte [nameOffset + name.length() + 1];
+		System.arraycopy(data, 0, bytes, 0, nameOffset);
+		for(int i = 0; i < name.length(); i++){
+			bytes[nameOffset + i] = (byte) name.charAt(i);
+		}
+		data = bytes;
+		isDirty = false;
+		
 		return data;
 	}
 	
@@ -68,6 +82,8 @@ public class Resource {
 			fis.close();
 			
 			System.out.println("done reading resource file: " + byteRead);
+			
+			isDirty = false;
 			
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -121,5 +137,15 @@ public class Resource {
 		Resource resourceFile = new Resource(file);
 		resourceFile.load();
 		//resourceFile.saveToFile();
+	}
+
+	public void renameTo(String text) {
+		if(name.equals(text)){
+			return;
+		}
+		
+		// TODO Auto-generated method stub
+		name = text;
+		isDirty = true;
 	}
 }

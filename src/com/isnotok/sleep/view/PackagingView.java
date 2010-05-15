@@ -82,10 +82,13 @@ public class PackagingView extends ViewPart implements ISelectionListener{
 				// TODO Auto-generated method stub
 				if(e.keyCode == SWT.BS){
 					GalleryItem [] galleryItems = gallery.getSelection();
-					if(galleryItems == null)
+					if(galleryItems == null || galleryItems.length == 0)
 						return;
 					
 					for(GalleryItem galleryItem : galleryItems){
+						if(galleryItem.getParentItem() == null)
+							continue;
+						
 						File file = (File) galleryItem.getData();
 						File parent = file.getParentFile();
 						pakManager.removeFile(parent.getName(), file);

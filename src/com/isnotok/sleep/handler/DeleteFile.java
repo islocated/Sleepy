@@ -36,19 +36,39 @@ public class DeleteFile implements IHandler {
 		ISelection sel = window.getActivePage().getSelection();
 		if(sel instanceof IStructuredSelection){
 			IStructuredSelection selection = (IStructuredSelection) sel;
-			Object obj = selection.getFirstElement();
-			if(obj instanceof File){
-				File file = (File) obj;
-				boolean delete = MessageDialog.openConfirm(window.getShell(), "Confirm Delete", "Are you sure you want to delete file '" + file.getName() + "'?");
-				if(delete){
-					if(FileUtil.deleteFile(file)){
-						System.out.println("deleted");
-						view.getCommonViewer().refresh();
-					}
-					else{
-						System.out.println("error");
+			Object [] objects = selection.toArray();
+			
+			if(objects == null || objects.length == 0)
+				return null;
+			
+			boolean delete;
+			
+			if(objects.length == 1){
+				File file = (File) objects[0];
+				delete = MessageDialog.openConfirm(window.getShell(), "Confirm Delete", "Are you sure you want to delete file '" + file.getName() + "'?");
+			}
+			else{
+				delete = MessageDialog.openConfirm(window.getShell(), "Confirm Delete", "Are you sure you want to delete these multiple files?");
+			}
+			
+			boolean deleted = false;
+			for(Object obj : objects){
+				if(obj instanceof File){
+					File file = (File) obj;
+					if(delete){
+						if(FileUtil.deleteFile(file)){
+							System.out.println("deleted");
+							deleted = true;
+						}
+						else{
+							System.out.println("error");
+						}
 					}
 				}
+			}
+			
+			if(deleted){
+				view.getCommonViewer().refresh();
 			}
 		}
 		

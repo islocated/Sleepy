@@ -31,12 +31,16 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.events.VerifyEvent;
+import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Scale;
 import org.eclipse.swt.widgets.Text;
@@ -73,7 +77,7 @@ public class CacheView extends ViewPart implements ISelectionListener{
 		Composite grid = new Composite(parent, SWT.NONE);
 		
 		GridLayout gridLayout = new GridLayout();
-		gridLayout.numColumns = 3;
+		gridLayout.numColumns = 5;
 		grid.setLayout(gridLayout);
 		
 		GridData gridData;
@@ -81,7 +85,7 @@ public class CacheView extends ViewPart implements ISelectionListener{
 		//Add Gallery to grid
 		gallery = new GalleryViewer(grid, SWT.V_SCROLL | SWT.VIRTUAL | SWT.MULTI);
 		gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
-		gridData.horizontalSpan = 3;
+		gridData.horizontalSpan = 5;
 		gallery.setLayoutData(gridData);
 		
 		gallery.setAsSelectionProvider(getSite());
@@ -130,9 +134,12 @@ public class CacheView extends ViewPart implements ISelectionListener{
 		
 
 		setupScale(grid);
-        
+		
 		//Set the filter for the keywords
 		setFilterField(grid);
+		
+		setupRenameField(grid);
+        
 		
 		// SetData is called when Gallery creates an item.
 		gallery.addListener(SWT.SetData, new Listener() {
@@ -203,12 +210,75 @@ public class CacheView extends ViewPart implements ISelectionListener{
 		scale.setSelection(3);
 	}
 	
+	
+	private void setupRenameField(Composite grid) {
+		final Label label = new Label(grid, SWT.NONE);
+		GridData gridData = new GridData(SWT.END, SWT.CENTER, false, false);
+		gridData.horizontalSpan = 1;
+		label.setLayoutData(gridData);
+		label.setText("Rename to:");
+		
+		final Text text = new Text(grid, SWT.SINGLE | SWT.BORDER);
+		gridData = new GridData(SWT.FILL, SWT.CENTER, true, false);
+		gridData.horizontalSpan = 1;
+		text.setLayoutData(gridData);
+		text.setTextLimit(10);
+		text.setToolTipText("Changes the name of the resource.  Only gets updated on a save.");
+		/*
+		text.addVerifyListener(new VerifyListener(){
+
+			public void verifyText(VerifyEvent e) {
+				if(text.getCharCount() >= 10){
+					e.text = text.getText(0, 10);
+				}
+				// TODO Auto-generated method stub
+				//e.text = text.getText().substring(0, 11);
+			}
+			
+		});*/
+		
+		final Button button = new Button(grid, SWT.BORDER);
+		gridData = new GridData(SWT.BEGINNING, SWT.CENTER, false, false);
+		gridData.horizontalSpan = 1;
+		button.setLayoutData(gridData);
+		button.setText("Set");
+		button.addSelectionListener(new SelectionListener(){
+
+			public void widgetDefaultSelected(SelectionEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			public void widgetSelected(SelectionEvent e) {
+				// TODO Auto-generated method stub
+				GalleryItem [] items = gallery.getSelection();
+				if(items == null || items.length == 0){
+					return;
+				}
+				
+				for(GalleryItem item : items){
+					if(item.getParentItem() == null){
+						continue;
+					}
+					
+					File resourceFile = (File) item.getData();
+					Resource resource = CacheManager.getInstance().getResource(resourceFile);
+					
+					resource.renameTo(text.getText(0,10));
+					
+					item.setText(text.getText());
+					gallery.redraw(item);
+				}
+			}
+			
+		});
+	}
 
 	private void setFilterField(Composite grid) {
 		final Text text = new Text(grid, SWT.SEARCH);
 		GridData gridData = new GridData(SWT.FILL, SWT.CENTER, true, false);
 		//gridData.h
-		gridData.horizontalSpan = 2;
+		gridData.horizontalSpan = 1;
 		text.setLayoutData(gridData);
 		
 		text.setMessage("Filter by keyword");
