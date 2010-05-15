@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.nebula.widgets.gallery.AbstractGridGroupRenderer;
 import org.eclipse.nebula.widgets.gallery.GalleryItem;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
@@ -20,6 +21,8 @@ import org.eclipse.swt.events.DragDetectEvent;
 import org.eclipse.swt.events.DragDetectListener;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -27,6 +30,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.Scale;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
@@ -96,7 +100,7 @@ public class CachePakEditor extends EditorPart{
 		Composite grid = new Composite(parent, SWT.NONE);
 		
 		GridLayout gridLayout = new GridLayout();
-		gridLayout.numColumns = 1;
+		gridLayout.numColumns = 3;
 		grid.setLayout(gridLayout);
 		
 		GridData gridData;
@@ -104,6 +108,7 @@ public class CachePakEditor extends EditorPart{
 		//Add Gallery to grid
 		gallery = new GalleryViewer(grid, SWT.V_SCROLL | SWT.VIRTUAL | SWT.MULTI);
 		gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
+		gridData.horizontalSpan = 3;
 		gallery.setLayoutData(gridData);
 		
 		gallery.setAsSelectionProvider(getSite());
@@ -116,6 +121,8 @@ public class CachePakEditor extends EditorPart{
 		//Drag drop
 		addDragNDrop();
 		
+		
+		setupScale(grid);
 		//Set the filter for the keywords
 		setFilterField(grid);
 		
@@ -201,10 +208,40 @@ public class CachePakEditor extends EditorPart{
         });
 	}
 	
+	
+
+	private void setupScale(Composite grid) {
+		GridData gridData;
+		final Scale scale = new Scale(grid, SWT.NONE);
+		scale.setMinimum(2);
+		scale.setMaximum(15);
+		scale.setIncrement(1);
+		gridData = new GridData(SWT.LEFT, SWT.CENTER, false, false);
+		gridData.horizontalSpan = 1;
+		scale.setLayoutData(gridData);
+		scale.addSelectionListener(new SelectionListener(){
+
+			public void widgetDefaultSelected(SelectionEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			public void widgetSelected(SelectionEvent e) {
+				// TODO Auto-generated method stub
+				AbstractGridGroupRenderer gr = (AbstractGridGroupRenderer) gallery.getGroupRenderer();
+				gr.setItemSize(32 * scale.getSelection()+ 10, 32 * scale.getSelection());
+			}
+			
+		});
+		
+		scale.setSelection(3);
+	}
+	
 
 	private void setFilterField(Composite grid) {
 		final Text text = new Text(grid, SWT.SEARCH);
 		GridData gridData = new GridData(SWT.FILL, SWT.CENTER, true, false);
+		gridData.horizontalSpan = 2;
 		text.setLayoutData(gridData);
 		
 		text.setMessage("Filter by keyword");

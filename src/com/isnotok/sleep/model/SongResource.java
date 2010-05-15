@@ -5,19 +5,74 @@ import java.io.File;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.PaletteData;
 
+import com.isnotok.sleep.util.BytesUtil;
+
 public class SongResource extends Resource{
 	public static final int SIZE = 16;
-	public static final int GRID = 13;
-	public static final int BYTES_PER_PIXEL = 4;
-	public static final int BYTES_FOR_ROOM = GRID * GRID * UniqueId.MAX_DIGITS;
-	public static final int BYTES_FOR_WALL = GRID * GRID;
-	public static final int BYTES_TOTAL = BYTES_FOR_ROOM + BYTES_FOR_WALL;
+	public static final int PHRASES = 9;
+	public static final int ROWS = 8;
+	public static final int BYTES_PER_PIXEL = 1;
+	
+	//public static final int BYTES_PER_PIXEL = 4;
+	//public static final int BYTES_FOR_ROOM = GRID * GRID * UniqueId.MAX_DIGITS;
+	//public static final int BYTES_FOR_WALL = GRID * GRID;
+	//public static final int BYTES_TOTAL = BYTES_FOR_ROOM + BYTES_FOR_WALL;
 
+	MusicResource [][] notes = new MusicResource[PHRASES][ROWS];
+	
 	public SongResource(File file){
 		super(file);
 		load();
+	}
+	
+	@Override
+	protected void load() {
+		// TODO Auto-generated method stub
+		super.load();
 		
-		nameOffset = BYTES_TOTAL;
+		
+		int offset = 0;
+		for(int y = 0; y < ROWS; y++){
+			for(int x = 0; x < PHRASES; x++){
+				byte [] b = BytesUtil.readBytes(data, offset, UniqueId.MAX_DIGITS);
+				offset += UniqueId.MAX_DIGITS;
+				
+				File parent = new File(file.getParentFile().getParentFile(), "music");
+				File music = new File(parent, new UniqueId(b).toHexString());
+				
+				notes[x][y] = (MusicResource) CacheManager.getInstance().getResource(music);
+			}
+		}
+		
+		//Read in row length
+		for(int y = 0; y < ROWS; y++){
+			offset += 1;
+		}
+		
+		//Read in timbre
+		for(int y = 0; y < ROWS; y++){
+			byte [] b = BytesUtil.readBytes(data, offset, UniqueId.MAX_DIGITS);
+			offset += UniqueId.MAX_DIGITS;
+		}
+		
+		//Read in loudness
+		for(int y = 0; y < ROWS; y++){
+			offset += 1;
+		}
+		
+		//Read in stereo
+		for(int y = 0; y < ROWS; y++){
+			offset += 1;
+		}
+		
+		//Read in scale
+		byte [] b = BytesUtil.readBytes(data, offset, UniqueId.MAX_DIGITS);
+		offset += UniqueId.MAX_DIGITS;
+		
+		//Read in speed
+		offset += 1;
+		
+		nameOffset = offset;
 	}
 	
 	@Override
@@ -27,47 +82,26 @@ public class SongResource extends Resource{
 
 	@Override
 	protected ImageData calculateImageData(){
-		if(data == null || data.length < BYTES_TOTAL)
+		if(data == null)
 			return null;
 		
-		Resource [][] tiles = new Resource[GRID][GRID];
+		PaletteData palette = new PaletteData(0x1, 0x1, 0x1);
 		
-		for(int y = 0; y < GRID; y++){
-			for(int x = 0; x < GRID; x++){
-				int index = (y * GRID + x) * UniqueId.MAX_DIGITS;
-				byte [] b = new byte[UniqueId.MAX_DIGITS];
-				System.arraycopy(data, index, b, 0, UniqueId.MAX_DIGITS);
+		byte [] bytes = new byte[SIZE * SIZE * PHRASES * ROWS * BYTES_PER_PIXEL];
+		
+		for(int y = 0; y < ROWS; y++){
+			for(int x = 0; x < PHRASES; x++){
+				Resource resource = notes[x][y];
 				
-				File parent = new File(file.getParentFile().getParentFile(), "tile");
-				File tile = new File(parent, new UniqueId(b).toHexString());
+				int offset = y * PHRASES * SIZE * SIZE + x * SIZE;
+				System.out.println("song: " + offset);
 				
-				tiles[x][y] = CacheManager.getInstance().getResource(tile);
+				//Use image data because that one has already been reversed etc...
+				BytesUtil.copyBlock(resource.getImageData().data, MusicResource.SIZE, MusicResource.SIZE, bytes, SIZE * PHRASES * BYTES_PER_PIXEL, SIZE * ROWS, offset);
 			}
 		}
 		
-		PaletteData palette = new PaletteData(0xFF000000, 0xFF0000, 0xFF00);
-		
-		byte [] bytes = new byte[SIZE * GRID * SIZE * GRID * BYTES_PER_PIXEL];
-		
-		for(int y = 0; y < GRID; y++){
-			for(int x = 0; x < GRID; x++){
-				//Copy tile[x][y] to bytes location
-				Resource tile = tiles[x][y];
-				
-				//Index is for all the pixels in here
-				int index = 0;
-				for(int j = 0; j < SIZE; j++){
-					for(int i = 0; i < SIZE; i++){
-						for(int k = 0; k < BYTES_PER_PIXEL; k++){
-							int bindex = k + i*4 + x*(16*4) + j*16*13*4 + y*16*13*13*4;
-							bytes[bindex] = tile.getData()[index++];
-						}
-					}
-				}
-			}
-		}
-		
-		return new ImageData(13*16, 13*16, 32, palette, 1, bytes);
+		return new ImageData(SIZE * PHRASES, SIZE * ROWS, 8 * BYTES_PER_PIXEL, palette, 1, bytes);
 	}
 	
 	public static void main(String [] args){

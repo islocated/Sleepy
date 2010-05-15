@@ -81,6 +81,9 @@ public class CacheManager {
 		else if(type.equals("scene")){
 			resource = new SceneResource(file);
 		}
+		else if(type.equals("song")){
+			resource = new SongResource(file);
+		}
 		
 		cache.put(file, resource);
 		
