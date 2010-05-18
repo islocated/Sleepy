@@ -137,16 +137,12 @@ public class SceneResource extends Resource{
 		
 		PaletteData palette = new PaletteData(0xFF000000, 0xFF0000, 0xFF00);
 
-		byte [] bytes;// = new byte[SIZE * GRID * SIZE * GRID * BYTES_PER_PIXEL];
+		byte [] bytes = new byte[SIZE * GRID * SIZE * GRID * BYTES_PER_PIXEL];
 		byte [] alpha = new byte[SIZE * GRID * SIZE * GRID];
 		
+		//Copy the room pixel data out to avoid updating room data
 		if(room != null){
-			bytes = room.getImageData().data;
-			//System.arraycopy(room.getImageData().data, 0, bytes, 0, SIZE * GRID * SIZE * GRID * BYTES_PER_PIXEL);
-			//System.out.println("have data");
-		}
-		else{
-			bytes = new byte[SIZE * GRID * SIZE * GRID * BYTES_PER_PIXEL];
+			System.arraycopy(room.getImageData().data, 0, bytes, 0, bytes.length);
 		}
 		
 		//System.out.println(resourceName);
