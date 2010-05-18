@@ -94,7 +94,7 @@ public class SongResource extends Resource{
 				Resource resource = notes[x][y];
 				
 				int offset = y * PHRASES * SIZE * SIZE + x * SIZE;
-				System.out.println("song: " + offset);
+				//System.out.println("song: " + offset);
 				
 				//Use image data because that one has already been reversed etc...
 				BytesUtil.copyBlock(resource.getImageData().data, MusicResource.SIZE, MusicResource.SIZE, bytes, SIZE * PHRASES * BYTES_PER_PIXEL, SIZE * ROWS, offset);

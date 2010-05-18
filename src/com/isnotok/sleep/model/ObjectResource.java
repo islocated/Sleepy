@@ -352,8 +352,8 @@ public class ObjectResource extends Resource{
 				int srcPos = (y + lowy) * (SIZE * GRID) + lowx;
 				int desPos = y * (width);
 				
-				System.out.println("srcPos: " + srcPos);
-				System.out.println("desPos: " + desPos);
+				//System.out.println("srcPos: " + srcPos);
+				//System.out.println("desPos: " + desPos);
 				
 				System.arraycopy(bytes, srcPos * BYTES_PER_PIXEL, subimage, desPos * BYTES_PER_PIXEL, width * BYTES_PER_PIXEL);
 				
